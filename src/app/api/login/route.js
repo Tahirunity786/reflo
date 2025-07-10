@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import User from '@/models/User';
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
