@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import ProTable from "../ProTable/ProTable";
 
 // Initial cart items
 const initialCart = [
@@ -63,68 +64,19 @@ export default function CartWidget() {
     <div className="max-w-7xl mx-auto px-5 py-10 text-gray-800">
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-6">
-        Theme Freesia Sites &gt; <span className="text-black">Shopping Cart</span> &gt;{" "}
-        <span className="font-semibold">Cart</span>
+        Home &gt; <span className="text-black">Shopping Cart</span> &gt;{" "}
+        <span className="font-semibold">My Shopping Cart</span>
       </nav>
 
-      <h1 className="text-2xl font-semibold mb-6">Cart</h1>
+      <h1 className="text-2xl font-semibold mb-6">My Shopping Cart</h1>
 
       {/* Main grid: Cart (left) + Related (right) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left: Cart section (2/3 on large screens) */}
         <div className="lg:col-span-2">
           {/* Cart Table */}
-          <div className="overflow-x-auto border rounded-lg mb-6">
-            <table className="min-w-full bg-white text-left">
-              <thead className="bg-orange-500 text-sm text-white">
-                <tr>
-                  <th className="p-4"></th>
-                  <th className="p-4">Product</th>
-                  <th className="p-4">Price</th>
-                  <th className="p-4">Quantity</th>
-                  <th className="p-4">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id} className="border-t">
-                    <td className="p-4">
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="text-red-500 font-bold text-lg"
-                      >
-                        ×
-                      </button>
-                    </td>
-                    <td className="p-4 flex items-center gap-2">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                      <span className="text-orange-500 hover:underline cursor-pointer">
-                        {item.name}
-                      </span>
-                    </td>
-                    <td className="p-4 text-orange-500 font-medium">
-                      ${item.price.toFixed(2)}
-                    </td>
-                    <td className="p-4">
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) => updateQuantity(item.id, e.target.value)}
-                        className="w-16 border rounded px-2 py-1 text-center"
-                      />
-                    </td>
-                    <td className="p-4 text-orange-500">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="overflow-x-auto rounded-lg mb-6">
+            <ProTable/>
           </div>
 
           {/* Coupon + Update */}
