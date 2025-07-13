@@ -89,14 +89,22 @@ const ProductCard = ({ product, isList }) => {
       </button>
 
       {/* Image */}
-      <div className={cn("relative bg-gray-100 transition-all duration-300", isList ? "w-full md:w-1/3 aspect-[3/2]" : "w-full aspect-[3/4]")}>
-        <Image
-          src={product.image}
-          alt={product.title}
-          fill
-          className="object-cover"
-        />
-      </div>
+      <div
+  className={cn(
+    "relative bg-gray-100 transition-all duration-300",
+    isList
+      ? "w-full md:w-1/3 aspect-[3/2]"
+      : "w-full aspect-[4/5]" // slightly shorter image in grid view
+  )}
+>
+  <Image
+    src={product.image}
+    alt={product.title}
+    fill
+    className="object-cover"
+  />
+</div>
+
 
       {/* Content */}
       <div className="p-4 text-left flex-1">

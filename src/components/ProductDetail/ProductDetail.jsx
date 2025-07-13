@@ -1,157 +1,169 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import React from 'react';
+import Image from 'next/image';
+import { Star, Heart, Truck, ShieldCheck, Badge } from 'lucide-react';
+import BestSellingProducts from '../BestSellingProducts/BestSellingProducts';
+import PurchaseOptions from '../PurchaseOptions/PurchaseOptions';
+import ProductInfoTabs from '../ProductInfoTabs/ProductInfoTabs';
 
-export default function ProductDetail() {
-    const [quantity, setQuantity] = useState(1);
-
-    // Example product data
-    const product = {
-        name: "Custom Motorcycle",
-        image: "/Image/b1f5ff0efaddf79447cd22ace6d7b1ff.jpg_2200x2200q80.jpg_.webp", // Replace with real path in /public/
-        originalPrice: 2000,
-        salePrice: 1900,
-        category: "Popular Item",
-        tag: "Automobiles",
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-    };
-
-    // Handle quantity input change
-    const handleQuantityChange = (e) => {
-        const value = parseInt(e.target.value) || 1;
-        setQuantity(Math.max(1, value));
-    };
+const ProductDetailPage = () => {
+    const sizes = ['S', 'M', 'L', 'XL'];
+    const colors = ['black', 'gray', 'brown'];
 
     return (
-        <div className="max-w-7xl mx-auto px-5 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Left/Main Column */}
-            <div className="lg:col-span-2 space-y-6 bg-white p-6">
-                {/* Breadcrumb */}
-                <nav className="text-sm text-gray-500">
-                    Theme Freesia Sites &gt; Shopping Cart &gt; Products &gt;{" "}
-                    <span className="text-black font-medium">{product.name}</span>
-                </nav>
+        <section className="max-w-screen-xl mx-auto px-8 py-8 bg-white text-gray-800">
+            {/* Breadcrumb */}
+            <nav className="text-xs text-gray-400 mb-4">Home / Faux fur gilet</nav>
 
-                {/* Product Section */}
-                <div className="flex flex-col lg:flex-row gap-6 items-start">
-                    {/* Image + Sale Badge */}
-                    <div className="relative">
-                        {/* <span className="absolute top-0 -left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-              Sale!
-            </span> */}
-                        <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full max-w-md object-contain h-[320px]"
-                        />
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="space-y-4">
-                        <h1 className="text-2xl font-semibold">{product.name}</h1>
-
-                        {/* Pricing */}
-                        <div className="flex items-center gap-4 text-lg">
-                            <span className="line-through text-gray-400">
-                                ${product.originalPrice.toFixed(2)}
-                            </span>
-                            <span className="text-orange-600 font-semibold">
-                                ${product.salePrice.toFixed(2)}
-                            </span>
-                        </div>
-
-                        {/* Quantity & Add to Cart */}
-                        <div className="flex items-center gap-3">
-                            <input
-                                type="number"
-                                min={1}
-                                value={quantity}
-                                onChange={handleQuantityChange}
-                                className="w-16 px-2 py-1 border rounded text-center"
-                            />
-                            <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
-                                Add to cart
-                            </button>
-                        </div>
-
-                        {/* Wishlist Button */}
-                        <button className="border text-orange-500 border-orange-500 px-4 py-2 rounded hover:bg-orange-50 flex items-center gap-2">
-                            <span>♡</span> Add to Wishlist
-                        </button>
-
-                        {/* Category & Tags */}
-                        <div className="text-sm text-gray-600 space-y-1">
-                            <div>
-                                <strong>Category:</strong> {product.category}
+            <div className="flex flex-col lg:flex-row gap-8 min-h-screen">
+                {/* ================= Left Section (Sticky Images) ================= */}
+                <div className="w-full lg:w-[52%] h-[100vh]">
+                
+                        <div className="flex flex-col-reverse lg:flex-row gap-4 ">
+                            {/* Thumbnails */}
+                            <div className="lg:w-1/6 md:w-full overflow-hidden">
+                                <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px]">
+                                    {[...Array(5)].map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className="min-w-[3rem] w-20 h-20 border rounded overflow-hidden flex-shrink-0 cursor-pointer"
+                                        >
+                                            <Image
+                                                src="/Image/fs_new_s1.webp"
+                                                alt={`Thumbnail ${i + 1}`}
+                                                width={96}
+                                                height={80}
+                                                className="object-cover w-full h-full"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div>
-                                <strong>Tag:</strong> {product.tag}
+
+                            {/* Main Image */}
+                            <div className="relative w-full aspect-[4/5] bg-gray-100 rounded overflow-hidden">
+                                <Image
+                                    src="/Image/fs_new_s1.webp"
+                                    alt="Faux fur gilet"
+                                    fill
+                                    className="object-cover rounded"
+                                />
+                                <button className="absolute top-3 right-3 text-gray-400 hover:text-red-500">
+                                    <Heart size={20} />
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                {/* Description Tabs */}
-                <div className="mt-10">
-                    <div className="border-b text-sm flex justify-start items-center gap-2">
-                        <button className="border-b-2 border-orange-500 px-4 py-2 font-medium text-black">
-                            Description
-                        </button>
-                        <button className="border-b-2 border-orange-500 px-4 py-2 font-medium text-black">
-                            Reviews
-                        </button>
-                    </div>
-
-                    <div className="mt-4 text-gray-700 text-sm leading-relaxed">
-                        <h2 className="text-lg font-semibold mb-2">Description</h2>
-                        <p>{product.description}</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Sidebar */}
-            <div className="space-y-8 bg-white p-6">
-                {/* Product Categories */}
-                <div className=" p-4 rounded shadow-sm">
-                    <h3 className="font-semibold text-sm border-b pb-2 mb-2">
-                        Shipping
-                    </h3>
 
                 </div>
 
-                {/* Product Suggestions */}
-                <div className="p-4 rounded shadow-sm">
-                    <h3 className="font-semibold text-sm border-b pb-2 mb-2">PRODUCTS</h3>
-                    <div className="space-y-4 text-sm">
-                        {/* Product 1 */}
-                        <div className="flex gap-4 items-center">
-                            <img src="/dumbbell.jpg" alt="Dumbbell" className="w-12 h-12" />
+                {/* ================= Right Section (Product Info) ================= */}
+                <div className="w-full lg:w-[48%] space-y-5">
+                    {/* Info Card */}
+                    <div className="bg-white z-10 pb-6">
+                        {/* Top Label */}
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="bg-yellow-300 text-xs px-2 py-1 rounded font-semibold">
+                                Subscription
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="text-2xl font-semibold mb-2">Faux fur gilet</h1>
+
+                        {/* Rating */}
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="flex text-yellow-400">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star key={i} size={14} className="fill-yellow-400" />
+                                ))}
+                            </div>
+                            <span className="text-sm text-gray-500">1 review</span>
+                            <div className="text-red-500 text-md">22 added in last 24 hours</div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="text-3xl font-bold text-black mb-4">$320.00</div>
+
+                        {/* Description */}
+                        <p className="text-md leading-relaxed mb-4">
+                            The custom long-sleeved jacket with fur-like features adds a classic crew neckline,
+                            easy short sleeves, a slightly cropped length and a box-cut fit for a truly timeless
+                            look.
+                        </p>
+
+                        {/* Benefits */}
+                        <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
+                            <li className="flex items-center gap-2 text-gray-600 text-md">
+                                <Truck size={20} /> Estimate delivery times: 3-5 days International.
+                            </li>
+                            <li className="flex items-center gap-2 text-gray-600 text-md">
+                                <Badge size={20} /> Use code <b>WELCOME15</b> for 15% off your first order.
+                            </li>
+                            <li className="flex items-center gap-2 text-gray-600 text-md">
+                                <ShieldCheck size={20} /> Secure checkout guarantee
+                            </li>
+                        </ul>
+
+                        {/* Variant Selectors */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Size Selector */}
                             <div>
-                                <div className="font-semibold">Dumbbell</div>
-                                <div className="text-orange-600 font-medium">
-                                    $77.00{" "}
-                                    <span className="line-through text-gray-400 text-xs ml-1">
-                                        $99.00
-                                    </span>
+                                <h4 className="text-sm font-medium mb-1">Size</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {sizes.map((size) => (
+                                        <button
+                                            key={size}
+                                            className="shadow-sm cursor-pointer px-4 py-1 rounded hover:bg-black hover:text-white text-sm"
+                                        >
+                                            {size}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Color Selector */}
+                            <div>
+                                <h4 className="text-sm font-medium mb-1">Color</h4>
+                                <div className="flex gap-2">
+                                    {colors.map((color) => (
+                                        <span
+                                            key={color}
+                                            className={`w-5 h-5 rounded-full border cursor-pointer ${color === 'black'
+                                                    ? 'bg-black border-black'
+                                                    : color === 'gray'
+                                                        ? 'bg-gray-400 border-gray-400'
+                                                        : 'bg-yellow-700 border-yellow-700'
+                                                }`}
+                                        ></span>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                        {/* Product 2 */}
-                        <div className="flex gap-4 items-center">
-                            <img
-                                src="/flare-skirt.jpg"
-                                alt="Flare Skirts"
-                                className="w-12 h-12"
-                            />
-                            <div>
-                                <div className="font-semibold">Flare Skirts</div>
-                                <div className="text-orange-600 font-medium">$89.00</div>
-                            </div>
-                        </div>
+                    </div>
+
+                    {/* Purchase Actions */}
+                    <div className="space-y-3">
+                        <PurchaseOptions />
+                    </div>
+
+                    {/* Extra Info */}
+                    <div className="space-y-3 text-sm text-gray-700">
+                        <p>
+                            <b>SKU</b>: ABCD123E
+                        </p>
+                        <p>
+                            <b>Available</b>: Instock
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
+            <ProductInfoTabs/>
+
+            {/* ================= More Products ================= */}
+            <BestSellingProducts />
+        </section>
     );
-}
+};
+
+export default ProductDetailPage;
