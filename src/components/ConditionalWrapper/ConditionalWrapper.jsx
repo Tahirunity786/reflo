@@ -4,6 +4,7 @@
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
 // import Footer from '../Footer/Footer';
 
 export default function ConditionalWrapper({ children }) {
@@ -20,7 +21,7 @@ export default function ConditionalWrapper({ children }) {
   ];
 
   const showNavbar = !hideRoutes.includes(pathname.split('/')[1]);
-//   const showFooter = !hideRoutes.includes(pathname.split('/')[1]);
+  const showFooter = !hideRoutes.includes(pathname.split('/')[1]);
 
   useEffect(() => {
     setLoading(false);
@@ -32,7 +33,7 @@ export default function ConditionalWrapper({ children }) {
     <>
       {showNavbar && <Navbar />}
       <main className="overflow-x-hidden">{children}</main>
-      {/* {showFooter && <Footer />} */}
+      {showFooter && <Footer />}
     </>
   );
 }

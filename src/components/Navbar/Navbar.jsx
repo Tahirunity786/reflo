@@ -1,97 +1,89 @@
+
 'use client';
-import {
-  FaSearch,
-  FaUser,
-  FaLock,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaShoppingCart,
-  FaHeart,
-} from 'react-icons/fa';
-import { PiBagSimpleBold } from 'react-icons/pi';
-import { HiMiniMapPin } from 'react-icons/hi2';
-import {
-  BiLogoFacebook,
-  BiLogoPinterestAlt,
-  BiLogoInstagram,
-  BiLogoLinkedinSquare,
-  BiLogoDribbble,
-} from 'react-icons/bi';
-import { FiX } from 'react-icons/fi';
-import { TbBrandSkype } from 'react-icons/tb';
-import Link from 'next/link';
+import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube, FaPinterestP } from 'react-icons/fa';
+import { FiSearch, FiUser, FiHeart, FiShoppingCart } from 'react-icons/fi';
+import { IoIosArrowDown } from 'react-icons/io';
 
-const Navbar = () => {
+const socialIcons = [
+  { icon: <FaFacebookF />, label: 'Facebook' },
+  { icon: <FaInstagram />, label: 'Instagram' },
+  { icon: <FaTiktok />, label: 'TikTok' },
+  { icon: <FaYoutube />, label: 'YouTube' },
+  { icon: <FaPinterestP />, label: 'Pinterest' },
+];
+
+const navLinks = ['Home', 'Shop', 'Products', 'Blog', 'About us'];
+
+export default function Navbar() {
   return (
-    <header className="border-b border-gray-200 text-sm">
-      {/* === Top Header (Contact Info + Social Links) === */}
-      <div className="bg-white px-4 py-2 flex flex-col md:flex-row md:justify-between md:items-center gap-2 text-gray-600">
-        {/* Contact Info */}
-        <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm">
-          {/* <span className="flex items-center gap-1"><HiMiniMapPin /> Themefreesia, Abc Building, 5th Floor, Zyz Street</span>
-          <span className="flex items-center gap-1"><FaPhoneAlt /> (123) 456-7890</span>
-          <span className="flex items-center gap-1"><FaEnvelope /> support@support.com</span>
-          <span className="flex items-center gap-1"><TbBrandSkype /> themefreesia</span> */}
-        </div>
-
-        {/* Social Icons */}
-        <div className="flex gap-3 justify-start md:justify-end">
-          <Link href="#" className="flex items-center gap-1 text-sm mb-0"> My Account</Link>
-          <Link href="#" className="flex items-center gap-1 text-sm mb-0"> Login</Link>
-        </div>
-      </div>
-
-      {/* === Main Navbar === */}
-      <div className="bg-white py-4 px-4 lg:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* Logo + Tagline */}
-        <div className="flex items-center gap-3">
-          <PiBagSimpleBold className="text-4xl text-orange-500" />
-          <div>
-            <h1 className="text-2xl font-bold text-orange-500 leading-tight">Reflo</h1>
-            <p className="text-xs tracking-wider text-gray-600">CHOOSE AND PURCHASE</p>
+    <header className="w-full">
+      {/* Top Bar */}
+      <div className="bg-black text-white text-sm flex justify-between items-center px-4 lg:px-8 py-2">
+        {/* Left: Welcome + Social Icons */}
+        <div className="flex items-center space-x-4">
+          <span className="font-semibold">Welcome Milano store!</span>
+          <div className="flex space-x-2 text-white">
+            {socialIcons.map((item, index) => (
+              <span key={index} className="cursor-pointer hover:text-pink-400" aria-label={item.label}>
+                {item.icon}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="w-full md:max-w-xl">
-          <div className="flex border border-orange-400 rounded overflow-hidden">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full px-4 py-2 outline-none text-sm"
-            />
-            <button className="bg-orange-500 p-3 text-white hover:bg-orange-600 transition">
-              <FaSearch />
-            </button>
-          </div>
+        {/* Center: Promotion */}
+        <div className="hidden md:flex items-center space-x-1">
+          <span>Coats—every friday 75% Off .</span>
+          <span className="font-semibold underline cursor-pointer hover:text-pink-400">Shop Sale</span>
         </div>
 
-        {/* Account Links + Cart */}
-        <div className="flex items-center flex-wrap justify-between md:justify-end gap-4 text-sm text-gray-700 w-full md:w-auto">
-          
-          <Link href="#" className="relative flex items-center gap-1">
-            <FaHeart className='h-5 w-5' />
-            <span className="absolute -top-2 -right-2 text-xs bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
-          </Link>
-          <Link href="#" className="relative flex items-center gap-1">
-            <FaShoppingCart className='h-5 w-5' />
-            <span className="absolute -top-2 -right-2 text-xs bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center">1</span>
-        
-          </Link>
+        {/* Right: Language & Help */}
+        <div className="flex items-center space-x-4">
+          <a href="#" className="hover:text-white">Help Center</a>
+          {/* <div className="flex items-center space-x-1 cursor-pointer">
+            <img src="https://flagcdn.com/us.svg" alt="US Flag" className="w-5 h-5 rounded-full" />
+            <span>United States (USD $)</span>
+            <IoIosArrowDown />
+          </div> */}
         </div>
       </div>
 
-      {/* === Bottom Navigation Menu === */}
-      <nav className="bg-white border-t border-gray-200 px-4 lg:px-6">
-        <ul className="flex flex-wrap items-center gap-6 py-2 text-gray-700 font-medium text-sm">
-          <li><Link href="/" className="flex items-center gap-1 text-orange-500 font-bold"> Home</Link></li>
-          <li><Link href="/shop" className="flex items-center gap-1"> Shop</Link></li>
-          {/* <li><Link href="#" className="flex items-center gap-1"> Blog</Link></li> */}
-          <li><Link href="/contact" className="flex items-center gap-1"> Contact Us</Link></li>
-        </ul>
-      </nav>
+      {/* Main Navbar */}
+      <div className="flex justify-between items-center px-4 lg:px-8 py-4 bg-white shadow-sm">
+        {/* Logo */}
+        <div className="text-3xl font-bold tracking-tight">milano</div>
+
+        {/* Navigation Links */}
+        <nav className="hidden lg:flex space-x-8 font-dm font-bold">
+          {navLinks.map((link, index) => (
+            <a key={index} href="#" className="hover:text-black">
+              {link}
+            </a>
+          ))}
+        </nav>
+
+        {/* Actions: Search, Profile, Wishlist, Cart */}
+        <div className="flex items-center space-x-4 text-black">
+          <NavIcon icon={<FiSearch />} />
+          <NavIcon icon={<FiUser />} />
+          <NavIcon icon={<FiHeart />} badge="0" />
+          <NavIcon icon={<FiShoppingCart />} badge="0" />
+        </div>
+      </div>
     </header>
   );
-};
+}
 
-export default Navbar;
+// Reusable NavIcon Component with optional badge
+function NavIcon({ icon, badge }) {
+  return (
+    <div className="relative">
+      <span className="text-xl cursor-pointer hover:text-pink-500">{icon}</span>
+      {badge && (
+        <span className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+          {badge}
+        </span>
+      )}
+    </div>
+  );
+}
