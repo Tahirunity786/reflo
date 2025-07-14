@@ -5,12 +5,26 @@ import {
     FaFacebook, FaInstagram, FaYoutube, FaTiktok // Font Awesome Icons
 } from 'react-icons/fa';
 import { Globe } from 'lucide-react';
+import Link from 'next/link';
 
 
 
 export default function Footer() {
-    const companyLinks = ['About Us', 'Contact Us', 'Our Store', 'Store Location', 'FAQ'];
-    const quickLinks = ['Privacy Policy', 'Terms & Conditions', 'Sale', 'Size guide', 'Wishlist', 'Compare'];
+
+    const companyLinks = [
+        { name: "Home", link: "/" },
+        { name: "Shop", link: "/shop" },
+        { name: "Collection", link: "/collection" },
+        { name: "About Us", link: "/aboutus" },
+        { name: "Contact Us", link: "/contact" },
+
+    ]
+    const quickLinks = [
+        { name: 'Privacy Policy', link: "/privacy" },
+        { name: 'Terms & Conditions', link: "/terms-conditions" },
+        { name: 'Refund', link: "/refund" },
+
+    ]
     const socialIcons = [
         { icon: <FaFacebook />, label: 'Facebook' },
         { icon: <FaInstagram />, label: 'Instagram' },
@@ -21,7 +35,7 @@ export default function Footer() {
 
 
     return (
-        <footer className="bg-[#F5F4F1] text-gray-700 pt-12 pb-6 px-4">
+        <footer className="bg-[#F5F4F1] text-gray-700 pt-12 pb-6 px-8">
             <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
                 {/* Logo & Description */}
                 <div>
@@ -48,9 +62,11 @@ export default function Footer() {
                 <div>
                     <h3 className="text-lg font-semibold mb-3">Our Company</h3>
                     <ul className="space-y-2 text-sm">
-                        {companyLinks.map(link => (
-                            <li key={link}>
-                                <a href="#" className="hover:underline">{link}</a>
+                        {companyLinks.map((link, index) => (
+                            <li key={index}>
+                                <Link href={link.link} className="hover:underline">
+                                    {link.name}
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -58,11 +74,13 @@ export default function Footer() {
 
                 {/* Quick Links */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-3">Quick links</h3>
+                    <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
                     <ul className="space-y-2 text-sm">
-                        {quickLinks.map(link => (
-                            <li key={link}>
-                                <a href="#" className="hover:underline">{link}</a>
+                        {quickLinks.map((link, index) => (
+                            <li key={index}>
+                                <Link href={link.link} className="hover:underline">
+                                    {link.name}
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -103,20 +121,10 @@ export default function Footer() {
             </div>
 
             {/* Bottom Bar */}
-            <div className="max-w-7xl mx-auto mt-10 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 gap-4">
-                <div className="flex items-center gap-2">
-                    <Globe size={16} />
-                    <span>United States (USD $)</span>
-                </div>
+            <div className="max-w-7xl mx-auto mt-10 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-center items-center text-sm text-gray-600 gap-4">
+              
                 <div>© 2025 Milano store. All rights reserved.</div>
-                <div className="flex items-center gap-1">
-                    {/* Dummy payment logos (replace with images if needed) */}
-                    <img src="/visa.svg" alt="Visa" className="h-4" />
-                    <img src="/mastercard.svg" alt="Mastercard" className="h-4" />
-                    <img src="/paypal.svg" alt="PayPal" className="h-4" />
-                    <img src="/amex.svg" alt="Amex" className="h-4" />
-                    <img src="/discover.svg" alt="Discover" className="h-4" />
-                </div>
+                
             </div>
         </footer>
     );
