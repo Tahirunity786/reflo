@@ -22,11 +22,11 @@ const socialIcons = [
 
 
 const navLinks = [
-  {name:"Home", link:"/"},
-  {name:"Shop", link:"/shop"},
-  {name:"Collection", link:"/collection"},
-  {name:"Blogs", link:"/blogs"},
-  {name:"About us", link:"/aboutus"},
+  { name: "Home", link: "/" },
+  { name: "Shop", link: "/shop" },
+  { name: "Collection", link: "/collection" },
+  { name: "Blogs", link: "/blogs" },
+  { name: "About us", link: "/aboutus" },
 ];
 
 export default function Navbar() {
@@ -76,34 +76,37 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <a href="#" className="hover:text-white">
+            <a href="/contact" className="hover:text-white">
               Help Center
             </a>
           </div>
         </div>
 
         {/* Main Navbar */}
-        <div className="flex justify-between items-center px-4 lg:px-8 py-4 bg-white shadow-sm">
-          <div className="text-3xl font-bold tracking-tight">milano</div>
+        <div className="sticky top-0 z-50 bg-white shadow-sm">
+          <div className="flex justify-between items-center px-4 lg:px-8 py-4">
 
-          <nav className="hidden lg:flex space-x-8 font-dm font-bold">
-            {navLinks.map((link, index) => (
-              <a key={index} href={link.link} className="hover:text-black">
-                {link.name}
-              </a>
-            ))}
-          </nav>
+            <div className="text-3xl font-bold tracking-tight">milano</div>
 
-          <div className="flex items-center space-x-4 text-black">
-            <NavIcon icon={<FiSearch />} onClick={() => setIsSearchOpen(true)} />
-            <NavIcon icon={<FiUser />} onClick={openSignIn} />
-            <NavIcon icon={<FiHeart />} badge="0" />
-            <NavIcon
-              icon={<FiShoppingCart />} badge="1"
-              onClick={() => setCartOpen(true)}
-            />
+            <nav className="hidden lg:flex space-x-8 font-dm font-bold">
+              {navLinks.map((link, index) => (
+                <a key={index} href={link.link} className="hover:text-black">
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center space-x-4 text-black">
+              <NavIcon icon={<FiSearch />} onClick={() => setIsSearchOpen(true)} />
+              <NavIcon icon={<FiUser />} onClick={openSignIn} />
+              <NavIcon icon={<FiHeart />} badge="0" />
+              <NavIcon
+                icon={<FiShoppingCart />} badge="1"
+                onClick={() => setCartOpen(true)}
+              />
+            </div>
           </div>
-        </div>
+          </div>
       </header>
 
       {/* Cart Sidebar */}

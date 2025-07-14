@@ -68,7 +68,7 @@ const BestSellingProducts = () => {
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-xl shadow-sm p-3 relative group"
+            className="relative group"
           >
             {/* Badge */}
             {product.badge && (
