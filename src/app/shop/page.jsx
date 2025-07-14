@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Star, LayoutGrid, List } from "lucide-react";
+import CollectCard from "@/components/CollectCard/CollectCard";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -63,6 +64,14 @@ const products = [
   },
 ];
 
+const cards = [
+  { _id: 1, img: "/Image/fs_new_s1.webp", imgAlt: "Collection", Label: "T shirt" },
+  { _id: 2, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
+  { _id: 3, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
+  { _id: 4, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
+
+]
+
 const ProductCard = ({ product, isList }) => {
   return (
     <div
@@ -90,20 +99,20 @@ const ProductCard = ({ product, isList }) => {
 
       {/* Image */}
       <div
-  className={cn(
-    "relative bg-gray-100 transition-all duration-300",
-    isList
-      ? "w-full md:w-1/3 aspect-[3/2]"
-      : "w-full aspect-[4/5]" // slightly shorter image in grid view
-  )}
->
-  <Image
-    src={product.image}
-    alt={product.title}
-    fill
-    className="object-cover"
-  />
-</div>
+        className={cn(
+          "relative bg-gray-100 transition-all duration-300",
+          isList
+            ? "w-full md:w-1/3 aspect-[3/2]"
+            : "w-full aspect-[4/5]" // slightly shorter image in grid view
+        )}
+      >
+        <Image
+          src={product.image}
+          alt={product.title}
+          fill
+          className="object-cover"
+        />
+      </div>
 
 
       {/* Content */}
@@ -193,6 +202,20 @@ const SweaterCollection = () => {
           <p className="text-sm md:text-base mt-2">Cozy and chic for any season.</p>
         </div>
       </div>
+      {/* Collect card */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center mb-6">
+        {cards.map((item) => (
+          <CollectCard
+            key={item._id}
+            imageSrc={item.img}
+            imageAlt={item.imgAlt}
+            buttonLabel={item.Label}
+            hSm={true}
+            onButtonClick={() => console.log(`Clicked ${item._id}`)}
+          />
+        ))}
+      </div>
+
 
       <div className="flex gap-8">
         {/* Sidebar Filter */}
