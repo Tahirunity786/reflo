@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 import MediaUploader from '@/components/Admin/MediaUploader/MediaUploader';
 import CategorySelector from '@/components/Admin/CategorySelector/CategorySelector';
+import AddVariant from '@/components/Admin/AddVariant/AddVariant';
 
 const ReactQuill = dynamic(
   () => import('react-quill-new'),
@@ -157,6 +158,8 @@ export default function AddProductPage() {
 
           {/* Category */}
           <CategorySelector/>
+          {/* Variants of product */}
+          <AddVariant/>
 
           {/* Inventory Section */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -235,7 +238,7 @@ export default function AddProductPage() {
           </div>
 
           {/* Variant / Custom Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-2">
+          {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-2">
             <button className="flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -248,7 +251,7 @@ export default function AddProductPage() {
               </svg>
               Add options like size or color
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Sidebar */}
