@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 
-export default function MediaUploader() {
+export default function MediaUploader({ onImagesChange }) {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
 
@@ -16,7 +16,12 @@ export default function MediaUploader() {
       file,
       url: URL.createObjectURL(file),
     }));
-    setImages(prev => [...prev, ...newImages]);
+
+    const updatedImages = [...images, ...newImages];
+    setImages(updatedImages);
+
+    // Pass raw file objects to parent
+    onImagesChange(updatedImages.map(img => img.file));
   };
 
   const handleDrop = (e) => {

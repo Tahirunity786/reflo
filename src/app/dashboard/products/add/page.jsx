@@ -14,8 +14,157 @@ const ReactQuill = dynamic(
 
 export default function AddProductPage() {
   const [isOnline, setIsOnline] = useState(true);
-  const [description, setDescription] = useState('');
   const quillRef = useRef(null);
+  const [formValues, setFormValues] = useState({
+    productTitle: '',
+    productStatus: 'draft',
+    productDescription: '',
+    productSKU: '',
+    productBarcode: '',
+    productPrice: 0.00,
+    productComparePrice: 0.00,
+    productCostPrice: 0.00,
+    productProfitPrice: 0.00,
+    productQuantity: 0,
+    productCategories: [],
+    productTags: [],
+    productShipping: { weight: 0.0, weightUnit: '' },
+    productVariants: {},
+    productOrganization: {},
+    productTrackQuantity: false,
+    productoutOfStock: false,
+    images: [],
+  });
+
+  console.log("Initial form values:", formValues);
+
+  const [openSKUBARCode, setOpenSKUBARCode] = useState(false);
+  const [openWeight, setOpenWeight] = useState(false);
+  const [tagInput, setTagInput] = useState('');
+
+  const totalProfit = formValues.productPrice - formValues.productCostPrice;
+
+  const grossMargin = +(((formValues.productPrice - formValues.productCostPrice) / formValues.productPrice) * 100).toFixed(1) || 0;
+
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+
+  };
+
+
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const newTag = tagInput.trim();
+      if (newTag && !formValues.productTags.includes(newTag)) {
+        setFormValues((prev) => ({
+          ...prev,
+          productTags: [...prev.productTags, newTag],
+        }));
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (indexToRemove) => {
+    setFormValues((prev) => ({
+      ...prev,
+      productTags: prev.productTags.filter((_, i) => i !== indexToRemove),
+    }));
+  };
+
+
+  // Prepare FormData object for submission
+  const buildFormData = () => {
+    const data = new FormData();
+    data.append('productTitle', formValues.productTitle);
+    data.append('productStatus', formValues.productStatus);
+    data.append('productDescription', formValues.productDescription);
+    data.append('productSKU', formValues.productSKU);
+    data.append('productBarcode', formValues.productBarcode);
+    data.append('productPrice', formValues.productPrice);
+    data.append('productComparePrice', formValues.productComparePrice);
+    data.append('productCostPrice', formValues.productCostPrice);
+    data.append('productProfitPrice', formValues.productProfitPrice);
+    data.append('productQuantity', formValues.productQuantity);
+    data.append('productTrackQuantity', formValues.productTrackQuantity);
+    data.append('productoutOfStock', formValues.productoutOfStock);
+
+    data.append(
+      'productCategories',
+      JSON.stringify(formValues.productCategories)
+    );
+    data.append('productTags', JSON.stringify(formValues.productTags));
+
+    // Shipping
+    data.append('shippingInfo', JSON.stringify(formValues.productShipping));
+
+    // Organization
+    data.append(
+      'productOrganization',
+      JSON.stringify(formValues.productOrganization)
+    );
+
+    formValues.images.forEach((file) => {
+      data.append('images', file);
+    });
+
+    return data;
+  };
+
+
+  const submitProduct = async () => {
+    const data = buildFormData();
+
+    try {
+      const response = await fetch('/api/product', {
+        method: 'POST',
+        body: data,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('Server error:', result);
+        throw new Error(result.error || 'Unknown server error');
+      }
+
+      console.log('Product created successfully:', result.product);
+    } catch (error) {
+      console.error('Error creating product:', error);
+    }
+  };
+
+
+
+  const toggleOpenSKUBARCode = (value) => {
+    setOpenSKUBARCode(value);
+    if (!value) {
+      setFormValues((prev) => ({
+        ...prev,
+        productSKU: '',
+        productBarcode: '',
+      }));
+    }
+  };
+  const toggleWeight = (value) => {
+    setOpenWeight(value);
+    if (!value) {
+      setFormValues((prev) => ({
+        ...prev,
+        productShipping: '',
+      }));
+    }
+  };
+
 
   // Optional: get Quill API instance
   useEffect(() => {
@@ -26,10 +175,19 @@ export default function AddProductPage() {
   }, []);
 
 
+  useEffect(() => {
+    if (totalProfit < 0) {
+      setFormValues((prev) => ({ ...prev, productProfitPrice: 0 }));
+    } else {
+      setFormValues((prev) => ({ ...prev, productProfitPrice: totalProfit }));
+    }
+  }, [totalProfit]);
+
+
   return (
     <div className="mx-auto max-w-7xl p-6">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <div className="items-center mb-4 flex">
           <button
             type="button"
@@ -40,6 +198,10 @@ export default function AddProductPage() {
             </svg>
           </button>
           <p className="text-xl font-medium text-gray-900 dark:text-white">Add product</p>
+        </div>
+        <div className='flex items-center justify-between'>
+          <button type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Discard</button>
+          <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => { submitProduct() }}>Save</button>
         </div>
       </div>
 
@@ -52,12 +214,15 @@ export default function AddProductPage() {
             <input
               type="text"
               placeholder="Short sleeve t-shirt"
+              value={formValues.productTitle}
+              name='productTitle'
+              onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full px-3 py-2 rounded-md text-gray-900 bg-white dark:bg-gray-700"
             />
           </div>
 
           {/* Description */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border shadow-sm p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg  shadow-sm p-6">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Description
             </label>
@@ -65,18 +230,29 @@ export default function AddProductPage() {
             <div className="rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
               <ReactQuill
                 ref={quillRef}
-                value={description}
-                onChange={setDescription}
+                value={formValues.productDescription}
+                onChange={(value) =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    productDescription: value,
+                  }))
+                }
                 theme="snow"
-               
                 placeholder="Write product description..."
                 className="dark:[&_.ql-toolbar]:bg-gray-700 dark:[&_.ql-container]:bg-gray-800 dark:[&_.ql-editor]:text-white"
               />
+
             </div>
           </div>
 
           {/* Media */}
-          <MediaUploader/>
+          <MediaUploader onImagesChange={(newImages) => {
+            setFormValues(prev => ({
+              ...prev,
+              images: newImages,
+            }));
+          }} />
+
 
           {/* Pricing */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -91,7 +267,10 @@ export default function AddProductPage() {
                   </span>
                   <input
                     type="number"
-                    placeholder="0.00"
+                    placeholder={formValues.productPrice}
+                    name='productPrice'
+                    required={true}
+                    onChange={handleChange}
                     className="flex-1 border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-r-md text-gray-900 bg-white dark:bg-gray-700"
                   />
                 </div>
@@ -106,7 +285,9 @@ export default function AddProductPage() {
                   </span>
                   <input
                     type="number"
-                    placeholder="0.00"
+                    placeholder={formValues.productComparePrice}
+                    onChange={handleChange}
+                    name='productComparePrice'
                     className="flex-1 border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-r-md text-gray-900 bg-white dark:bg-gray-700"
                   />
                 </div>
@@ -118,6 +299,7 @@ export default function AddProductPage() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
+
                   className="border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600 w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700"
                 />
                 <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Charge tax on this product</span>
@@ -127,22 +309,23 @@ export default function AddProductPage() {
             {/* Cost/Profit/Margin */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Cost per item</label>
-                <div className="flex">
-                  <span className="items-center px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-500 text-sm rounded-l-md inline-flex border border-r-0 border-gray-300 dark:border-gray-600 dark:text-gray-400">
-                    Rs
-                  </span>
-                  <input
-                    type="number"
-                    placeholder="0.00"
-                    className="flex-1 border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-r-md text-gray-900 bg-white dark:bg-gray-700"
-                  />
-                </div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Cost Per Item</label>
+                <input
+                  type="text"
+                  name={'productCostPrice'}
+                  value={formValues.productCostPrice}
+                  onChange={handleChange}
+                  placeholder='RS 0.00'
+                  className="border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full px-3 py-2 rounded-md text-gray-900 bg-white dark:bg-gray-700"
+                />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Profit</label>
                 <input
                   type="text"
+                  disabled
+                  value={totalProfit}
+                  placeholder='RS 0.00'
                   className="border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full px-3 py-2 rounded-md text-gray-900 bg-white dark:bg-gray-700"
                 />
               </div>
@@ -150,6 +333,9 @@ export default function AddProductPage() {
                 <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Margin</label>
                 <input
                   type="text"
+                  disabled
+                  placeholder='--'
+                  value={`${grossMargin}%` || "--"}
                   className="border border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full px-3 py-2 rounded-md text-gray-900 bg-white dark:bg-gray-700"
                 />
               </div>
@@ -157,9 +343,31 @@ export default function AddProductPage() {
           </div>
 
           {/* Category */}
-          <CategorySelector/>
+          <CategorySelector
+            onSelectCategory={(category) => {
+              setFormValues((prev) => ({
+                ...prev,
+                productCategories: [category], // Reset everything on category change
+              }));
+            }}
+            onSelectSubcategory={(subcategory) => {
+              setFormValues((prev) => {
+                const updated = [...prev.productCategories];
+                updated[1] = subcategory;
+                return { ...prev, productCategories: updated };
+              });
+            }}
+          // onSelectSubSubcategory={(subSub) => {
+          //   setFormValues((prev) => {
+          //     const updated = [...prev.productCategories];
+          //     updated[2] = subSub;
+          //     return { ...prev, productCategories: updated };
+          //   });
+          // }}
+          />
+
           {/* Variants of product */}
-          <AddVariant/>
+          <AddVariant />
 
           {/* Inventory Section */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -177,15 +385,10 @@ export default function AddProductPage() {
                 <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Quantity</label>
                 <input
                   type="number"
+                  value={formValues.productQuantity}
+                  onChange={(e) => setFormValues(prev => ({ ...prev, productQuantity: e.target.value }))}
+                  placeholder="0"
                   className="w-32 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-900 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Shop location</label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-900 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -197,13 +400,41 @@ export default function AddProductPage() {
                 <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Continue selling when out of stock</span>
               </label>
 
-              <label className="flex items-center">
+              <label className="flex items-center mb-2">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:border-gray-600"
+                  checked={formValues.productSKU !== '' || formValues.productBarcode !== ''}
+                  onChange={() => toggleOpenSKUBARCode(!openSKUBARCode)}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">This product has a SKU or barcode</span>
+                <span className="ml-2 text-sm text-gray-600">This product has a SKU or barcode</span>
               </label>
+
+              {openSKUBARCode && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Product SKU</label>
+                    <input
+                      type="text"
+                      value={formValues.productSKU}
+                      onChange={(e) => setFormValues(prev => ({ ...prev, productSKU: e.target.value }))}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring focus:ring-blue-200"
+                      placeholder="Enter product SKU"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Product Barcode</label>
+                    <input
+                      type="text"
+                      value={formValues.productBarcode}
+                      onChange={(e) => setFormValues(prev => ({ ...prev, productBarcode: e.target.value }))}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring focus:ring-blue-200"
+                      placeholder="Enter product barcode"
+                    />
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
 
@@ -214,44 +445,56 @@ export default function AddProductPage() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
+                  onChange={(e) => toggleWeight(!openWeight)}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:border-gray-600"
                 />
                 <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">This is a physical product</span>
               </label>
+              {openWeight && (
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Weight</label>
+                  <div className="flex">
+                    <input
+                      type="number"
+                      placeholder="0.0"
+                      value={formValues.productShipping.weight || ''}
+                      onChange={(e) => {
+                        const weightValue = e.target.value;
+                        setFormValues((prev) => ({
+                          ...prev,
+                          productShipping: {
+                            weight: weightValue,
+                            weightUnit: prev.productShipping.weightUnit || 'kg', // Set default only if not already selected
+                          },
+                        }));
+                      }}
+                      className="flex-1 border border-r-0 border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2 rounded-l-md text-gray-900 bg-white dark:bg-gray-700"
+                    />
 
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Weight</label>
-                <div className="flex">
-                  <input
-                    type="number"
-                    placeholder="0.0"
-                    className="flex-1 border border-r-0 border-gray-300 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2 rounded-l-md text-gray-900 bg-white dark:bg-gray-700"
-                  />
-                  <select className="border border-gray-300 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2 rounded-r-md text-gray-900 bg-white dark:bg-gray-700">
-                    <option>kg</option>
-                    <option>g</option>
-                    <option>lb</option>
-                  </select>
+                    <select
+                      value={formValues.productShipping?.weightUnit || 'kg'}
+                      className="border border-gray-300 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2 rounded-r-md text-gray-900 bg-white dark:bg-gray-700"
+                      onChange={(e) =>
+                        setFormValues((prev) => ({
+                          ...prev,
+                          productShipping: {
+                            ...prev.productShipping,
+                            weightUnit: e.target.value,
+                          },
+                        }))
+                      }
+                    >
+                      <option value="kg">kg</option>
+                      <option value="g">g</option>
+                      <option value="lb">lb</option>
+                    </select>
+
+                  </div>
                 </div>
-              </div>
+              )}
+
             </div>
           </div>
-
-          {/* Variant / Custom Info */}
-          {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-2">
-            <button className="flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add customs information
-            </button>
-            <button className="flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add options like size or color
-            </button>
-          </div> */}
         </div>
 
         {/* Right Sidebar */}
@@ -259,11 +502,18 @@ export default function AddProductPage() {
           {/* Product Status */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <p className="text-lg font-medium text-gray-900 mb-4 dark:text-white">Status</p>
-            <select className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>Active</option>
-              <option>Draft</option>
-              <option>Archived</option>
+            <select
+              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={formValues.productStatus}
+              onChange={(e) => setFormValues(prev => ({ ...prev, productStatus: e.target.value }))}
+              required
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
             </select>
+
+
           </div>
 
           {/* Publishing */}
@@ -284,15 +534,116 @@ export default function AddProductPage() {
           </div>
 
           {/* Product Organization */}
-          {/* (Omitted for brevity; all fields are correct.) */}
 
-          {/* Theme Template */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <p className="text-lg font-medium text-gray-900 mb-4 dark:text-white">Theme Template</p>
-            <select className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>Default product</option>
-              <option>Custom product</option>
-            </select>
+            <p className="text-lg font-medium text-gray-900 mb-4 dark:text-white">Product Organization</p>
+
+            {/* Type */}
+            <div className="mb-3">
+              <label htmlFor="product-type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type</label>
+              <input
+                type="text"
+                id="product-type"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="e.g. Shirt"
+                required
+                value={formValues.productOrganization.type || ''}
+                onChange={(e) =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    productOrganization: {
+                      ...prev.productOrganization,
+                      type: e.target.value,
+                    },
+                  }))
+                }
+              />
+            </div>
+
+            {/* Vendor */}
+            <div className="mb-3">
+              <label htmlFor="product-vendor" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vendor</label>
+              <input
+                type="text"
+                id="product-vendor"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="e.g. Nike"
+                required
+                value={formValues.productOrganization.vendor || ''}
+                onChange={(e) =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    productOrganization: {
+                      ...prev.productOrganization,
+                      vendor: e.target.value,
+                    },
+                  }))
+                }
+              />
+            </div>
+
+            {/* Collection */}
+            <div className="mb-3">
+              <label htmlFor="product-collection" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Collection</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  id="product-collection"
+                  placeholder="Search"
+                  className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                  value={formValues.productOrganization.collection || ''}
+                  onChange={(e) =>
+                    setFormValues((prev) => ({
+                      ...prev,
+                      productOrganization: {
+                        ...prev.productOrganization,
+                        collection: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Tags */}
+            <div className="mb-3">
+              <label htmlFor="product-tags" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formValues.productTags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full dark:bg-blue-800 dark:text-white"
+                  >
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(index)}
+                      className="ml-2 text-blue-800 dark:text-white hover:text-red-600"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                ))}
+              </div>
+
+              <input
+                type="text"
+                id="product-tags"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Type a tag and press Enter"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+              />
+            </div>
+
           </div>
         </div>
       </div>

@@ -84,7 +84,7 @@ const productSchema = new mongoose.Schema({
 
   productStatus: {
     type: String,
-    enum: ['active', 'draft'],
+    enum: ['published', 'draft', 'archived'],
     default: 'draft',
   },
 
