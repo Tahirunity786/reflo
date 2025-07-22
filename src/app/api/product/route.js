@@ -1,51 +1,97 @@
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { Buffer } from 'buffer';
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
+import cloudinary from '@/lib/cloudinary';
+
+
+/**
+ * Handle POST request to create a new product
+ * including uploading product images to Cloudinary
+ */
 export async function POST(req) {
-  await connectDB();
+  await connectDB(); // Connect to MongoDB
 
   try {
     const formData = await req.formData();
 
-    const productTitle = formData.get('productTitle');
-    const productStatus = formData.get('productStatus');
-    const productDescription = formData.get('productDescription');
-    const productSKU = formData.get('productSKU');
-    const productBarcode = formData.get('productBarcode');
-    const productPrice = parseFloat(formData.get('productPrice'));
-    const productComparePrice = parseFloat(formData.get('productComparePrice'));
-    const productCostPrice = parseFloat(formData.get('productCostPrice'));
-    const productProfitPrice = parseFloat(formData.get('productProfitPrice'));
-    const productQuantity = parseInt(formData.get('productQuantity'), 10);
-    const productTrackQuantity = formData.get('productTrackQuantity') === 'true';
-    const productoutOfStock = formData.get('productoutOfStock') === 'true';
+    // Extract and validate basic product fields
+    const getString = (key) => formData.get(key) || '';
+    const getFloat = (key) => parseFloat(formData.get(key)) || 0;
+    const getInt = (key) => parseInt(formData.get(key), 10) || 0;
+    const getBoolean = (key) => formData.get(key) === 'true';
 
-    const productCategories = JSON.parse(formData.get('productCategories') || '[]');
-    const productTags = JSON.parse(formData.get('productTags') || '[]');
+    const productTitle = getString('productTitle');
+    const productStatus = getString('productStatus');
+    const productDescription = getString('productDescription');
+    const productSKU = getString('productSKU');
+    const productBarcode = getString('productBarcode');
+    const productPrice = getFloat('productPrice');
+    const productComparePrice = getFloat('productComparePrice');
+    const productCostPrice = getFloat('productCostPrice');
+    const productProfitPrice = getFloat('productProfitPrice');
+    const productQuantity = getInt('productQuantity');
+    const productTrackQuantity = getBoolean('productTrackQuantity');
+    const productoutOfStock = getBoolean('productoutOfStock');
 
-    const shippingInfo = JSON.parse(formData.get('shippingInfo') || '{}');
-    const productOrganization = JSON.parse(formData.get('productOrganization') || '{}');
+    // Parse JSON fields safely
+    const parseJSON = (key, fallback) => {
+      try {
+        return JSON.parse(formData.get(key) || fallback);
+      } catch {
+        return fallback === '{}' ? {} : [];
+      }
+    };
 
-    // Handle multiple file uploads
+    const productCategories = parseJSON('productCategories', '[]');
+    const productTags = parseJSON('productTags', '[]');
+    const shippingInfo = parseJSON('shippingInfo', '{}');
+    const productOrganization = parseJSON('productOrganization', '{}');
+
+    // Get all image files from form data
     const images = formData.getAll('images');
     if (!images.length) {
       return NextResponse.json({ error: 'At least one image is required' }, { status: 400 });
     }
-    const savedImages = await Promise.all(
+
+    // Upload images to Cloudinary
+    const savedImages = [];
+
+    const uploadResults = await Promise.allSettled(
       images.map(async (file) => {
         if (!(file instanceof File)) {
           throw new Error('Invalid file upload');
         }
+
         const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${Date.now()}_${file.name}`;
-        const uploadPath = path.join(process.cwd(), 'public', 'uploads', filename);
-        await writeFile(uploadPath, buffer);
-        return { url: `/uploads/${filename}`, alt: file.name, size: file.size };
+        const base64Data = `data:${file.type};base64,${buffer.toString('base64')}`;
+
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(base64Data, {
+          folder: 'products',
+          public_id: `${Date.now()}_${file.name.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')}`,
+        });
+
+        return {
+          url: result.secure_url,
+          alt: file.name,
+          size: file.size,
+        };
       })
     );
 
+    // Filter successful uploads
+    for (const result of uploadResults) {
+      if (result.status === 'fulfilled') {
+        savedImages.push(result.value);
+      }
+    }
+
+    if (savedImages.length === 0) {
+      return NextResponse.json({ error: 'Failed to upload any images' }, { status: 500 });
+    }
+
+    // Create a new product document
     const product = new Product({
       productTitle,
       productStatus,
@@ -72,11 +118,18 @@ export async function POST(req) {
       productImages: savedImages,
     });
 
-    const saved = await product.save();
-    return NextResponse.json({ message: 'Product saved!', product: saved }, { status: 201 });
-  } catch (err) {
-    console.error('Upload error:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const savedProduct = await product.save();
+
+    return NextResponse.json(
+      { message: 'Product saved successfully!', product: savedProduct },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('Upload error:', error);
+    return NextResponse.json(
+      { error: error.message || 'An unknown error occurred' },
+      { status: 500 }
+    );
   }
 }
 
