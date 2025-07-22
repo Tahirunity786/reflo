@@ -6,7 +6,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import MediaUploader from '@/components/Admin/MediaUploader/MediaUploader';
 import CategorySelector from '@/components/Admin/CategorySelector/CategorySelector';
 import AddVariant from '@/components/Admin/AddVariant/AddVariant';
-
+import { toast } from 'wc-toast';
 const ReactQuill = dynamic(
   () => import('react-quill-new'),
   { ssr: false }
@@ -36,7 +36,6 @@ export default function AddProductPage() {
     images: [],
   });
 
-  console.log("Initial form values:", formValues);
 
   const [openSKUBARCode, setOpenSKUBARCode] = useState(false);
   const [openWeight, setOpenWeight] = useState(false);
@@ -121,6 +120,8 @@ export default function AddProductPage() {
   };
 
 
+
+
   const submitProduct = async () => {
     const data = buildFormData();
 
@@ -137,7 +138,36 @@ export default function AddProductPage() {
         throw new Error(result.error || 'Unknown server error');
       }
 
-      console.log('Product created successfully:', result.product);
+      setFormValues({
+        productTitle: '',
+        productStatus: 'draft',
+        productDescription: '',
+        productSKU: '',
+        productBarcode: '',
+        productPrice: 0.00,
+        productComparePrice: 0.00,
+        productCostPrice: 0.00,
+        productProfitPrice: 0.00,
+        productQuantity: 0,
+        productCategories: [],
+        productTags: [],
+        productShipping: { weight: 0.0, weightUnit: '' },
+        productVariants: {},
+        productOrganization: {},
+        productTrackQuantity: false,
+        productoutOfStock: false,
+        images: [],
+      });
+
+
+      toast('Product Saved', {
+        icon: {
+          type: 'svg',
+          content: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+</svg>`,
+        },
+      });
     } catch (error) {
       console.error('Error creating product:', error);
     }

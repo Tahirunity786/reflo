@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from "next/link";
 import "@/app/globals.css";
+
 import {
   UserCircleIcon,
   ShoppingBagIcon,
@@ -25,6 +26,7 @@ export default function AdminLayout({ children }) {
   const [orderDropdownOpen, setOrderDropdownOpen] = useState(false);
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [customerDropdownOpen, setCustomerDropdownOpen] = useState(false);
+  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -184,7 +186,11 @@ export default function AdminLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="p-6">{children}</main>
+        <main className="p-6">
+          <wc-toast></wc-toast>
+
+          {children}
+          </main>
       </div>
     </div>
   );
