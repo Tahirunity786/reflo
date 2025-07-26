@@ -9,15 +9,39 @@ export default function ProductTable() {
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Last 30 days');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [actionDropdownOpen, setActionDropdownOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [selectedProducts, setSelectedProducts] = useState([]);
   // 🔁 Pagination & Sorting
   const [page, setPage] = useState(1);
   const limit = 10;
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState('dateCreated');
   const [sortOrder, setSortOrder] = useState('desc');
+
+  const handleSelectAll = () => {
+    const allIds = products
+      .map((p) => p._id)
+      .filter(Boolean); // filter out undefined/null just in case
+
+    if (selectedProducts.length === allIds.length) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts(allIds);
+    }
+  };
+
+
+  const handleSelectOne = (id) => {
+    setSelectedProducts((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
+
+
+
 
   // 🌐 Fetch products
   useEffect(() => {
@@ -53,37 +77,67 @@ export default function ProductTable() {
     <div className="relative overflow-x-auto">
       {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row justify-between items-center pb-4 gap-4">
-        {/* Filter Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="inline-flex items-center text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 rounded-lg text-sm px-3 py-1.5"
-          >
-            <FaClock className="me-2" /> {selectedFilter}
-            <FaChevronDown className="ms-2.5" />
-          </button>
-          {dropdownOpen && (
-            <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow">
-              <ul className="p-3 space-y-1 text-sm">
-                {FILTER_OPTIONS.map((option) => (
-                  <li key={option}>
-                    <div
-                      onClick={() => {
-                        setSelectedFilter(option);
-                        setDropdownOpen(false);
-                      }}
-                      className="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded"
-                    >
-                      <input type="radio" checked={selectedFilter === option} readOnly className="w-4 h-4" />
-                      <label className="ms-2">{option}</label>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        <div className='flex items-center justify-start gap-2'>
+          {/* Filter Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setActionDropdownOpen(!actionDropdownOpen)}
+              className="inline-flex items-center text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 rounded-lg text-sm px-3 py-1.5"
+            >
+              <FaClock className="me-2" /> Action
+              <FaChevronDown className="ms-2.5" />
+            </button>
+            {actionDropdownOpen && (
+              <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow">
+                <ul className="p-3 space-y-1 text-sm">
+                  {FILTER_OPTIONS.map((option) => (
+                    <li key={option}>
+                      <div
+                        onClick={() => {
+                          setSelectedFilter(option);
+                          setDropdownOpen(false);
+                        }}
+                        className="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded"
+                      >
+                        <input type="radio" checked={selectedFilter === option} readOnly className="w-4 h-4" />
+                        <label className="ms-2">{option}</label>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="inline-flex items-center text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 rounded-lg text-sm px-3 py-1.5"
+            >
+              <FaClock className="me-2" /> {selectedFilter}
+              <FaChevronDown className="ms-2.5" />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow">
+                <ul className="p-3 space-y-1 text-sm">
+                  {FILTER_OPTIONS.map((option) => (
+                    <li key={option}>
+                      <div
+                        onClick={() => {
+                          setSelectedFilter(option);
+                          setDropdownOpen(false);
+                        }}
+                        className="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded"
+                      >
+                        <input type="radio" checked={selectedFilter === option} readOnly className="w-4 h-4" />
+                        <label className="ms-2">{option}</label>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-
         {/* Search */}
         <div className="relative">
           <FaSearch className="absolute top-2.5 left-3 text-gray-400" />
@@ -101,6 +155,14 @@ export default function ProductTable() {
       <table className="w-full text-sm text-left text-gray-500">
         <thead className="bg-gray-50 text-gray-700 uppercase text-xs">
           <tr>
+            <th className="px-4 py-2"><div className="flex item-center ">  <input
+              id="select-checkbox"
+              type="checkbox"
+              checked={products.length > 0 && selectedProducts.length === products.length}
+              onChange={handleSelectAll}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm"
+            />
+              <label htmlFor='select-checkbox' className='ms-3'>Select all</label></div></th>
             <th className="px-4 py-2">#</th>
             <th
               className="px-6 py-3 cursor-pointer"
@@ -132,7 +194,22 @@ export default function ProductTable() {
           ) : (
             products.map((product, index) => (
               <tr key={product._id} className="bg-white border-b hover:bg-gray-50">
-                <td className="px-4 py-2"><input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/></td>
+                <td className="px-4 py-2">
+                  {product._id ? (
+                    <input
+                      type="checkbox"
+                      checked={selectedProducts.includes(product._id)}
+                      onChange={() => handleSelectOne(product._id)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm"
+                    />
+                  ) : (
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm"
+                    />
+                  )}
+                </td>
+
                 <td className="px-4 py-2">{(page - 1) * limit + index + 1}</td>
                 <td className="px-6 py-4 font-medium text-gray-900">{product.productTitle}</td>
                 <td className="px-6 py-4">{product.productSKU}</td>

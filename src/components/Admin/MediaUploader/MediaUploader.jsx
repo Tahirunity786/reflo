@@ -2,35 +2,52 @@
 
 import { useState, useRef, useCallback } from 'react';
 
-export default function MediaUploader({ onImagesChange }) {
+export default function MediaUploader({ onImagesChange, mode = 'multiple' }) {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
 
   const acceptedFormats = ['image/png', 'image/jpeg', 'image/webp', 'image/jpg'];
 
+  // Handle file selection
   const handleFiles = (files) => {
     const validFiles = Array.from(files).filter(file =>
       acceptedFormats.includes(file.type)
     );
+
     const newImages = validFiles.map(file => ({
       file,
       url: URL.createObjectURL(file),
     }));
 
-    const updatedImages = [...images, ...newImages];
+    const updatedImages = mode === 'single'
+      ? newImages.slice(0, 1)
+      : [...images, ...newImages];
+
     setImages(updatedImages);
 
     // Pass raw file objects to parent
     onImagesChange(updatedImages.map(img => img.file));
   };
 
+  // Handle file input change
+  const handleFileInputChange = (e) => {
+    handleFiles(e.target.files);
+  };
+
+  // Handle drop event
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (mode === 'single' && images.length > 0) return;
+
     handleFiles(e.dataTransfer.files);
   };
 
+  // Handle paste event
   const handlePaste = useCallback((e) => {
+    if (mode === 'single' && images.length > 0) return;
+
     const items = e.clipboardData.items;
     const files = [];
     for (const item of items) {
@@ -40,12 +57,9 @@ export default function MediaUploader({ onImagesChange }) {
       }
     }
     handleFiles(files);
-  }, []);
+  }, [images, mode]);
 
-  const handleFileInputChange = (e) => {
-    handleFiles(e.target.files);
-  };
-
+  // Trigger file input on box click
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
@@ -68,10 +82,11 @@ export default function MediaUploader({ onImagesChange }) {
           ref={fileInputRef}
           type="file"
           accept="image/png, image/jpeg, image/webp, image/jpg"
-          multiple
+          multiple={mode === 'multiple'}
           onChange={handleFileInputChange}
           hidden
         />
+
         <div className="space-y-2">
           <div className="text-gray-400 dark:text-gray-500">
             <svg className="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">

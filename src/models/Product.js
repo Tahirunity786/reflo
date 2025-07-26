@@ -4,13 +4,14 @@ const slugify = require('slugify');
 const imageSchema = new mongoose.Schema({
   url: { type: String, required: true },
   alt: { type: String, default: '' },
+  public_id: { type: String, required: true }, // 🔐 Save Cloudinary ID
   size: { type: Number, default: 0 },
 }, { _id: false });
 
 const variantSchema = new mongoose.Schema({
   sku: { type: String, required: true, trim: true },
   price: { type: Number, required: true, min: 0 },
-  comparePrice: { type: Number, min: 0 },
+  comparePrice: { type: Number, min: 0, },
   costPrice: { type: Number, min: 0 },
   stock: { type: Number, default: 0, min: 0 },
   options: {
@@ -86,6 +87,26 @@ const productSchema = new mongoose.Schema({
     type: String,
     enum: ['published', 'draft', 'archived'],
     default: 'draft',
+  },
+  productMetaDescription: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  productPageTitle: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  pageTitle: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  pageDesc: {
+    type: String,
+    required: false,
+    default: '',
   },
 
   productCountInStock: {

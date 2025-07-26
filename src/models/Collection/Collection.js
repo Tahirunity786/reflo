@@ -23,6 +23,8 @@ const collectionSchema = new mongoose.Schema({
   image: {
     url: { type: String },
     alt: { type: String, default: '' },
+    public_id: { type: String, required: true },
+    size: { type: Number, default: 0 },
   },
   products: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -36,6 +38,16 @@ const collectionSchema = new mongoose.Schema({
     type: String,
     enum: ['active', 'draft'],
     default: 'draft',
+  },
+  pageTitle: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  pageDesc: {
+    type: String,
+    required: false,
+    default: '',
   },
   isFeatured: {
     type: Boolean,

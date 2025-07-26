@@ -7,6 +7,8 @@ import MediaUploader from '@/components/Admin/MediaUploader/MediaUploader';
 import CategorySelector from '@/components/Admin/CategorySelector/CategorySelector';
 import AddVariant from '@/components/Admin/AddVariant/AddVariant';
 import { toast } from 'wc-toast';
+import CollectionSelector from '@/components/CollectionSelector/CollectionSelector';
+import { PenIcon } from 'lucide-react';
 const ReactQuill = dynamic(
   () => import('react-quill-new'),
   { ssr: false }
@@ -39,6 +41,7 @@ export default function AddProductPage() {
 
   const [openSKUBARCode, setOpenSKUBARCode] = useState(false);
   const [openWeight, setOpenWeight] = useState(false);
+  const [isEditing, setEditing] = useState(false);
   const [tagInput, setTagInput] = useState('');
 
   const totalProfit = formValues.productPrice - formValues.productCostPrice;
@@ -196,13 +199,6 @@ export default function AddProductPage() {
   };
 
 
-  // Optional: get Quill API instance
-  useEffect(() => {
-    if (quillRef.current) {
-      const quill = quillRef.current?.getEditor();
-      // For example: console.log(quill.getText());
-    }
-  }, []);
 
 
   useEffect(() => {
@@ -525,6 +521,35 @@ export default function AddProductPage() {
 
             </div>
           </div>
+          {/* SEO Section */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex item-center justify-between">
+              <p className="text-lg font-medium text-gray-900 mb-4 dark:text-white">Search engine listing</p>
+              <div>
+                <PenIcon className="w-5 h-5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer" onClick={() => setEditing(!isEditing)} />
+              </div>
+            </div>
+            <p className="text-xs font-medium text-gray-900 mb-4 dark:text-white">Add a title and description to see how this product might appear in a search engine listing</p>
+            {
+              isEditing ? (<div className='space-y-4'>
+                <div>
+                  <label htmlFor="page_title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Title</label>
+                  <input type="text" id="page_title" name='pageTitle' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+                <div>
+                  <label htmlFor="meta_desc" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Description</label>
+                  <textarea id="meta_desc" rows={5} name='pageDesc' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+                <label htmlFor="website-admin" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Url handle</label>
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                   shop/
+                  </span>
+                  <input type="text" id="website-admin" className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </div>
+              </div>) : null
+            }
+          </div>
         </div>
 
         {/* Right Sidebar */}
@@ -613,33 +638,7 @@ export default function AddProductPage() {
             </div>
 
             {/* Collection */}
-            <div className="mb-3">
-              <label htmlFor="product-collection" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Collection</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  id="product-collection"
-                  placeholder="Search"
-                  className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
-                  value={formValues.productOrganization.collection || ''}
-                  onChange={(e) =>
-                    setFormValues((prev) => ({
-                      ...prev,
-                      productOrganization: {
-                        ...prev.productOrganization,
-                        collection: e.target.value,
-                      },
-                    }))
-                  }
-                />
-              </div>
-            </div>
+            <CollectionSelector collections={['Home page', 'Summer Collection', 'Men’s Wear']} />
 
             {/* Tags */}
             <div className="mb-3">

@@ -74,9 +74,11 @@ export async function POST(req) {
 
         return {
           url: result.secure_url,
+          public_id: result.public_id, // 🔐 Save Cloudinary ID
           alt: file.name,
           size: file.size,
         };
+
       })
     );
 
@@ -133,12 +135,10 @@ export async function POST(req) {
   }
 }
 
-
 export async function GET(req) {
   try {
     await connectDB();
 
-    // Extract query params from URL
     const { searchParams } = new URL(req.url);
 
     const page = parseInt(searchParams.get('page')) || 1;
@@ -146,10 +146,8 @@ export async function GET(req) {
     const search = searchParams.get('search') || '';
     const sort = searchParams.get('sort') || 'dateCreated';
     const order = searchParams.get('order') === 'asc' ? 1 : -1;
-
     const skip = (page - 1) * limit;
 
-    // 🔍 Search filter (product title or tags)
     const searchFilter = {
       $or: [
         { productTitle: { $regex: search, $options: 'i' } },
@@ -157,22 +155,34 @@ export async function GET(req) {
       ],
     };
 
-    // 🔎 Query products
     const products = await Product.find(searchFilter)
       .select(
         'productTitle slug productSKU productPrice productComparePrice productCountInStock productRating productNumReviews productImages productStatus dateCreated'
       )
-      .populate('collection', 'title') // Only populate title field of collection
+      .populate('collection', 'title')
       .sort({ [sort]: order })
       .skip(skip)
       .limit(limit)
-      .lean(); // Return plain objects
+      .lean();
+
+    const enhancedProducts = products.map((product) => {
+      const mainImage = product.productImages?.[0]?.url || null;
+      const thumbnail = mainImage
+        ? mainImage.replace('/upload/', '/upload/w_300,h_300,c_fill/')
+        : null;
+
+      return {
+        ...product,
+        thumbnail,
+        mainImage,
+      };
+    });
 
     const total = await Product.countDocuments(searchFilter);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      data: products,
+      data: enhancedProducts,
       pagination: {
         total,
         page,
@@ -180,6 +190,11 @@ export async function GET(req) {
         pages: Math.ceil(total / limit),
       },
     });
+
+    // Set Cache-Control headers (60 seconds stale-while-revalidate)
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=59');
+
+    return response;
   } catch (error) {
     console.error('[GET /api/products/dashboard]', error);
     return NextResponse.json(
