@@ -28,15 +28,26 @@ const CollectionSelector = ({ selectedCollections = [], onChange }) => {
     try {
       setLoading(true);
       const res = await fetch("/api/collection");
+
+      if (!res.ok) throw new Error("Network response was not ok");
+
       const data = await res.json();
-      setCollections(data || []);
-      setFilteredCollections(data || []);
+
+      if (!Array.isArray(data)) {
+        throw new Error("Expected array but got something else");
+      }
+
+      setCollections(data);
+      setFilteredCollections(data);
     } catch (err) {
-      console.error("Failed to fetch collections", err);
+      console.error("❌ Failed to fetch collections:", err);
+      setCollections([]);
+      setFilteredCollections([]);
     } finally {
       setLoading(false);
     }
   };
+
 
   // Initial fetch
   useEffect(() => {

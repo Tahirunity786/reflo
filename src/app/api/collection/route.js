@@ -5,17 +5,17 @@ import cloudinary from '@/lib/cloudinary';
 
 
 export async function GET(req) {
-    await connectDB(); // Connect to MongoDB
-    try {
-        const Collection = (await import('@/models/Collection/Collection')).default;
-        const collections = await Collection.find({}).populate('products');
-        return NextResponse.json(collections, { status: 200 });
-    } catch (error) {
-        console.error('❌ Failed to fetch collections:', error);
-        return NextResponse.json({ error: 'Failed to fetch collections' }, { status: 500 });
-
-    }
+  await connectDB();
+  try {
+    const Collection = (await import('@/models/Collection/Collection')).default;
+    const collections = await Collection.find({}).populate('products');
+    return NextResponse.json(collections, { status: 200 });
+  } catch (error) {
+    console.error('❌ Failed to fetch collections:', error);
+    return NextResponse.json({ error: 'Failed to fetch collections' }, { status: 500 });
+  }
 }
+
 export async function POST(req) {
     await connectDB(); // Connect to MongoDB
 
