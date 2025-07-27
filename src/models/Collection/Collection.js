@@ -49,14 +49,7 @@ const collectionSchema = new mongoose.Schema({
     required: false,
     default: '',
   },
-  isFeatured: {
-    type: Boolean,
-    default: false,
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
+  
 }, {
   timestamps: true,
 });

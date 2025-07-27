@@ -30,6 +30,7 @@ export default function AddProductPage() {
     productQuantity: 0,
     productCategories: [],
     productTags: [],
+    productCollection: [],
     productShipping: { weight: 0.0, weightUnit: '' },
     productVariants: {},
     productOrganization: {},
@@ -39,9 +40,12 @@ export default function AddProductPage() {
   });
 
 
+
+
   const [openSKUBARCode, setOpenSKUBARCode] = useState(false);
   const [openWeight, setOpenWeight] = useState(false);
   const [isEditing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [tagInput, setTagInput] = useState('');
 
   const totalProfit = formValues.productPrice - formValues.productCostPrice;
@@ -58,6 +62,12 @@ export default function AddProductPage() {
     }));
 
 
+  };
+  const handleCollectionChange = (updatedIds) => {
+    setFormValues((prev) => ({
+      ...prev,
+      productCollection: updatedIds,
+    }));
   };
 
 
@@ -84,6 +94,8 @@ export default function AddProductPage() {
   };
 
 
+
+
   // Prepare FormData object for submission
   const buildFormData = () => {
     const data = new FormData();
@@ -105,6 +117,8 @@ export default function AddProductPage() {
       JSON.stringify(formValues.productCategories)
     );
     data.append('productTags', JSON.stringify(formValues.productTags));
+    // Collection
+    data.append('productCollection', JSON.stringify(formValues.productCollection));
 
     // Shipping
     data.append('shippingInfo', JSON.stringify(formValues.productShipping));
@@ -129,6 +143,7 @@ export default function AddProductPage() {
     const data = buildFormData();
 
     try {
+      setLoading(true)
       const response = await fetch('/api/product', {
         method: 'POST',
         body: data,
@@ -154,6 +169,7 @@ export default function AddProductPage() {
         productQuantity: 0,
         productCategories: [],
         productTags: [],
+        productCollection: [],
         productShipping: { weight: 0.0, weightUnit: '' },
         productVariants: {},
         productOrganization: {},
@@ -161,7 +177,7 @@ export default function AddProductPage() {
         productoutOfStock: false,
         images: [],
       });
-
+      setLoading(false)
 
       toast('Product Saved', {
         icon: {
@@ -171,6 +187,7 @@ export default function AddProductPage() {
                     </svg>`,
         },
       });
+
     } catch (error) {
       console.error('Error creating product:', error);
     }
@@ -227,7 +244,7 @@ export default function AddProductPage() {
         </div>
         <div className='flex items-center justify-between'>
           <button type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Discard</button>
-          <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => { submitProduct() }}>Save</button>
+          <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => { submitProduct() }}>{loading ? "Saving..." : "Save"}</button>
         </div>
       </div>
 
@@ -543,7 +560,7 @@ export default function AddProductPage() {
                 <label htmlFor="website-admin" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Url handle</label>
                 <div className="flex">
                   <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                   shop/
+                    shop/
                   </span>
                   <input type="text" id="website-admin" className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 </div>
@@ -638,7 +655,10 @@ export default function AddProductPage() {
             </div>
 
             {/* Collection */}
-            <CollectionSelector collections={['Home page', 'Summer Collection', 'Men’s Wear']} />
+            <CollectionSelector
+              selectedCollections={formValues.productCollection}
+              onChange={handleCollectionChange}
+            />
 
             {/* Tags */}
             <div className="mb-3">

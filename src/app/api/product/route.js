@@ -3,24 +3,28 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import cloudinary from '@/lib/cloudinary';
+import Collection from '@/models/Collection/Collection';
 
-
-/**
- * Handle POST request to create a new product
- * including uploading product images to Cloudinary
- */
 export async function POST(req) {
-  await connectDB(); // Connect to MongoDB
+  await connectDB();
 
   try {
     const formData = await req.formData();
 
-    // Extract and validate basic product fields
+    // Utility functions
     const getString = (key) => formData.get(key) || '';
     const getFloat = (key) => parseFloat(formData.get(key)) || 0;
     const getInt = (key) => parseInt(formData.get(key), 10) || 0;
     const getBoolean = (key) => formData.get(key) === 'true';
+    const parseJSON = (key, fallback = '[]') => {
+      try {
+        return JSON.parse(formData.get(key) || fallback);
+      } catch {
+        return fallback === '{}' ? {} : [];
+      }
+    };
 
+    // Fields
     const productTitle = getString('productTitle');
     const productStatus = getString('productStatus');
     const productDescription = getString('productDescription');
@@ -34,39 +38,27 @@ export async function POST(req) {
     const productTrackQuantity = getBoolean('productTrackQuantity');
     const productoutOfStock = getBoolean('productoutOfStock');
 
-    // Parse JSON fields safely
-    const parseJSON = (key, fallback) => {
-      try {
-        return JSON.parse(formData.get(key) || fallback);
-      } catch {
-        return fallback === '{}' ? {} : [];
-      }
-    };
-
     const productCategories = parseJSON('productCategories', '[]');
+    const productCollection = parseJSON('productCollection', '[]');
     const productTags = parseJSON('productTags', '[]');
     const shippingInfo = parseJSON('shippingInfo', '{}');
     const productOrganization = parseJSON('productOrganization', '{}');
 
-    // Get all image files from form data
+    // Handle image upload
     const images = formData.getAll('images');
     if (!images.length) {
       return NextResponse.json({ error: 'At least one image is required' }, { status: 400 });
     }
 
-    // Upload images to Cloudinary
     const savedImages = [];
 
     const uploadResults = await Promise.allSettled(
       images.map(async (file) => {
-        if (!(file instanceof File)) {
-          throw new Error('Invalid file upload');
-        }
+        if (!(file instanceof File)) throw new Error('Invalid file upload');
 
         const buffer = Buffer.from(await file.arrayBuffer());
         const base64Data = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-        // Upload to Cloudinary
         const result = await cloudinary.uploader.upload(base64Data, {
           folder: 'products',
           public_id: `${Date.now()}_${file.name.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')}`,
@@ -74,15 +66,13 @@ export async function POST(req) {
 
         return {
           url: result.secure_url,
-          public_id: result.public_id, // 🔐 Save Cloudinary ID
+          public_id: result.public_id,
           alt: file.name,
           size: file.size,
         };
-
       })
     );
 
-    // Filter successful uploads
     for (const result of uploadResults) {
       if (result.status === 'fulfilled') {
         savedImages.push(result.value);
@@ -93,7 +83,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Failed to upload any images' }, { status: 500 });
     }
 
-    // Create a new product document
+    // Create the product (only now we can get _id)
     const product = new Product({
       productTitle,
       productStatus,
@@ -108,7 +98,10 @@ export async function POST(req) {
       productTrackQuantity,
       productoutOfStock,
       productCategories,
+      productCollection,
       productTags,
+      productImages: savedImages,
+      productOrganization,
       shippingInfo: {
         isPhysicalProduct: true,
         weight: {
@@ -116,11 +109,20 @@ export async function POST(req) {
           unit: shippingInfo.weightUnit || 'kg',
         },
       },
-      productOrganization,
-      productImages: savedImages,
     });
 
     const savedProduct = await product.save();
+
+    // ✅ Now update collections
+    await Promise.all(
+      productCollection.map((collectionId) =>
+        Collection.findByIdAndUpdate(
+          collectionId,
+          { $addToSet: { products: savedProduct._id } },
+          { new: true }
+        )
+      )
+    );
 
     return NextResponse.json(
       { message: 'Product saved successfully!', product: savedProduct },

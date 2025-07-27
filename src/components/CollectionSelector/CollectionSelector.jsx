@@ -1,17 +1,57 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PlusCircle, Search, X } from "lucide-react";
+import { PlusCircle, Search, Loader2 } from "lucide-react";
 import AddCollectionModal from "../AddCollectionModal/AddCollectionModal";
 
-const CollectionSelector = ({ collections }) => {
+const CollectionSelector = ({ selectedCollections = [], onChange }) => {
+  const [collections, setCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [filteredCollections, setFilteredCollections] = useState(collections || []);
+  const [loading, setLoading] = useState(true);
   const dropdownRef = useRef();
 
-  // Close dropdown when clicked outside
+  const toggleCollection = (id) => {
+    if (selectedCollections.includes(id)) {
+      onChange(selectedCollections.filter((c) => c !== id));
+    } else {
+      onChange([...selectedCollections, id]);
+    }
+  };
+
+
+
+  // Fetch collections from API
+  const fetchCollections = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/collection");
+      const data = await res.json();
+      setCollections(data || []);
+      setFilteredCollections(data || []);
+    } catch (err) {
+      console.error("Failed to fetch collections", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchCollections();
+  }, []);
+
+  // Re-filter on search
+  useEffect(() => {
+    const results = collections.filter((collection) =>
+      collection.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCollections(results);
+  }, [searchTerm, collections]);
+
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -21,14 +61,6 @@ const CollectionSelector = ({ collections }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Filter logic
-  useEffect(() => {
-    const results = collections.filter((collection) =>
-      collection.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCollections(results);
-  }, [searchTerm, collections]);
 
   return (
     <div className="mb-4 relative" ref={dropdownRef}>
@@ -73,15 +105,25 @@ const CollectionSelector = ({ collections }) => {
 
           <hr className="my-1 border-gray-200 dark:border-gray-600" />
 
-          {/* Filtered Collections */}
-          {filteredCollections.length > 0 ? (
-            filteredCollections.map((item, idx) => (
+          {/* Loading */}
+          {loading ? (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+            </div>
+          ) : filteredCollections.length > 0 ? (
+            filteredCollections.map((item) => (
               <div
-                key={idx}
+                key={item._id}
                 className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-white cursor-pointer flex items-center gap-2"
               >
-                <input type="checkbox" className="accent-blue-600" id={`collection-${idx}`} />
-                <label htmlFor={`collection-${idx}`}>{item}</label>
+                <input
+                  type="checkbox"
+                  id={`collection-${item._id}`}
+                  className="accent-blue-600"
+                  checked={selectedCollections.includes(item._id)}
+                  onChange={() => toggleCollection(item._id)}
+                />
+                <label htmlFor={`collection-${item._id}`}>{item.name}</label>
               </div>
             ))
           ) : (
@@ -92,8 +134,15 @@ const CollectionSelector = ({ collections }) => {
         </div>
       )}
 
-      {/* Modal Component */}
-      {isModalOpen && <AddCollectionModal onClose={() => setModalOpen(false)} />}
+      {/* Modal (with refresh on close) */}
+      {isModalOpen && (
+        <AddCollectionModal
+          onClose={() => {
+            setModalOpen(false);
+            fetchCollections(); // Refresh on close
+          }}
+        />
+      )}
     </div>
   );
 };

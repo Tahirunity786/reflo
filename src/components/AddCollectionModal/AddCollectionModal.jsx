@@ -16,6 +16,7 @@ const ReactQuill = dynamic(
 const AddCollectionModal = ({ onClose }) => {
     const [collectionName, setCollectionName] = useState("");
     const [isEditing, setEditing] = useState(false);
+    const [loading, setLoafing] = useState(false);
     const [tagInput, setTagInput] = useState('');
 
 
@@ -32,15 +33,9 @@ const AddCollectionModal = ({ onClose }) => {
             public_id: '',
             size: 0,
         },
-
-
+        pageTitle: '',
+        pageDesc: '',
     });
-
-
-    console.log("Form Values:", formValues);
-
-
-
 
 
     const handleTagKeyDown = (e) => {
@@ -73,15 +68,22 @@ const AddCollectionModal = ({ onClose }) => {
         data.append('collectionTitle', formValues.collectionTitle);
         data.append('collectionStatus', formValues.collectionStatus);
         data.append('collectionDescription', formValues.collectionDescription);
-
         data.append('collectionTags', JSON.stringify(formValues.collectionTags));
+        data.append('pageTitle', formValues.pageTitle);
+        data.append('pageDesc', formValues.pageDesc);
 
-        formValues.collectionImage.forEach((file) => {
-            data.append('images', file);
-        });
+        // Make sure collectionImage is an array or single file
+        if (Array.isArray(formValues.collectionImage)) {
+            formValues.collectionImage.forEach((file) => {
+                data.append('images', file);
+            });
+        } else {
+            data.append('images', formValues.collectionImage); // single file fallback
+        }
 
         return data;
     };
+
     const handleChange = async (e) => {
         const { name, value } = e.target;
 
@@ -93,6 +95,37 @@ const AddCollectionModal = ({ onClose }) => {
 
     };
 
+    const handleSubmit = async () => {
+        const formData = buildFormData();
+
+        try {
+            setLoafing(true);
+
+            const response = await fetch('/api/collection', {
+                method: 'POST',
+                body: formData,
+            });
+
+            let result;
+            try {
+                result = await response.json(); // Parse JSON safely
+            } catch (jsonError) {
+                throw new Error('Invalid server response. Please try again later.');
+            }
+
+            if (!response.ok) {
+                throw new Error(result?.error || 'Failed to add collection');
+            }
+
+            toast.success('Collection added successfully!');
+            onClose(); // Close modal on success
+        } catch (error) {
+            console.error('❌ Error adding collection:', error);
+            toast.error(error.message || 'An error occurred while adding the collection');
+        } finally {
+            setLoafing(false);
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-30 backdrop-blur-sm">
@@ -155,12 +188,22 @@ const AddCollectionModal = ({ onClose }) => {
                                 isEditing ? (<div className='space-y-4'>
                                     <div>
                                         <label htmlFor="page_title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Title</label>
-                                        <input type="text" id="page_title" name='pageTitle' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                                        <input
+                                            type="text"
+                                            id="page_title"
+                                            name="pageTitle"
+                                            value={formValues.pageTitle}
+                                            onChange={handleChange}
+                                        />
                                     </div>
                                     <div>
                                         <label htmlFor="meta_desc" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Description</label>
-                                        <textarea id="meta_desc" rows={5} name='pageDesc' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-                                    </div>
+                                        <textarea
+                                            id="meta_desc"
+                                            name="pageDesc"
+                                            value={formValues.pageDesc}
+                                            onChange={handleChange}
+                                        />                                    </div>
                                     <label htmlFor="website-admin" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Url handle</label>
                                     <div className="flex">
                                         <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -172,7 +215,7 @@ const AddCollectionModal = ({ onClose }) => {
                             }
                         </div>
                     </div>
-                    
+
                     {/* <Image */}
                     <div className="lg:col-span-1">
                         <div className="mb-3">
@@ -224,7 +267,12 @@ const AddCollectionModal = ({ onClose }) => {
 
                     </div>
                 </div>
-                <button className="bg-sky-600 text-white py-2.5 px-5 rounded-lg my-2 float-right">Add Collection</button>
+                <button
+                    className="bg-sky-600 text-white py-2.5 px-5 rounded-lg my-2 float-right"
+                    onClick={handleSubmit}
+                >
+                    {loading ? "Adding Collection" : "Add Collection"}
+                </button>
             </div>
         </div>
     );
