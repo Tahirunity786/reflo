@@ -18,6 +18,9 @@ export default function AddProductPage() {
   const [isOnline, setIsOnline] = useState(true);
   const quillRef = useRef(null);
   const [formValues, setFormValues] = useState({
+    pageTitle: '',
+    pageDesc: '',
+    pageSlug: '',
     productTitle: '',
     productStatus: 'draft',
     productDescription: '',
@@ -99,6 +102,9 @@ export default function AddProductPage() {
   // Prepare FormData object for submission
   const buildFormData = () => {
     const data = new FormData();
+    data.append('pageTitle', formValues.pageTitle);
+    data.append('pageDesc', formValues.pageDesc);
+    data.append('pageSlug', formValues.pageSlug);
     data.append('productTitle', formValues.productTitle);
     data.append('productStatus', formValues.productStatus);
     data.append('productDescription', formValues.productDescription);
@@ -551,18 +557,18 @@ export default function AddProductPage() {
               isEditing ? (<div className='space-y-4'>
                 <div>
                   <label htmlFor="page_title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Title</label>
-                  <input type="text" id="page_title" name='pageTitle' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                  <input type="text" id="page_title" name='pageTitle' value={formValues.pageTitle} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required onChange={handleChange} />
                 </div>
                 <div>
                   <label htmlFor="meta_desc" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Description</label>
-                  <textarea id="meta_desc" rows={5} name='pageDesc' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                  <textarea id="meta_desc" rows={5} name='pageDesc' value={formValues.pageDesc} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required onChange={handleChange} />
                 </div>
                 <label htmlFor="website-admin" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Url handle</label>
                 <div className="flex">
                   <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                     shop/
                   </span>
-                  <input type="text" id="website-admin" className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                  <input type="text" id="website-admin" name='pageSlug' value={formValues.pageSlug}  className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onChange={handleChange} />
                 </div>
               </div>) : null
             }
