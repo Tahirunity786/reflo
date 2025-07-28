@@ -3,16 +3,20 @@ import { Buffer } from 'buffer';
 import connectDB from '@/lib/mongodb';
 import cloudinary from '@/lib/cloudinary';
 import Collection from '@/models/Collection/Collection';
+import Product from "@/models/Product"; 
 
 export async function GET(req) {
-  await connectDB();
-  try {
-    const collections = await Collection.find({}).populate('products');
-    return NextResponse.json(collections);
-  } catch (error) {
-    console.error('❌ Failed to fetch collections:', error);
-    return NextResponse.json({ error: 'Failed to fetch collections' }, { status: 500 });
-  }
+    await connectDB();
+    try {
+        const collections = await Collection.find({}).populate("products"); // ✅ now safe
+        return NextResponse.json(collections);
+    } catch (error) {
+        console.error("❌ Failed to fetch collections:", error);
+        return NextResponse.json(
+            { error: "Failed to fetch collections" },
+            { status: 500 }
+        );
+    }
 }
 export async function POST(req) {
     await connectDB(); // Connect to MongoDB
