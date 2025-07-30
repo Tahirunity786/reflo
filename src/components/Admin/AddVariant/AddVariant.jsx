@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PlusCircle, Trash2, CheckCircle } from 'lucide-react';
 
 // Generate variant combinations grouped by primary (parent) level
@@ -130,12 +130,19 @@ export default function ProductVariants({ onVariantsChange }) {
   const groupedCombinations = generateGroupedCombinations(confirmedOptions);
 
   useEffect(() => {
-  onVariantsChange({
-    groupedCombinations,
-    variantData,
-    variantImages,
-  });
+  const hasGroupedCombinations = groupedCombinations && groupedCombinations.length > 0;
+  const hasVariantData = variantData && variantData.length > 0;
+  const hasVariantImages = variantImages && variantImages.length > 0;
+
+  if (hasGroupedCombinations && hasVariantData && hasVariantImages) {
+    onVariantsChange({
+      groupedCombinations,
+      variantData,
+      variantImages,
+    });
+  }
 }, [groupedCombinations, variantData, variantImages, onVariantsChange]);
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-4">Variants</h3>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 import MediaUploader from '@/components/Admin/MediaUploader/MediaUploader';
@@ -96,14 +96,12 @@ export default function AddProductPage() {
     }));
   };
 
-  const handleVariantsChange = (variants) => {
-    setFormValues(prev => ({
+  const onVariantsChange = useCallback((variants) => {
+    setFormValues((prev) => ({
       ...prev,
-      productVariants: variants
+      productVariants: variants,
     }));
-  };
-
-
+  }, []);
 
 
   // Prepare FormData object for submission
@@ -423,7 +421,7 @@ export default function AddProductPage() {
           />
 
           {/* Variants of product */}
-          <AddVariant onVariantsChange={handleVariantsChange} />
+          <AddVariant onVariantsChange={onVariantsChange} />
 
           {/* Inventory Section */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
