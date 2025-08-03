@@ -11,6 +11,7 @@ import CartSidebar from '../CartSidebar/CartSidebar';
 import SignInModal from '../SignInModal/SignInModal';
 import SignUpModal from '../SignUpModal/SignUpModal';
 import SearchModal from '../SearchModal/SearchModal';
+import { ShoppingBasket, ShoppingBasketIcon } from 'lucide-react';
 
 const socialIcons = [
   { icon: <FaFacebookF />, label: 'Facebook' },
@@ -54,7 +55,7 @@ export default function Navbar() {
         {/* Top Bar */}
         <div className="bg-black text-white text-sm flex justify-between items-center px-4 lg:px-8 py-2">
           <div className="flex items-center space-x-4">
-            <span className="font-semibold">Welcome Milano store!</span>
+            <span className="font-semibold">Welcome DoorBix store!</span>
             <div className="flex space-x-2 text-white">
               {socialIcons.map((item, index) => (
                 <span
@@ -86,7 +87,7 @@ export default function Navbar() {
         <div className="sticky top-0 z-50 bg-white shadow-sm">
           <div className="flex justify-between items-center px-4 lg:px-8 py-4">
 
-            <div className="text-3xl font-bold tracking-tight">milano</div>
+            <div className="text-3xl font-bold tracking-tight flex items-center space-x-2.5"><div><ShoppingBasketIcon width={32} height={32}/></div><div>DoorBix</div></div>
 
             <nav className="hidden lg:flex space-x-8 font-dm font-bold">
               {navLinks.map((link, index) => (
