@@ -180,7 +180,7 @@ const ProductDetailPage = ({ slug, data }) => {
                             <b>SKU</b>: {data?.productSKU}
                         </p>
                         <p>
-                            <b>Available</b>: {data.stock <= 0 ? (<span className='text-red-600'>Out of Stock</span>) : (<span className='text-green-700'>In of Stock</span>)}
+                            <b>Available</b>: {data?.stock <= 0 ? (<span className='text-red-600'>Out of Stock</span>) : (<span className='text-green-700'>In of Stock</span>)}
                         </p>
                     </div>
                 </div>
