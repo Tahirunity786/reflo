@@ -34,7 +34,8 @@ const ProductDetailPage = ({ slug, data }) => {
                                                 key={i}
                                                 className="min-w-[3rem] w-20 h-20 border rounded overflow-hidden flex-shrink-0 cursor-pointer"
                                             >
-                                                <Image
+                                                <img
+                                                    loading='lazy'
                                                     src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${img.image}`}
                                                     alt={`Thumbnail ${i + 1}`}
                                                     width={96}
@@ -52,10 +53,11 @@ const ProductDetailPage = ({ slug, data }) => {
                         {/* Main Image */}
                         <div className="relative w-full aspect-[4/5] bg-gray-100 rounded overflow-hidden">
                             {data?.productImages?.[0]?.image && (
-                                <Image
+                                <img
                                     src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${data.productImages[0].image}`}
                                     alt="Faux fur gilet"
                                     fill
+                                    loading='lazy'
                                     className="object-cover rounded"
                                 />
                             )}
@@ -83,7 +85,7 @@ const ProductDetailPage = ({ slug, data }) => {
                         <h1 className="text-2xl font-semibold mb-2">{data?.productName}</h1>
 
                         {/* Rating */}
-                        
+
                         <div className="flex items-center gap-2 mb-4">
                             <div className="flex text-yellow-400">
                                 {[...Array(5)].map((_, i) => (
@@ -105,13 +107,6 @@ const ProductDetailPage = ({ slug, data }) => {
                                 </del>
                             )}
                         </div>
-
-                        {/* Description */}
-                        <p className="text-md leading-relaxed mb-4">
-                            The custom long-sleeved jacket with fur-like features adds a classic crew neckline,
-                            easy short sleeves, a slightly cropped length and a box-cut fit for a truly timeless
-                            look.
-                        </p>
 
                         {/* Benefits */}
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
