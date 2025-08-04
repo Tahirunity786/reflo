@@ -178,7 +178,7 @@ const ProductCard = ({ product, isList }) => {
   );
 };
 
-const SweaterCollection = () => {
+const Page = () => {
   const [layout, setLayout] = useState("grid");
   const [loading, setLoading] = useState(false);
 
@@ -385,4 +385,4 @@ const SweaterCollection = () => {
   );
 };
 
-export default SweaterCollection;
+export default Page;
