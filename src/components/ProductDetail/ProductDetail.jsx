@@ -127,7 +127,7 @@ const ProductState = ({
                                         <div
                                             key={i}
                                             onClick={() => handleThumbnailClick(img.image)}
-                                            className={`min-w-[3rem] w-20 h-20 border rounded overflow-hidden flex-shrink-0 cursor-pointer transition-transform hover:scale-105 ${selectedImage === img.image ? 'ring-2 ring-black' : ''
+                                            className={`min-w-[3rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer  ${selectedImage === img.image ? 'shadow-xl' : ''
                                                 }`}
                                         >
                                             <Image
@@ -172,7 +172,7 @@ const ProductState = ({
                 {/* ================= Right Section (Product Info) ================= */}
                 <div className="w-full lg:w-[48%] space-y-5">
                     {/* Info Card */}
-                    <div className="bg-white z-10 pb-6">
+                    <div className="bg-white z-10 pb-2">
                         {/* Top Label */}
                         {/* <div className="flex items-center justify-between mb-2">
                             <span className="bg-yellow-300 text-xs px-2 py-1 rounded font-semibold">
@@ -264,7 +264,7 @@ const ProductState = ({
                     </div>
 
                     {/* Purchase Actions */}
-                    <div className="space-y-3">
+                    <div className="mb-3">
                         <PurchaseOptions />
                     </div>
 
@@ -337,7 +337,7 @@ const ProductState = ({
 
                 </div>
             </div>
-            <ProductInfoTabs />
+            <ProductInfoTabs data={data} />
 
             {/* ================= More Products ================= */}
             <BestSellingProducts />
