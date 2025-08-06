@@ -198,11 +198,11 @@ const ProductState = ({
                         {/* Price */}
                         <div className="mb-4 flex items-baseline gap-3">
                             <span className="text-3xl font-bold text-black">
-                                ${data?.productPrice}
+                                {data?.productPrice} AED
                             </span>
                             {data?.productComparePrice && (
                                 <del className="text-gray-500">
-                                    ${data.productComparePrice}
+                                    {data.productComparePrice} AED
                                 </del>
                             )}
                         </div>

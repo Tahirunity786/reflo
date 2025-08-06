@@ -95,15 +95,15 @@ const BestSellingProducts = () => {
                   {product.productName}
                 </h3>
                 <div className="text-yellow-500 text-sm mb-1">
-              {'★'.repeat(3)}{'☆'.repeat(5 - 3)}
-            </div>
+                  {'★'.repeat(3)}{'☆'.repeat(5 - 3)}
+                </div>
 
                 {/* Pricing */}
                 <div className="text-sm sm:text-base font-semibold text-gray-900">
-                  ${parseFloat(product.productPrice)}{" "}
+                  {parseFloat(product.productPrice)}{" "} {process.env.NEXT_PUBLIC_CURRENCY}
                   {product.productComparePrice && (
                     <span className="line-through text-gray-400 text-sm ml-1 font-normal">
-                      ${parseFloat(product.productComparePrice)}
+                      {parseFloat(product.productComparePrice)} {process.env.NEXT_PUBLIC_CURRENCY}
                     </span>
                   )}
                 </div>

@@ -74,11 +74,11 @@ const ProductCard = ({ product, isList }) => {
                 {/* Price */}
                 <div className="mt-1">
                     <span className="text-sm font-bold text-black">
-                        ${product.productPrice}
+                        {product.productPrice} AED
                     </span>
                     {product.productComparePrice && (
                         <span className="ml-2 text-xs text-gray-400 line-through">
-                            ${product.productComparePrice}
+                            {product.productComparePrice} AED
                         </span>
                     )}
                 </div>
@@ -203,7 +203,7 @@ const Page = () => {
                         <div>
                             <h4 className="text-base font-semibold mb-3 pb-2">Price Range</h4>
                             <input type="range" min={0} max={500} className="w-full accent-black" />
-                            <div className="text-sm text-gray-700 mt-1">$0 - $500</div>
+                            <div className="text-sm text-gray-700 mt-1">0 {process.env.NEXT_PUBLIC_CURRENCY} - 500 {process.env.NEXT_PUBLIC_CURRENCY} </div>
                         </div>
                     </div>
 
