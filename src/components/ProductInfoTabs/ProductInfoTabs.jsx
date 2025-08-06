@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import HtmlContent from '../HtmlContent/HtmlContent';
 
 export default function ProductInfoTabs({ data }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -10,9 +11,10 @@ export default function ProductInfoTabs({ data }) {
     {
       label: 'Description',
       content: (
-        <p className="text-gray-700 leading-relaxed">
-          {data?.productDescription || "No description available."}
-        </p>
+      
+          <HtmlContent content={data?.productDescription} charLimit={'full'}/>
+          
+       
       ),
     },
     {
