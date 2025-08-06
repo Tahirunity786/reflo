@@ -86,13 +86,13 @@ const BestSellingProducts = () => {
                 </button>
 
                 {/* Product Image */}
-                <div className="w-full overflow-hidden rounded-lg mb-4">
+                <div className="w-full overflow-hidden rounded-lg mb-4 aspect-[5/5]">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${product.productImages[0]?.image}`}
                     alt={product.productName}
                     width={300}
                     height={400}
-                    className="object-cover w-full h-[340px] transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                    className="object-cover w-full  transition-transform duration-300 group-hover:scale-105 cursor-pointer"
                     onClick={() => { router.push(`/shop/${product.productSlug}`) }}
                   />
                 </div>

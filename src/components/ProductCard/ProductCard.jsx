@@ -38,7 +38,7 @@ const ProductCard = ({ product, isList }) => {
                     "relative bg-gray-100 transition-all duration-300",
                     isList
                         ? "w-full md:w-1/3 aspect-[3/2]"
-                        : "w-full aspect-[4/5]" // slightly shorter image in grid view
+                        : "w-full aspect-[6/5]" // slightly shorter image in grid view
                 )}
             >
                 <Image
