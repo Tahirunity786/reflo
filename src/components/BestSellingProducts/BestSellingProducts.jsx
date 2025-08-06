@@ -10,6 +10,16 @@ const BestSellingProducts = () => {
   const [loading, setLoading] = useState(false);
   const [errorState, setErrorState] = useState(false);
   const [bsData, setBSData] = useState([]);
+  const [expandedTitles, setExpandedTitles] = useState({});
+  const maxLength = 19;
+
+  const toggleShow = (e, id) => {
+    e.stopPropagation();
+    setExpandedTitles(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
 
 
@@ -92,8 +102,21 @@ const BestSellingProducts = () => {
                   className="text-base sm:text-lg font-semibold text-gray-800 hover:text-black transition-colors duration-200 ease-in-out cursor-pointer"
                   onClick={() => router.push(`/shop/${product.productSlug}`)}
                 >
-                  {product.productName}
+                  {product.productName.length > maxLength && !expandedTitles[product.id]
+                    ? product.productName.slice(0, maxLength) + '... '
+                    : product.productName}
+
+                  {product.productName.length > maxLength && (
+                    <span
+                      onClick={(e) => toggleShow(e, product.id)}
+                      className="text-blue-500 hover:underline ml-1"
+                    >
+                      {expandedTitles[product.id] ? 'less' : 'more'}
+                    </span>
+                  )}
                 </h3>
+
+
                 <div className="text-yellow-500 text-sm mb-1">
                   {'★'.repeat(3)}{'☆'.repeat(5 - 3)}
                 </div>
