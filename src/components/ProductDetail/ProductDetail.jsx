@@ -6,6 +6,7 @@ import { Star, Heart, Truck, ShieldCheck, Badge } from 'lucide-react';
 import BestSellingProducts from '../BestSellingProducts/BestSellingProducts';
 import PurchaseOptions from '../PurchaseOptions/PurchaseOptions';
 import ProductInfoTabs from '../ProductInfoTabs/ProductInfoTabs';
+import Header from '../Header/Header';
 
 const LoadingState = () => {
     return (
@@ -110,8 +111,18 @@ const ProductState = ({
     activeTab,
     setActiveTab,
 }) => {
+
+    const metaData = {
+        title: `DoorBix || ${data?.productName}`,
+        description: "Shop our premium red t-shirt made from 100% cotton. Unisex fit, soft, breathable, and perfect for casual wear. Available in all sizes.",
+        image: `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${productImages[0]?.image}`,
+        pageUrl: `https://wwww.doorbix.com/shop/${data?.productSlug}`,
+    }
+
+
     return (
         <section className="max-w-screen-xl mx-auto px-8 py-8 bg-white text-gray-800">
+            <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl}/>
             {/* Breadcrumb */}
             <nav className="text-xs text-gray-400 mb-4">Home / Shop/ {data?.productName}</nav>
 
@@ -185,7 +196,7 @@ const ProductState = ({
 
                         {/* Rating */}
 
-                        <div className="flex items-center gap-2 mb-4">
+                        {/* <div className="flex items-center gap-2 mb-4">
                             <div className="flex text-yellow-400">
                                 {[...Array(5)].map((_, i) => (
                                     <Star key={i} size={14} className="fill-yellow-400" />
@@ -193,7 +204,7 @@ const ProductState = ({
                             </div>
                             <span className="text-sm text-gray-500">1 review</span>
                             <div className="text-red-500 text-md">22 added in last 24 hours</div>
-                        </div>
+                        </div> */}
 
                         {/* Price */}
                         <div className="mb-4 flex items-baseline gap-3">
@@ -346,8 +357,6 @@ const ProductState = ({
 }
 
 const ProductDetailPage = ({ slug }) => {
-    const sizes = ['S', 'M', 'L', 'XL'];
-    const colors = ['black', 'gray', 'brown'];
     const [activeTab, setActiveTab] = useState("category");
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true); // Start with true
@@ -362,6 +371,8 @@ const ProductDetailPage = ({ slug }) => {
             setFade(false);
         }, 200);
     };
+
+    
 
     useEffect(() => {
         const retrieveProduct = async () => {
