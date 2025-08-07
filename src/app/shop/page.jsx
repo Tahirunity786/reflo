@@ -94,7 +94,7 @@ const Page = () => {
 
         const [productsRes, collectionsRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products`),
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections`)
+          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections?quantity=4`)
         ]);
 
         if (!productsRes.ok || !collectionsRes.ok) {
