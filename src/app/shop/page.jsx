@@ -92,23 +92,17 @@ const Page = () => {
       try {
         setLoading(true);
 
-        const [productsRes, collectionsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products`),
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections?quantity=4`)
-        ]);
-
-        if (!productsRes.ok || !collectionsRes.ok) {
-          throw new Error("Failed to fetch products or collections");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products?collection=4`)
+          
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
         }
 
-        const [productsData, collectionsData] = await Promise.all([
-          productsRes.json(),
-          collectionsRes.json()
-        ]);
+        const data = await response.json()
 
         setPData({
-          products: productsData,
-          collections: collectionsData,
+          products: data.products,
+          collections: data.collections,
         });
 
       } catch (error) {
