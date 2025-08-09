@@ -22,7 +22,7 @@ const ProductWidget = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections?quantity=6`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections?quantity=5`);
         if (response.ok) {
           const data = await response.json();
           setData(data);
