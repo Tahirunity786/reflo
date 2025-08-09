@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 
-const BestSellingProducts = () => {
+const BestSellingProducts = ({title, type}) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false);
   const [errorState, setErrorState] = useState(false);
@@ -29,7 +29,7 @@ const BestSellingProducts = () => {
 
       try {
         setLoading(true)
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products?type=bestSelling&quantity=4`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products?type=${type}&quantity=4`);
         if (response.ok) {
           const data = await response.json();
           setBSData(data);
@@ -52,7 +52,7 @@ const BestSellingProducts = () => {
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Best Selling</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h2>
           <p className="text-gray-600 max-w-xl mx-auto mt-2">
             Unmatched design—superior performance and customer satisfaction in one.
           </p>

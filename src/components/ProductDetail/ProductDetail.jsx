@@ -351,7 +351,7 @@ const ProductState = ({
             <ProductInfoTabs data={data} />
 
             {/* ================= More Products ================= */}
-            <BestSellingProducts />
+            <BestSellingProducts title={"Best Selling"} type={"bestSelling"}/>
         </section >
     );
 }
