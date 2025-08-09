@@ -59,15 +59,16 @@ const ProductWidget = () => {
               className="min-w-[70%] sm:min-w-[40%] md:min-w-0 flex-shrink-0 md:flex-shrink snap-center flex flex-col items-center text-center"
             >
               {/* Image */}
-              <div className="w-full overflow-hidden rounded-xl">
+              <div className="w-full aspect-[3/4] overflow-hidden rounded-xl">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${category.collectionImage}`}
+                  src={category.collectionImage}
                   alt={category.collectionName}
                   width={300}
                   height={400}
-                  className="object-cover w-full h-auto transition-transform duration-300 hover:scale-105"
+                  className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                 />
               </div>
+
               {/* Name */}
               <Link href={`/collection/${category.collectionSlug}`} className="mt-3 font-semibold text-lg text-gray-900">
                 {category.collectionName}
