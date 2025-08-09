@@ -61,7 +61,7 @@ const ProductWidget = () => {
               {/* Image */}
               <div className="w-full aspect-[3/4] overflow-hidden rounded-xl">
                 <Image
-                  src={category.collectionImage}
+                  src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${category.collectionImage}`}
                   alt={category.collectionName}
                   width={300}
                   height={400}
