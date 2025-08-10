@@ -1,10 +1,11 @@
 'use client';
+
 import React, { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
-import clsx from 'clsx';
+import Cookies from 'js-cookie';
 import SignUpModal from '../SignUpModal/SignUpModal';
 
-// Reusable Input Field Component
+// ✅ Reusable Input Field Component
 const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) => (
     <input
         type={type}
@@ -17,20 +18,60 @@ const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) =>
 );
 
 const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [showSignUp, setShowSignUp] = useState(false);
 
     if (!isOpen) return null;
 
+    // ✅ Handle form submission
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user/users/login/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.detail || 'Invalid credentials');
+            }
+
+            Cookies.set("access", data.tokens.access, { expires: 1 }); // 1 day
+            Cookies.set("refresh", data.tokens.refresh, { expires: 7 }); // 7 days
+
+            // Optionally store user info
+            Cookies.set('user', JSON.stringify(data.user), { secure: true, sameSite: 'Strict' });
+
+            // ✅ Close modal after successful login
+            onClose();
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-lg animate-fadeIn">
                 {/* Close button */}
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-black">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-black"
+                >
                     <X size={20} />
                 </button>
 
@@ -40,13 +81,17 @@ const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
                     Please enter your details below to sign in.
                 </p>
 
+                {/* Error message */}
+                {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+
                 {/* Form */}
-                <div className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4">
                     <InputField
                         type="email"
                         placeholder="Your email*"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
 
                     <div className="relative">
@@ -55,6 +100,7 @@ const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
                             placeholder="Password*"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                         <button
                             type="button"
@@ -70,18 +116,23 @@ const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
                     </div>
 
                     {/* Login Button */}
-                    <button className="w-full bg-black cursor-pointer text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition">
-                        Login
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-black cursor-pointer text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition disabled:opacity-50"
+                    >
+                        {loading ? 'Logging in...' : 'Login'}
                     </button>
 
                     {/* Create Account Button */}
                     <button
+                        type="button"
                         onClick={onSwitchToSignUp}
                         className="w-full border cursor-pointer border-black py-3 rounded-full font-semibold hover:bg-gray-100 transition"
                     >
-                        Create Account
+                        Create an Account
                     </button>
-                </div>
+                </form>
             </div>
             <SignUpModal isOpen={showSignUp} onClose={() => setShowSignUp(false)} />
         </div>

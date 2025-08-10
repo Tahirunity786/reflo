@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 // ✅ Reusable input field
 const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) => (
@@ -15,19 +17,63 @@ const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) =>
 );
 
 const SignUpModal = ({ isOpen, onClose }) => {
+
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 🔐 You can integrate API call or validation logic here
-    console.log({ firstName, lastName, email, password });
-    onClose(); // close modal after signup
+
+    try {
+      setLoading(true);
+
+      // Example form data object
+      const formData = {
+        first_name: firstName, // replace with your state variables
+        last_name: lastName, // replace with your state variables
+        email: email,
+        password: password
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/user/users/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      Cookies.set("access", data.tokens.access, { expires: 1 }); // 1 day
+      Cookies.set("refresh", data.tokens.refresh, { expires: 7 }); // 7 days
+      Cookies.set('user', JSON.stringify(data.user), { secure: true, sameSite: 'Strict' });
+
+      onClose();
+      router.refresh()
+
+
+    } catch (err) {
+      console.error("Error registering user:", err);
+      setLoading(false)
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -83,8 +129,9 @@ const SignUpModal = ({ isOpen, onClose }) => {
           <button
             type="submit"
             className="w-full bg-black cursor-pointer text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition"
+            disabled = {loading}
           >
-            Create Account
+            {loading ? "Submit...":"Create Account"}
           </button>
         </form>
       </div>
