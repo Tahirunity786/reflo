@@ -128,7 +128,7 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
                       </div>
                       <div>
                         <h5 className="text-sm font-medium cursor-pointer" onClick={()=>handleClick(item.productSlug)}>{item.productName.slice(0, 15)}</h5>
-                        <p className="text-sm text-gray-500">{item.productPrice}</p>
+                        <p className="text-sm text-gray-500">{item.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}</p>
                       </div>
                     </div>
                   ))}
