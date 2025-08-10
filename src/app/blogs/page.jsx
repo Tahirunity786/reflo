@@ -12,10 +12,6 @@ import { FreeMode } from "swiper/modules";
 
 
 const Page = () => {
-
-
-
-
     const [activeIndex, setActiveIndex] = useState(0);
     const swiperRef = useRef(null);
     const [isEnd, setIsEnd] = useState(false);
@@ -31,9 +27,6 @@ const Page = () => {
     };
     const buttonLabels = [
         "All Posts",
-        "Exam Preparation",
-        "Training Tips",
-        "Industrial News",
         "Success Stories"
     ];
     const metadata = {
@@ -159,7 +152,7 @@ const Page = () => {
 
                             {/* Card Body */}
                             <div className="p-4">
-                                <span className="inline-block bg-yellow-400 text-black text-sm px-3 py-1 rounded-full mb-3">Exam preparation</span>
+                                <span className="inline-block bg-yellow-400 text-black text-sm px-3 py-1 rounded-full mb-3">Fashion</span>
                                 <h5 className="text-lg font-bold">Card title</h5>
                                 <p className="text-sm text-gray-700 mb-4">
                                     Some quick example text to build on the card title and make up the bulk of the card's content.
