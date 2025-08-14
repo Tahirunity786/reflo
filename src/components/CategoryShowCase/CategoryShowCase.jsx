@@ -5,32 +5,12 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Reusable hero banner data array (will be replaced with fetched posts)
-const banners = [
-  {
-    title: 'Trendy Fashion',
-    subtitle: 'Learn more about trending fashion around the world.',
-    image: '/Image/fs_new_s1.webp',
-  },
-  {
-    title: 'Confident Looks',
-    subtitle: 'LIMITED TIME ONLY',
-    image: '/Image/fs_new_s1.webp',
-  },
-  {
-    title: 'Classic Styles',
-    subtitle: 'YOUR PERFECT OUTFIT',
-    image: '/Image/fs_new_s1.webp',
-  },
-  {
-    title: 'Bold Statements',
-    subtitle: 'STAND OUT TODAY',
-    image: '/Image/fs_new_s1.webp',
-  },
-];
 
 export default function CategoryShowCase() {
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +32,7 @@ export default function CategoryShowCase() {
     fetchBlogCategoryPost();
   }, []);
 
-  const displayItems = loading ? Array(4).fill(null) : posts.length ? posts : banners;
+  const displayItems = loading ? Array(4).fill(null) : posts.length ? posts : [];
 
   return (
     <section className="py-12 bg-[#F4F1EA]">
@@ -84,6 +64,7 @@ export default function CategoryShowCase() {
 
 // Single banner card component (reusable)
 function BannerCard({ banner }) {
+  const router = useRouter()
   return (
     <div className="relative h-[400px] rounded-lg overflow-hidden group shadow-md">
       <Image
@@ -95,11 +76,12 @@ function BannerCard({ banner }) {
       <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center text-white px-4">
         <p className="text-xs tracking-widest mb-1 uppercase">{banner.blogExcerpt}</p>
         <h2 className="text-2xl font-semibold mb-4">{banner.blogTitle}</h2>
-        <button className="bg-white text-black text-sm font-medium px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition">
+        <button className="bg-white text-black text-sm font-medium px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition" onClick={() => router.push(`/blogs/${banner.slug}`)}>
           Learn More
         </button>
       </div>
     </div>
+    
   );
 }
 
