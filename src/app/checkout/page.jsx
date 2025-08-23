@@ -7,37 +7,40 @@ import { selectCartItems, selectCartTotal, removeItem, updateQty } from "@/redux
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
+import SignInModal from '@/components/SignInModal/SignInModal';
+import SignUpModal from '@/components/SignUpModal/SignUpModal';
+
 
 // Helper Component: Input Field
-// Helper Component: Input Field
-const Input = ({ type = "text", placeholder, value, onChange }) => {
-  const inputProps = {
-    type,
-    placeholder,
-    className:
-      "w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 " +
-      "text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 " +
-      "placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none " +
-      "focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-  };
+const Input = ({ name, type = "text", placeholder, value, onChange }) => {
+    const inputProps = {
+        name,  // ✅ make sure name is passed
+        type,
+        placeholder,
+        className:
+            "w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4",
+    };
 
-  // if onChange is passed → controlled component
-  if (onChange !== undefined) {
-    return <input {...inputProps} value={value || ""} onChange={onChange} />;
-  }
+    if (onChange !== undefined) {
+        return <input {...inputProps} value={value || ""} onChange={onChange} />;
+    }
 
-  // otherwise → uncontrolled with defaultValue
-  return <input {...inputProps} defaultValue={value || ""} />;
+    return <input {...inputProps} defaultValue={value || ""} />;
 };
 
 
 
 // Helper Component: Select Dropdown
-const Select = ({ options }) => (
+const Select = ({ name, value, options, onChange }) => (
     <div className="relative">
-        <select className="appearance-none w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <select
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
             {options.map((opt, idx) => (
-                <option key={idx}>{opt}</option>
+                <option key={idx} value={opt}>{opt}</option>
             ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
@@ -47,6 +50,7 @@ const Select = ({ options }) => (
         </div>
     </div>
 );
+
 const useCartTotal = (items) => {
     return useMemo(() => {
         if (!items) return 0;
@@ -69,6 +73,38 @@ export default function CheckoutForm() {
     const items = useSelector(selectCartItems);
     const [item, setItems] = useState([]);
     const [authUser, setAuthUser] = useState(null);
+    const [showSignIn, setShowSignIn] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
+
+    const [formData, setFormData] = useState({
+        email: "",
+        firstName: "",
+        lastName: "",
+        address: "",
+        apartment: "",
+        city: "",
+        state: "",
+        zip: "",
+        emailOffers: false,
+        saveInfo: false,
+        delivery: "Ship",
+        method: "Home delivery",
+        items: [], // ✅ hold product ids here
+    });
+
+
+
+    // ✅ update formData.email when authUser is loaded
+    useEffect(() => {
+        if (authUser?.email) {
+            setFormData((prev) => ({
+                ...prev,
+                email: authUser.email,
+            }));
+        }
+    }, [authUser]);
+
+
 
 
     useEffect(() => {
@@ -83,13 +119,29 @@ export default function CheckoutForm() {
     }, []);
 
 
+    useEffect(() => {
+        if (!item) return;
+
+        // normalize to array
+        const normalizedItems = Array.isArray(item) ? item : [item];
+        const ids = normalizedItems.map((p) => p.id);
+
+        setFormData((prev) => ({
+            ...prev,
+            productIds: ids,
+        }));
+    }, [item]);
+
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
     const total = useCartTotal(item);
-
-
-
     const maxLength = 20;
-
-
 
     // ✅ Keep slug in sync with searchParams
     useEffect(() => {
@@ -136,6 +188,67 @@ export default function CheckoutForm() {
         return () => controller.abort();
     }, [slug]);
 
+    const placeOrder = async () => {
+        // 🛒 Build items array
+        const orderItems = Array.isArray(item) ? item : [item];
+        const itemsPayload = orderItems.map((p) => ({
+            product_id: p.id,   // <-- here
+            name: p.name,
+            quantity: p.qty,
+            unit_price: p.price.toFixed(2),
+        }));
+
+
+        const addressesPayload = [
+            {
+                address_type: "SHP",
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                phone: formData.phone || "",
+                line1: formData.address,
+                line2: formData.apartment,
+                city: formData.city,
+                state: formData.state,
+                postal_code: formData.zip,
+                country: (formData.country || "UAE").toUpperCase(), // ✅ ISO alpha-2
+            },
+        ];
+
+
+        // 🧾 Final request body
+        const payload = {
+            delivery: formData.delivery,
+            method: formData.method,
+            items: itemsPayload,
+            addresses: addressesPayload,
+        };
+
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log("✅ Order placed successfully:", data);
+
+            // Optionally: clear cart, redirect to thank-you page
+        } catch (error) {
+            console.error("❌ Failed to place order:", error);
+        }
+    };
+
+
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -145,74 +258,79 @@ export default function CheckoutForm() {
                     {/* Contact Section */}
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h2>
-
-
                         {
-                            !authUser ? (
-                                <button className="text-sm text-blue-600 dark:text-blue-400 mb-4">
-                                    Log in
-                                </button>
-                            ) : null
+                            !authUser && (
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    <span className='cursor-pointer font-bold' onClick={() => setShowSignIn(true)}>Login</span> or <span className='cursor-pointer font-bold' onClick={() => setShowSignUp(true)}>create</span> an account for a faster checkout experience.
+                                </p>
+                            )
                         }
-                        <div className="space-y-4">
-                            <Input
-                                placeholder="Email"
-                                value={authUser ? authUser.email : ""}
-                                onChange={(e) => setAuthUser({ ...authUser, email: e.target.value })}
+                        <Input
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+
+                        <div className="flex items-center">
+                            <input
+                                id="emailOffers"
+                                name="emailOffers"
+                                type="checkbox"
+                                checked={formData.emailOffers}
+                                onChange={handleChange}
+                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                             />
-                            <div className="flex items-center">
-                                <input id="emailOffers" type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                                <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 dark:text-gray-400">Email me with news and offers</label>
-                            </div>
+                            <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                Email me with news and offers
+                            </label>
                         </div>
                     </section>
 
                     {/* Delivery Section */}
                     <section>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Delivery</h2>
-                        <div className="space-y-4">
-                            <Select options={['Ship',]} />
-                            <Select options={['Home delivery']} />
-                        </div>
+                        <Select
+                            name="delivery"
+                            value={formData.delivery}
+                            options={["Ship"]}
+                            onChange={handleChange}
+                        />
+                        <Select
+                            name="method"
+                            value={formData.method}
+                            options={["Home delivery"]}
+                            onChange={handleChange}
+                        />
                     </section>
-
                     {/* Address Section */}
-                    <section className="space-y-4">
-                        {/* <Select options={['Canada/English', 'United States']} /> */}
-                        {/* <p className="text-sm text-gray-600 dark:text-gray-400">United States</p> */}
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input placeholder="First name (optional)" />
-                            <Input placeholder="Last name" />
+                    <section>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <Input name="firstName" placeholder="First name" value={formData.firstName} onChange={handleChange} />
+                            <Input name="lastName" placeholder="Last name" value={formData.lastName} onChange={handleChange} />
                         </div>
+                        <Input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
+                        <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
 
-                        <div className="relative">
-                            <Input placeholder="Address" />
-                            <div className="absolute inset-y-0 right-0 flex items-center px-2">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        <Input placeholder="Apartment, suite, etc. (optional)" />
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <Input placeholder="City" />
-                            <Input
-                                placeholder="State"
-                                // onChange={(e) => }
-                            />
-                            <Input placeholder="ZIP code" />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+                            <Input name="city" placeholder="City" value={formData.city} onChange={handleChange} />
+                            <Input name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+                            <Input name="zip" placeholder="ZIP code" value={formData.zip} onChange={handleChange} />
                         </div>
 
                         <div className="flex items-center">
-                            <input id="saveInfo" type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                            <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-600 dark:text-gray-400">Save this information for next time</label>
+                            <input
+                                id="saveInfo"
+                                name="saveInfo"
+                                type="checkbox"
+                                checked={formData.saveInfo}
+                                onChange={handleChange}
+                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                Save this information for next time
+                            </label>
                         </div>
                     </section>
-
                     {/* Shipping Method */}
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Shipping</h2>
@@ -233,7 +351,7 @@ export default function CheckoutForm() {
 
                     </section>
 
-                    <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <button onClick={() => placeOrder()} className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         Place order
                     </button>
 
@@ -373,6 +491,24 @@ export default function CheckoutForm() {
                     </div>
                 </div>
             </div>
+            {/* Sign In Modal */}
+            <SignInModal
+                isOpen={showSignIn}
+                onClose={() => setShowSignIn(false)}
+                onSwitchToSignUp={() => {
+                    setShowSignIn(false);
+                    setShowSignUp(true);
+                }}
+            />
+
+            <SignUpModal
+                isOpen={showSignUp}
+                onClose={() => setShowSignUp(false)}
+                onSwitchToSignIn={() => {
+                    setShowSignUp(false);
+                    setShowSignIn(true);
+                }}
+            />
         </div>
     );
 }
