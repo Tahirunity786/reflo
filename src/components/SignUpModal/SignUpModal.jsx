@@ -68,7 +68,7 @@ const SignUpModal = ({ isOpen, onClose, onSwitchToSignIn }) => {
       Cookies.set('user', JSON.stringify(data.user), { secure: true, sameSite: 'Strict' });
 
       onClose();
-      router.refresh()
+      window.location.reload()
 
 
     } catch (err) {

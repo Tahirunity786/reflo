@@ -18,6 +18,7 @@ import SearchModal from '../SearchModal/SearchModal';
 import { ShoppingBasketIcon } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const socialIcons = [
   { icon: <FaFacebookF />, label: 'Facebook' },
@@ -36,6 +37,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const [isCartOpen, setCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -79,6 +81,7 @@ export default function Navbar() {
     Cookies.remove('user');
     setAuthUser(null);
     setDropdownOpen(false);
+    window.location.reload()
   };
 
   return (

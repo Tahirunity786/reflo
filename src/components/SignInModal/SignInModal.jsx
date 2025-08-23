@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
 import Cookies from 'js-cookie';
 import SignUpModal from '../SignUpModal/SignUpModal';
+import { useRouter } from 'next/navigation';
 
 // ✅ Reusable Input Field Component
 const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) => (
@@ -18,6 +19,8 @@ const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) =>
 );
 
 const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
+
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(false);
@@ -56,6 +59,7 @@ const SignInModal = ({ isOpen, onClose, onSwitchToSignUp }) => {
 
             // ✅ Close modal after successful login
             onClose();
+            window.location.reload()
 
         } catch (err) {
             setError(err.message);

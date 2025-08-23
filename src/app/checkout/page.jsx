@@ -6,15 +6,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectCartItems, selectCartTotal, removeItem, updateQty } from "@/redux/slices/cartSlice";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSearchParams } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 // Helper Component: Input Field
-const Input = ({ type = 'text', placeholder }) => (
-    <input
-        type={type}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-    />
-);
+// Helper Component: Input Field
+const Input = ({ type = "text", placeholder, value, onChange }) => {
+  const inputProps = {
+    type,
+    placeholder,
+    className:
+      "w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 " +
+      "text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 " +
+      "placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none " +
+      "focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+  };
+
+  // if onChange is passed → controlled component
+  if (onChange !== undefined) {
+    return <input {...inputProps} value={value || ""} onChange={onChange} />;
+  }
+
+  // otherwise → uncontrolled with defaultValue
+  return <input {...inputProps} defaultValue={value || ""} />;
+};
+
+
 
 // Helper Component: Select Dropdown
 const Select = ({ options }) => (
@@ -47,11 +63,24 @@ const useCartTotal = (items) => {
 export default function CheckoutForm() {
 
     // const total = useSelector(selectCartTotal);
+    const dispatch = useDispatch();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState(searchParams.get("i") || "");
-    const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
     const [item, setItems] = useState([]);
+    const [authUser, setAuthUser] = useState(null);
+
+
+    useEffect(() => {
+        const user = Cookies.get('user');
+        if (user) {
+            try {
+                setAuthUser(JSON.parse(user));
+            } catch {
+                setAuthUser(user);
+            }
+        }
+    }, []);
 
 
     const total = useCartTotal(item);
@@ -87,7 +116,6 @@ export default function CheckoutForm() {
                 }
 
                 const data = await response.json();
-                console.log("Fetched product data:", data);
                 setItems(data);
             } catch (error) {
                 if (error.name === "AbortError") {
@@ -117,9 +145,21 @@ export default function CheckoutForm() {
                     {/* Contact Section */}
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h2>
-                        <button className="text-sm text-blue-600 dark:text-blue-400 mb-4">Log in</button>
+
+
+                        {
+                            !authUser ? (
+                                <button className="text-sm text-blue-600 dark:text-blue-400 mb-4">
+                                    Log in
+                                </button>
+                            ) : null
+                        }
                         <div className="space-y-4">
-                            <Input placeholder="Email or mobile phone number" />
+                            <Input
+                                placeholder="Email"
+                                value={authUser ? authUser.email : ""}
+                                onChange={(e) => setAuthUser({ ...authUser, email: e.target.value })}
+                            />
                             <div className="flex items-center">
                                 <input id="emailOffers" type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
                                 <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 dark:text-gray-400">Email me with news and offers</label>
@@ -160,7 +200,10 @@ export default function CheckoutForm() {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Input placeholder="City" />
-                            <Select options={['State', 'Hawaii']} />
+                            <Input
+                                placeholder="State"
+                                // onChange={(e) => }
+                            />
                             <Input placeholder="ZIP code" />
                         </div>
 
