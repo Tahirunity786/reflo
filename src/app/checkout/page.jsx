@@ -186,8 +186,7 @@ export default function CheckoutForm() {
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment</h2>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            At Doorbix, you can conveniently pay using Cash on Delivery (COD).
-                        </p>
+                            At Doorbix, we prioritize your comfort and trust — that’s why we offer a convenient and secure Cash on Delivery (COD) option, allowing you to pay only when your order arrives at your doorstep.</p>
 
                     </section>
 

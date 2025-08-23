@@ -4,6 +4,7 @@ import { X, Eye, EyeOff } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
+
 // ✅ Reusable input field
 const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) => (
   <input
@@ -16,7 +17,7 @@ const InputField = ({ type = 'text', placeholder, value, onChange, ...rest }) =>
   />
 );
 
-const SignUpModal = ({ isOpen, onClose }) => {
+const SignUpModal = ({ isOpen, onClose, onSwitchToSignIn }) => {
 
 
   const [firstName, setFirstName] = useState('');
@@ -25,6 +26,8 @@ const SignUpModal = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+
+
 
   const router = useRouter();
 
@@ -79,12 +82,10 @@ const SignUpModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-lg animate-fadeIn">
-        {/* ❌ Close button */}
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-black">
           <X size={20} />
         </button>
 
-        {/* 📝 Modal Title */}
         <h2 className="text-2xl font-bold text-center mb-2">Create Account</h2>
         <p className="text-sm text-gray-500 text-center mb-6">
           Please fill the fields below to register.
@@ -129,11 +130,20 @@ const SignUpModal = ({ isOpen, onClose }) => {
           <button
             type="submit"
             className="w-full bg-black cursor-pointer text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition"
-            disabled = {loading}
+            disabled={loading}
           >
-            {loading ? "Submit...":"Create Account"}
+            {loading ? "Submit..." : "Create Account"}
           </button>
         </form>
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <span
+            className="text-black font-semibold cursor-pointer hover:underline"
+            onClick={onSwitchToSignIn}
+          >
+            Login
+          </span>
+        </div>
       </div>
     </div>
   );
