@@ -1,11 +1,11 @@
 'use client';
-import React, { useState, useEffect, use, useMemo } from 'react';
+import React, { useState, useEffect, use, useMemo , useRef} from 'react';
 import { X, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useSelector, useDispatch } from "react-redux";
 import { selectCartItems, selectCartTotal, removeItem, updateQty } from "@/redux/slices/cartSlice";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import SignInModal from '@/components/SignInModal/SignInModal';
 import SignUpModal from '@/components/SignUpModal/SignUpModal';
@@ -68,6 +68,7 @@ export default function CheckoutForm() {
 
     // const total = useSelector(selectCartTotal);
     const dispatch = useDispatch();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState(searchParams.get("i") || "");
     const items = useSelector(selectCartItems);
@@ -153,6 +154,7 @@ export default function CheckoutForm() {
 
     useEffect(() => {
         const controller = new AbortController();
+         
 
         const fetchProduct = async () => {
             try {
@@ -188,67 +190,115 @@ export default function CheckoutForm() {
         return () => controller.abort();
     }, [slug]);
 
-    const placeOrder = async () => {
-        // 🛒 Build items array
-        const orderItems = Array.isArray(item) ? item : [item];
-        const itemsPayload = orderItems.map((p) => ({
-            product_id: p.id,   // <-- here
-            name: p.name,
-            quantity: p.qty,
-            unit_price: p.price.toFixed(2),
-        }));
+    const [isPending, setIsPending] = useState(false); // ⏳ waiting before order
+    const [secondsLeft, setSecondsLeft] = useState(5);
+    const abortController = useRef(null); // keep AbortController instance
 
+    // ⏳ Countdown effect
+    useEffect(() => {
+        if (!isPending) return;
 
-        const addressesPayload = [
-            {
-                address_type: "SHP",
-                first_name: formData.firstName,
-                last_name: formData.lastName,
-                phone: formData.phone || "",
-                line1: formData.address,
-                line2: formData.apartment,
-                city: formData.city,
-                state: formData.state,
-                postal_code: formData.zip,
-                country: (formData.country || "UAE").toUpperCase(), // ✅ ISO alpha-2
-            },
-        ];
+        if (secondsLeft === 0) {
+            // Auto place order when countdown hits 0
+            placeOrder();
+            return;
+        }
 
+        const timer = setTimeout(() => {
+            setSecondsLeft((prev) => prev - 1);
+        }, 1000);
 
-        // 🧾 Final request body
-        const payload = {
-            delivery: formData.delivery,
-            method: formData.method,
-            items: itemsPayload,
-            addresses: addressesPayload,
-        };
+        return () => clearTimeout(timer);
+    }, [isPending, secondsLeft]);
 
-        try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
+    const startOrderCountdown = () => {
+        setIsPending(true);
+        setSecondsLeft(5);
+    };
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
+    const cancelOrder = () => {
+        setIsPending(false);
+        setSecondsLeft(5);
 
-            const data = await response.json();
-            console.log("✅ Order placed successfully:", data);
-
-            // Optionally: clear cart, redirect to thank-you page
-        } catch (error) {
-            console.error("❌ Failed to place order:", error);
+        // cancel any ongoing request
+        if (abortController.current) {
+            abortController.current.abort();
         }
     };
 
+   const placeOrder = async () => {
+     const authToken = Cookies.get("access");
+    setIsPending(false); // stop countdown
+    abortController.current = new AbortController();
 
+    // 🛒 Build items array
+    const orderItems = Array.isArray(item) ? item : [item];
+    const itemsPayload = orderItems.map((p) => ({
+        product_id: p.id,
+        name: p.name,
+        quantity: p.qty,
+        unit_price: p.price.toFixed(2),
+    }));
+
+    const addressesPayload = [
+        {
+            address_type: "SHP",
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            phone: formData.phone || "",
+            line1: formData.address,
+            line2: formData.apartment,
+            city: formData.city,
+            state: formData.state,
+            postal_code: formData.zip,
+            country: (formData.country || "UAE").toUpperCase(),
+        },
+    ];
+
+    // 🧾 Final request body
+    const payload = {
+        delivery: formData.delivery,
+        method: formData.method,
+        items: itemsPayload,
+        addresses: addressesPayload,
+    };
+
+    try {
+        // ✅ Build headers dynamically
+        const headers = {
+            "Content-Type": "application/json",
+        };
+        if (authToken) {
+            headers["Authorization"] = `Bearer ${authToken}`;
+        }
+
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+            {
+                method: "POST",
+                headers,
+                body: JSON.stringify(payload),
+                signal: abortController.current.signal,
+            }
+        );
+
+        if (response.status !== 201) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // ✅ Redirect to thank you page with order ID
+        router.push(`/thankyou?order=${data.order_id}`);
+    } catch (error) {
+        if (error.name === "AbortError") {
+            console.log("⚠️ Order request cancelled by user.");
+        } else {
+            console.error("❌ Failed to place order:", error);
+        }
+    }
+};
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -351,10 +401,26 @@ export default function CheckoutForm() {
 
                     </section>
 
-                    <button onClick={() => placeOrder()} className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Place order
-                    </button>
-
+                    <div className="w-full">
+                        {!isPending ? (
+                            <button
+                                onClick={startOrderCountdown}
+                                className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
+                                Place Order
+                            </button>
+                        ) : (
+                            <div className="flex items-center justify-between gap-2">
+                                <button
+                                    onClick={cancelOrder}
+                                    className="flex-1 bg-red-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                >
+                                    Cancel ({secondsLeft}s)
+                                </button>
+                               
+                            </div>
+                        )}
+                    </div>
                     <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 flex space-x-4 text-sm">
                         <a href="#" className="text-blue-600 dark:text-blue-400">Privacy policy</a>
                         <a href="#" className="text-blue-600 dark:text-blue-400">Cancellation policy</a>
