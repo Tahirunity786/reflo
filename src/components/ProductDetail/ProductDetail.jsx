@@ -7,7 +7,7 @@ import BestSellingProducts from '../BestSellingProducts/BestSellingProducts';
 import PurchaseOptions from '../PurchaseOptions/PurchaseOptions';
 import ProductInfoTabs from '../ProductInfoTabs/ProductInfoTabs';
 import Header from '../Header/Header';
-import { WishButton } from '../WishButton/WishButton';
+import WishButton from '../WishButton/WishButton';
 
 
 const LoadingState = () => {

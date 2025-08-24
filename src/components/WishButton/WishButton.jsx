@@ -3,8 +3,9 @@ import { addItemSafe } from "@/redux/slices/wishSlice";
 import { FaShoppingBasket } from "react-icons/fa";
 import { Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
+import React from "react";
 
-export const WishButton = ({ data }) => {
+const WishButton = ({ data }) => {
   const dispatch = useDispatch();
 
   // 👇 correctly select wishlist items from Redux
@@ -19,16 +20,18 @@ export const WishButton = ({ data }) => {
       });
       return;
     }
-
+    console.log(data)
     const item = {
       id: data?.id,
       slug: data?.productSlug,
       name: data?.productName,
       price: data?.productPrice,
+      stockStatus: data?.productStock > 0 ? "In Stock" : "Out of Stock",
       image: data?.productImages?.[0]?.image
         ? `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${data?.productImages[0].image}`
         : null,
     };
+
 
     dispatch(addItemSafe(item));
 
@@ -41,10 +44,12 @@ export const WishButton = ({ data }) => {
     <button
       type="button"
       onClick={addToWishItem}
-      className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors duration-200"
+      className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors z-50 duration-200"
       aria-label="Add to wishlist"
     >
       <Heart size={20} />
     </button>
   );
 };
+
+export default React.memo(WishButton);

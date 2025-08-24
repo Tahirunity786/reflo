@@ -89,6 +89,7 @@ const wishlistSlice = createSlice({
         slug: item.slug ?? null,
         name: item.name,
         price: Number(item.price) || 0,
+        stockStatus:item.stockStatus,
         image: item.image ?? null,
       });
       state.lastError = null;

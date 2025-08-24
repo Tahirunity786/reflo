@@ -8,6 +8,7 @@ import { addItemSafe } from "@/redux/slices/cartSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { FaShoppingBasket } from "react-icons/fa";
+import WishButton from "../WishButton/WishButton";
 
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
@@ -65,13 +66,7 @@ const ProductCard = ({ product, isList }) => {
             )}
 
             {/* Wishlist Icon */}
-            <button
-                aria-label="Add to wishlist"
-                className="absolute top-3 right-3 z-10 text-gray-400 hover:text-red-500"
-                type="button"
-            >
-                <Heart size={18} />
-            </button>
+            <WishButton data={product}/>
 
             {/* Image */}
             <div

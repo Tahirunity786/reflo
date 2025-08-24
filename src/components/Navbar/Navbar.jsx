@@ -180,7 +180,7 @@ export default function Navbar() {
                   )}
                 </AnimatePresence>
               </div>
-              <NavIcon icon={<FiHeart />} badge="0" />
+              <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge="0" />
               <NavIcon icon={<FiShoppingCart />} badge="1" onClick={() => setCartOpen(true)} />
             </div>
           </div>
