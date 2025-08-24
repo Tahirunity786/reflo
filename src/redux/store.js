@@ -4,6 +4,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import expireTransform from "@/redux/utils/expireTransform";
 import userReducer from "@/redux/slices/userSlice";
 import cartReducer from "@/redux/slices/cartSlice";
+import wishReducer from "@/redux/slices/wishSlice";
 
 const persistConfig = {
   key: "root",
@@ -15,6 +16,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
+  wish: wishReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

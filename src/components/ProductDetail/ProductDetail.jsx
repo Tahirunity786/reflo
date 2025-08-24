@@ -8,6 +8,7 @@ import PurchaseOptions from '../PurchaseOptions/PurchaseOptions';
 import ProductInfoTabs from '../ProductInfoTabs/ProductInfoTabs';
 import Header from '../Header/Header';
 
+
 const LoadingState = () => {
     return (
         <section className="max-w-screen-xl mx-auto px-8 py-8 animate-pulse text-gray-800">
@@ -112,6 +113,8 @@ const ProductState = ({
     setActiveTab,
 }) => {
 
+    
+
     const metaData = {
         title: `DoorBix || ${data?.productName}`,
         description: "Shop our premium red t-shirt made from 100% cotton. Unisex fit, soft, breathable, and perfect for casual wear. Available in all sizes.",
@@ -169,13 +172,7 @@ const ProductState = ({
                                 />
                             )}
 
-                            <button
-                                type="button"
-                                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors duration-200"
-                                aria-label="Add to wishlist"
-                            >
-                                <Heart size={20} />
-                            </button>
+                           
                         </div>
                     </div>
                 </div>
@@ -362,7 +359,7 @@ const ProductDetailPage = ({ slug }) => {
     const [loading, setLoading] = useState(true); // Start with true
     const [selectedImage, setSelectedImage] = useState(null);
     const [fade, setFade] = useState(false);
-    
+
 
     const handleThumbnailClick = (image) => {
         if (image === selectedImage) return;
@@ -373,7 +370,7 @@ const ProductDetailPage = ({ slug }) => {
         }, 200);
     };
 
-   
+
 
     useEffect(() => {
         const retrieveProduct = async () => {
