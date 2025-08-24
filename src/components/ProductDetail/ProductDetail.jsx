@@ -222,7 +222,7 @@ const ProductState = ({
                                 <Truck size={20} /> Estimate delivery times: 3-5 days International.
                             </li>
                             <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <Badge size={20} /> Use code <b>WELCOME15</b> for 15% off your first order.
+                                <Badge size={20} /> Subscribe & Save 3% on this product
                             </li>
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <ShieldCheck size={20} /> Secure checkout guarantee

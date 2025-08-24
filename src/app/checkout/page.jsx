@@ -12,20 +12,29 @@ import SignUpModal from '@/components/SignUpModal/SignUpModal';
 
 
 // Helper Component: Input Field
-const Input = ({ name, type = "text", placeholder, value, onChange }) => {
+const Input = ({ name, type = "text", placeholder, value, onChange, error }) => {
     const inputProps = {
-        name,  // ✅ make sure name is passed
+        name,
         type,
         placeholder,
-        className:
-            "w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4",
+        value: value || "",
+        onChange,
+        className: `
+      w-full px-3 py-2 rounded-md 
+      bg-white dark:bg-gray-700 
+      text-gray-900 dark:text-white 
+      border ${error ? "border-red-500 mb-1" : "border-gray-300 dark:border-gray-600 mb-4"}
+      placeholder-gray-500 dark:placeholder-gray-400 
+      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+    `,
     };
 
-    if (onChange !== undefined) {
-        return <input {...inputProps} value={value || ""} onChange={onChange} />;
-    }
-
-    return <input {...inputProps} defaultValue={value || ""} />;
+    return (
+        <div>
+            <input {...inputProps} />
+            {error && <p className="text-red-500 text-sm mt-1 mb-4">{error}</p>}
+        </div>
+    );
 };
 
 
@@ -64,6 +73,16 @@ const useCartTotal = (items) => {
     }, [items]);
 };
 
+const REQUIRED_FIELDS = [
+    "email",
+    "firstName",
+    "lastName",
+    "address",
+    "city",
+    "state",
+    "zip",
+];
+
 export default function CheckoutForm() {
 
     const router = useRouter();
@@ -78,7 +97,10 @@ export default function CheckoutForm() {
     const [secondsLeft, setSecondsLeft] = useState(5);
     const abortController = useRef(null); // keep AbortController instance
     const [status, setStatus] = useState("idle");
+    const [errors, setErrors] = useState({});
     const [qty, setQty] = useState(1); // quantity state
+
+    const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
 
     const [formData, setFormData] = useState({
         email: "",
@@ -107,15 +129,6 @@ export default function CheckoutForm() {
             }));
         }
     }, [authUser]);
-
-    useEffect(() => {
-
-        if (searchParams.get("q")) {
-            setQty(parseInt(searchParams.get("q"), 10));
-
-        }
-    }, [searchParams])
-
 
 
 
@@ -151,8 +164,22 @@ export default function CheckoutForm() {
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
-    const total = useCartTotal(item);
+    // 🛒 Always compute cart total at hook level
+    const cartTotal = useCartTotal(items);
+
+    // ✅ Now compute final total
+    const total = useMemo(() => {
+        if (slug === "cart") {
+            return cartTotal;
+        } else {
+            return item?.price ? item.price * qty : 0;
+        }
+    }, [slug, cartTotal, item, qty]);
+
+
+
     const maxLength = 20;
 
     // ✅ Keep slug in sync with searchParams
@@ -203,6 +230,13 @@ export default function CheckoutForm() {
         return () => controller.abort();
     }, [slug]);
 
+    useEffect(() => {
+        if (slug !== "cart" && searchParams.get("q")) {
+            const q = parseInt(searchParams.get("q"), 10);
+            setQty(!isNaN(q) && q > 0 ? q : 1);
+        }
+    }, [searchParams, slug]);
+
 
 
     // ⏳ Countdown effect
@@ -238,82 +272,97 @@ export default function CheckoutForm() {
             abortController.current.abort();
         }
     };
+    const validate = () => {
+        let newErrors = {};
+        REQUIRED_FIELDS.forEach((field) => {
+            if (!formData[field]?.trim()) {
+                newErrors[field] = "This field is required";
+            }
+        });
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const placeOrder = async () => {
-        const authToken = Cookies.get("access");
-        setIsPending(true); // stop countdown
-        abortController.current = new AbortController();
+        if (validate()) {
+            const authToken = Cookies.get("access");
+            setIsPending(true); // stop countdown
+            abortController.current = new AbortController();
 
-        // 🛒 Build items array
-        const orderItems = Array.isArray(item) ? item : [item];
-        const itemsPayload = orderItems.map((p) => ({
-            product_id: p.id,
-            name: p.name,
-            quantity: p.qty,
-            unit_price: p.price.toFixed(2),
-        }));
+            // 🛒 Build items array
+            const orderItems = Array.isArray(item) ? item : [item];
+            const itemsPayload = orderItems.map((p) => ({
+                product_id: p.id,
+                name: p.name,
+                quantity: p.qty,
+                unit_price: p.price.toFixed(2),
+            }));
 
-        const addressesPayload = [
-            {
-                address_type: "SHP",
-                first_name: formData.firstName,
-                last_name: formData.lastName,
-                email: formData.email,
-                phone: formData.phone || "",
-                line1: formData.address,
-                line2: formData.apartment,
-                city: formData.city,
-                state: formData.state,
-                postal_code: formData.zip,
-                country: (formData.country || "UAE").toUpperCase(),
-            },
-        ];
-
-        // 🧾 Final request body
-        const payload = {
-            delivery: formData.delivery,
-            method: formData.method,
-            items: itemsPayload,
-            addresses: addressesPayload,
-        };
-
-        try {
-            // ✅ Build headers dynamically
-            const headers = {
-                "Content-Type": "application/json",
-            };
-            if (authToken) {
-                headers["Authorization"] = `Bearer ${authToken}`;
-            }
-
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+            const addressesPayload = [
                 {
-                    method: "POST",
-                    headers,
-                    body: JSON.stringify(payload),
-                    signal: abortController.current.signal,
+                    address_type: "SHP",
+                    first_name: formData.firstName,
+                    last_name: formData.lastName,
+                    email: formData.email,
+                    phone: formData.phone || "",
+                    line1: formData.address,
+                    line2: formData.apartment,
+                    city: formData.city,
+                    state: formData.state,
+                    postal_code: formData.zip,
+                    country: (formData.country || "UAE").toUpperCase(),
+                },
+            ];
+
+            // 🧾 Final request body
+            const payload = {
+                delivery: formData.delivery,
+                method: formData.method,
+                items: itemsPayload,
+                addresses: addressesPayload,
+            };
+
+            try {
+                // ✅ Build headers dynamically
+                const headers = {
+                    "Content-Type": "application/json",
+                };
+                if (authToken) {
+                    headers["Authorization"] = `Bearer ${authToken}`;
                 }
-            );
 
-            if (response.status === 201) {
-                const data = await response.json();
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+                    {
+                        method: "POST",
+                        headers,
+                        body: JSON.stringify(payload),
+                        signal: abortController.current.signal,
+                    }
+                );
 
-                // ✅ Redirect to thank you page with order ID
-                router.push(`/thankyou?order=${data.order_id}`);
-            } else if (response.status !== 201) {
+                if (response.status === 201) {
+                    const data = await response.json();
 
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+                    // ✅ Redirect to thank you page with order ID
+                    router.push(`/thankyou?order=${data.order_id}`);
+                } else if (response.status !== 201) {
+
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    console.log("⚠️ Order request cancelled by user.");
+                } else {
+                    console.error("❌ Failed to place order:", error);
+                }
+            } finally {
+                setIsPending(false);
+                setStatus("confirm");
             }
-        } catch (error) {
-            if (error.name === "AbortError") {
-                console.log("⚠️ Order request cancelled by user.");
-            } else {
-                console.error("❌ Failed to place order:", error);
-            }
-        } finally {
+        } else {
             setIsPending(false);
-            setStatus("confirm");
+            setStatus("idle");
         }
     };
 
@@ -337,6 +386,7 @@ export default function CheckoutForm() {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
+                            error={errors.email}
                         />
 
                         <div className="flex items-center">
@@ -372,16 +422,16 @@ export default function CheckoutForm() {
                     {/* Address Section */}
                     <section>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <Input name="firstName" placeholder="First name" value={formData.firstName} onChange={handleChange} />
-                            <Input name="lastName" placeholder="Last name" value={formData.lastName} onChange={handleChange} />
+                            <Input name="firstName" error={errors.firstName} placeholder="First name" value={formData.firstName} onChange={handleChange} />
+                            <Input name="lastName" error={errors.lastName} placeholder="Last name" value={formData.lastName} onChange={handleChange} />
                         </div>
-                        <Input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
+                        <Input name="address" error={errors.address} placeholder="Address" value={formData.address} onChange={handleChange} />
                         <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-                            <Input name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-                            <Input name="state" placeholder="State" value={formData.state} onChange={handleChange} />
-                            <Input name="zip" placeholder="ZIP code" value={formData.zip} onChange={handleChange} />
+                            <Input name="city" placeholder="City" error={errors.city} value={formData.city} onChange={handleChange} />
+                            <Input name="state" placeholder="State" error={errors.state} value={formData.state} onChange={handleChange} />
+                            <Input name="zip" placeholder="ZIP code" error={errors.zip} value={formData.zip} onChange={handleChange} />
                         </div>
 
                         <div className="flex items-center">
@@ -575,15 +625,37 @@ export default function CheckoutForm() {
                                 <span className="text-gray-600 dark:text-gray-400">Shipping</span>
                                 <span className="text-gray-500 dark:text-gray-400">Free</span>
                             </div>
+                            {isAuthenticated ? (
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600 dark:text-gray-400">Discount</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        -{Math.round(total * 0.03)}   {/* 3% discount rounded */}
+                                    </span>
+                                </div>
+                            ) : null}
+
                         </div>
 
                         <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between text-lg font-semibold">
                             <span className="text-gray-900 dark:text-white">Total</span>
                             <div className="text-right">
-
-                                <span className="ml-1 text-gray-900 dark:text-white">{total} {process.env.NEXT_PUBLIC_CURRENCY}</span>
+                                {isAuthenticated ? (
+                                    <>
+                                        <span className="line-through text-gray-500 mr-2">
+                                            {total} {process.env.NEXT_PUBLIC_CURRENCY}
+                                        </span>
+                                        <span className="text-gray-900 dark:text-white">
+                                            {Math.round(total * 0.97)} {process.env.NEXT_PUBLIC_CURRENCY}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className="text-gray-900 dark:text-white">
+                                        {total} {process.env.NEXT_PUBLIC_CURRENCY}
+                                    </span>
+                                )}
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

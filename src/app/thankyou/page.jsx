@@ -44,9 +44,9 @@ export default function ThankYouPage() {
     }
   }, [params]);
   const itemsTotal = order?.items?.reduce(
-  (acc, item) => acc + Number(item.total_price || 0),
-  0
-);
+    (acc, item) => acc + Number(item.total_price || 0),
+    0
+  );
 
 
   return (
@@ -192,10 +192,21 @@ export default function ThankYouPage() {
             </div>
 
             {/* ✅ Total */}
+            {
+              order?.discount_amount > 0 && (
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-gray-800 font-semibold">Discount</span>
+                  <span className="font-bold text-green-600">
+                    -{order?.discount_amount} {process.env.NEXT_PUBLIC_CURRENCY}
+                  </span>
+                </div>
+              )
+            }
+
             <div className="flex justify-between items-center pt-2">
               <span className="text-gray-800 font-semibold">Total</span>
               <span className="font-bold text-green-600">
-                {itemsTotal} {process.env.NEXT_PUBLIC_CURRENCY}
+                {itemsTotal - order?.discount_amount} {process.env.NEXT_PUBLIC_CURRENCY}
               </span>
             </div>
           </div>
