@@ -9,14 +9,15 @@ import wishReducer from "@/redux/slices/wishSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user","cart"], 
+  whitelist: ["user", "cart", "wishlist"], 
   transforms: [expireTransform],
 };
+
 
 const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
-  wish: wishReducer,
+  wishlist: wishReducer,  // <-- match slice name + selectors
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
