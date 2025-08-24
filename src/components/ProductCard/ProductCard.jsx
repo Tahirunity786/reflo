@@ -34,6 +34,7 @@ const ProductCard = ({ product, isList }) => {
             slug: product.productSlug,
             name: product.productName,
             price: product.productPrice,
+            unite_price: product.productPrice,
             image: product?.productImages?.[0]?.image
                 ? `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${product.productImages[0].image}`
                 : null,

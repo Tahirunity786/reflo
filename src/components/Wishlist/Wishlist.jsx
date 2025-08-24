@@ -30,8 +30,15 @@ export default function Wishlist() {
     }
 
     const cartItem = {
-      ...item,
-      qty: 1, // default quantity
+      id: item.id,
+      slug: item.productSlug,
+      name: item.productName,
+      price: item.productPrice,
+      unite_price: item.productPrice,
+      image: item?.productImages?.[0]?.image
+        ? `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${item.image}`
+        : null,
+      qty: 1,
     };
 
     dispatch(addCartItemSafe(cartItem));

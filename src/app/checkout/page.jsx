@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, use, useMemo , useRef} from 'react';
+import React, { useState, useEffect, use, useMemo, useRef } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useSelector, useDispatch } from "react-redux";
@@ -66,8 +66,6 @@ const useCartTotal = (items) => {
 
 export default function CheckoutForm() {
 
-    // const total = useSelector(selectCartTotal);
-    const dispatch = useDispatch();
     const router = useRouter();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState(searchParams.get("i") || "");
@@ -76,6 +74,11 @@ export default function CheckoutForm() {
     const [authUser, setAuthUser] = useState(null);
     const [showSignIn, setShowSignIn] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
+    const [isPending, setIsPending] = useState(false); // ⏳ waiting before order
+    const [secondsLeft, setSecondsLeft] = useState(5);
+    const abortController = useRef(null); // keep AbortController instance
+    const [status, setStatus] = useState("idle");
+    const [qty, setQty] = useState(1); // quantity state
 
     const [formData, setFormData] = useState({
         email: "",
@@ -104,6 +107,14 @@ export default function CheckoutForm() {
             }));
         }
     }, [authUser]);
+
+    useEffect(() => {
+
+        if (searchParams.get("q")) {
+            setQty(parseInt(searchParams.get("q"), 10));
+
+        }
+    }, [searchParams])
 
 
 
@@ -154,7 +165,7 @@ export default function CheckoutForm() {
 
     useEffect(() => {
         const controller = new AbortController();
-         
+
 
         const fetchProduct = async () => {
             try {
@@ -177,6 +188,8 @@ export default function CheckoutForm() {
                 } else {
                     console.error("❌ Error fetching product:", error);
                 }
+            } finally {
+                controller.abort();
             }
         };
 
@@ -190,16 +203,15 @@ export default function CheckoutForm() {
         return () => controller.abort();
     }, [slug]);
 
-    const [isPending, setIsPending] = useState(false); // ⏳ waiting before order
-    const [secondsLeft, setSecondsLeft] = useState(5);
-    const abortController = useRef(null); // keep AbortController instance
+
 
     // ⏳ Countdown effect
     useEffect(() => {
         if (!isPending) return;
 
         if (secondsLeft === 0) {
-            // Auto place order when countdown hits 0
+            setIsPending(false);
+            setStatus("confirm"); // ✅ show confirm widget instead of auto place
             placeOrder();
             return;
         }
@@ -213,92 +225,97 @@ export default function CheckoutForm() {
 
     const startOrderCountdown = () => {
         setIsPending(true);
+        setStatus("pending");
         setSecondsLeft(5);
     };
 
     const cancelOrder = () => {
         setIsPending(false);
+        setStatus("cancelled");
         setSecondsLeft(5);
 
-        // cancel any ongoing request
         if (abortController.current) {
             abortController.current.abort();
         }
     };
 
-   const placeOrder = async () => {
-     const authToken = Cookies.get("access");
-    setIsPending(false); // stop countdown
-    abortController.current = new AbortController();
+    const placeOrder = async () => {
+        const authToken = Cookies.get("access");
+        setIsPending(true); // stop countdown
+        abortController.current = new AbortController();
 
-    // 🛒 Build items array
-    const orderItems = Array.isArray(item) ? item : [item];
-    const itemsPayload = orderItems.map((p) => ({
-        product_id: p.id,
-        name: p.name,
-        quantity: p.qty,
-        unit_price: p.price.toFixed(2),
-    }));
+        // 🛒 Build items array
+        const orderItems = Array.isArray(item) ? item : [item];
+        const itemsPayload = orderItems.map((p) => ({
+            product_id: p.id,
+            name: p.name,
+            quantity: p.qty,
+            unit_price: p.price.toFixed(2),
+        }));
 
-    const addressesPayload = [
-        {
-            address_type: "SHP",
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            email: formData.email,
-            phone: formData.phone || "",
-            line1: formData.address,
-            line2: formData.apartment,
-            city: formData.city,
-            state: formData.state,
-            postal_code: formData.zip,
-            country: (formData.country || "UAE").toUpperCase(),
-        },
-    ];
-
-    // 🧾 Final request body
-    const payload = {
-        delivery: formData.delivery,
-        method: formData.method,
-        items: itemsPayload,
-        addresses: addressesPayload,
-    };
-
-    try {
-        // ✅ Build headers dynamically
-        const headers = {
-            "Content-Type": "application/json",
-        };
-        if (authToken) {
-            headers["Authorization"] = `Bearer ${authToken}`;
-        }
-
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+        const addressesPayload = [
             {
-                method: "POST",
-                headers,
-                body: JSON.stringify(payload),
-                signal: abortController.current.signal,
+                address_type: "SHP",
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                email: formData.email,
+                phone: formData.phone || "",
+                line1: formData.address,
+                line2: formData.apartment,
+                city: formData.city,
+                state: formData.state,
+                postal_code: formData.zip,
+                country: (formData.country || "UAE").toUpperCase(),
+            },
+        ];
+
+        // 🧾 Final request body
+        const payload = {
+            delivery: formData.delivery,
+            method: formData.method,
+            items: itemsPayload,
+            addresses: addressesPayload,
+        };
+
+        try {
+            // ✅ Build headers dynamically
+            const headers = {
+                "Content-Type": "application/json",
+            };
+            if (authToken) {
+                headers["Authorization"] = `Bearer ${authToken}`;
             }
-        );
 
-        if (response.status !== 201) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+                {
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify(payload),
+                    signal: abortController.current.signal,
+                }
+            );
+
+            if (response.status === 201) {
+                const data = await response.json();
+
+                // ✅ Redirect to thank you page with order ID
+                router.push(`/thankyou?order=${data.order_id}`);
+            } else if (response.status !== 201) {
+
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+        } catch (error) {
+            if (error.name === "AbortError") {
+                console.log("⚠️ Order request cancelled by user.");
+            } else {
+                console.error("❌ Failed to place order:", error);
+            }
+        } finally {
+            setIsPending(false);
+            setStatus("confirm");
         }
-
-        const data = await response.json();
-
-        // ✅ Redirect to thank you page with order ID
-        router.push(`/thankyou?order=${data.order_id}`);
-    } catch (error) {
-        if (error.name === "AbortError") {
-            console.log("⚠️ Order request cancelled by user.");
-        } else {
-            console.error("❌ Failed to place order:", error);
-        }
-    }
-};
+    };
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -402,14 +419,15 @@ export default function CheckoutForm() {
                     </section>
 
                     <div className="w-full">
-                        {!isPending ? (
+                        {status === "idle" && (
                             <button
                                 onClick={startOrderCountdown}
                                 className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                             >
                                 Place Order
                             </button>
-                        ) : (
+                        )}
+                        {status === "pending" && isPending && (
                             <div className="flex items-center justify-between gap-2">
                                 <button
                                     onClick={cancelOrder}
@@ -417,7 +435,19 @@ export default function CheckoutForm() {
                                 >
                                     Cancel ({secondsLeft}s)
                                 </button>
-                               
+                            </div>
+                        )}
+                        {status === "cancelled" && (
+                            <button
+                                onClick={startOrderCountdown}
+                                className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
+                                Place Order
+                            </button>
+                        )}
+                        {status === "confirm" && (
+                            <div className="p-4 bg-green-50 rounded-md text-center border border-green-200 text-green-800 font-semibold">
+                                Order Confirmed
                             </div>
                         )}
                     </div>
@@ -522,12 +552,12 @@ export default function CheckoutForm() {
                                             </Tooltip.Provider>
 
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                Qty: {item.qty}
+                                                Qty: {qty}
                                             </p>
                                         </div>
 
                                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {item.price * item.qty} {process.env.NEXT_PUBLIC_CURRENCY}
+                                            {item.price * qty} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </div>
                                     </div>
                                 );

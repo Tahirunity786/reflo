@@ -80,6 +80,7 @@ const cartSlice = createSlice({
         slug: item.slug ?? null,
         name: item.name,
         price: Number(item.price), // store numeric; server must validate later
+        unite_price: Number(item.price), // store numeric; server must validate later
         image: item.image ?? null,
         qty: Math.max(1, Number(item.qty) || 1),
       });

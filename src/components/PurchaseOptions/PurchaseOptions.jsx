@@ -33,10 +33,11 @@ const PurchaseOptions = ({ data }) => {
       slug: data?.productSlug,
       name: data?.productName,
       price: data?.productPrice,
+      unite_price: data?.productPrice,
       image: data?.productImages?.[0]?.image
         ? `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${data?.productImages[0].image}`
         : null,
-      qty: 1,
+      qty: qty,
     };
 
     dispatch(addItemSafe(item));
@@ -159,7 +160,7 @@ const PurchaseOptions = ({ data }) => {
         {/* Buy It Now Button */}
         <button
           disabled={!agreed}
-          onClick={()=>{router.push(`/checkout?i=${data?.id}`)}}
+          onClick={()=>{router.push(`/checkout?i=${data?.id}&q=${qty}`)}}
           className={`w-full rounded-full py-3 transition ${agreed
             ? "bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
             : "bg-red-500/10 text-red-600 cursor-not-allowed"
