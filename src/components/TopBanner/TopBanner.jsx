@@ -5,19 +5,25 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const slides = [
   {
-    image: '/Image/fs_new_s1.webp',
+    image: '/Image/Copilot_20250825_121802.png',
     title: 'Soft Comfort',
     subtitle: 'Bold Looks',
     tag: 'MODERN EVERYDAY LOOKS',
   },
   {
-    image: '/Image/fs_new_s2.webp',
+    image: '/Image/Copilot_20250825_122111.png',
     title: 'Chic Layers',
     subtitle: 'For Cold Days',
     tag: 'STYLISH WINTER PICKS',
   },
   {
-    image: '/Image/fs_new_s3.webp',
+    image: '/Image/Copilot_20250825_122406.png',
+    title: 'Effortless Wear',
+    subtitle: 'Everywhere',
+    tag: 'FRESH SEASON STYLES',
+  },
+  {
+    image: '/Image/Copilot_20250825_123122.png',
     title: 'Effortless Wear',
     subtitle: 'Everywhere',
     tag: 'FRESH SEASON STYLES',
