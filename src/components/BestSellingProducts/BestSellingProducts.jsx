@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import WishButton from '../WishButton/WishButton';
 
 
 const BestSellingProducts = ({title, type}) => {
@@ -81,9 +82,7 @@ const BestSellingProducts = ({title, type}) => {
             bsData.map((product) => (
               <div key={product.id} className="relative group">
                 {/* Wishlist Icon */}
-                <button className="absolute top-4 z-50 right-4 text-gray-600 hover:text-black">
-                  <Heart className="w-5 h-5" />
-                </button>
+                <WishButton data={product}/>
 
                 {/* Product Image */}
                 <div className="w-full overflow-hidden rounded-lg mb-4 aspect-[5/5]">

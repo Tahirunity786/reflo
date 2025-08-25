@@ -39,7 +39,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
                 {/* Logo & Description */}
                 <div>
-                    <h1 className="text-2xl font-bold mb-2">milano</h1>
+                    <h1 className="text-2xl font-bold mb-2">DoorBix</h1>
                     <p className="text-sm leading-6">
                         We only carry designs we believe in ethically and aesthetically – original, authentic pieces that are made to last.{' '}
                         <a href="#" className="text-black font-semibold underline">Learn more</a>

@@ -31,13 +31,11 @@ export default function Wishlist() {
 
     const cartItem = {
       id: item.id,
-      slug: item.productSlug,
-      name: item.productName,
-      price: item.productPrice,
-      unite_price: item.productPrice,
-      image: item?.productImages?.[0]?.image
-        ? `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${item.image}`
-        : null,
+      slug: item.slug,
+      name: item.name,
+      price: item.price,
+      unite_price: item.price,
+      image: item.image,
       qty: 1,
     };
 

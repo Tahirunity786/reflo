@@ -19,6 +19,9 @@ import { ShoppingBasketIcon } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useSelector } from "react-redux";
+import { selectCartItems, selectCartCount} from "@/redux/slices/cartSlice";
+import { selectWishlistCount} from "@/redux/slices/wishSlice";
 
 const socialIcons = [
   { icon: <FaFacebookF />, label: 'Facebook' },
@@ -38,6 +41,7 @@ const navLinks = [
 
 export default function Navbar() {
   const router = useRouter();
+  const items = useSelector(selectCartItems);
   const [isCartOpen, setCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -45,6 +49,9 @@ export default function Navbar() {
   const [authUser, setAuthUser] = useState(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const cartLength = useSelector(selectCartCount);
+  const wishLength = useSelector(selectWishlistCount);
 
   useEffect(() => {
     const user = Cookies.get('user');
@@ -180,8 +187,8 @@ export default function Navbar() {
                   )}
                 </AnimatePresence>
               </div>
-              <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge="0" />
-              <NavIcon icon={<FiShoppingCart />} badge="1" onClick={() => setCartOpen(true)} />
+              <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge={`${wishLength}`} />
+              <NavIcon icon={<FiShoppingCart />} badge={cartLength} onClick={() => setCartOpen(true)} />
             </div>
           </div>
         </div>
