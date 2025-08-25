@@ -188,7 +188,7 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
               <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge={`${wishLength}`} />
-              <NavIcon icon={<FiShoppingCart />} badge={cartLength} onClick={() => setCartOpen(true)} />
+              <NavIcon icon={<FiShoppingCart />} badge={`${cartLength}`} onClick={() => setCartOpen(true)} />
             </div>
           </div>
         </div>
