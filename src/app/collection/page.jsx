@@ -15,7 +15,7 @@ const Page = () => {
     const fetchCollection = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/collections?quantity=4`);
         if (response.ok) {
           const CData = await response.json();
           setData(CData);

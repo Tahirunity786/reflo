@@ -90,7 +90,7 @@ export default function Navbar() {
         {/* Top Bar */}
         <div className="bg-black text-white text-sm flex justify-between items-center px-4 lg:px-8 py-2">
           <div className="flex items-center space-x-4">
-            <span className="font-semibold">Welcome DoorBix store!</span>
+            <span className="font-semibold">Welcome To DoorBix</span>
             <div className="flex space-x-2 text-white">
               {socialIcons.map((item, index) => (
                 <span
@@ -104,8 +104,8 @@ export default function Navbar() {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-1">
-            <span>Coats—every Friday 75% Off.</span>
-            <span className="font-semibold underline cursor-pointer hover:text-pink-400">
+            <span>Get 3% Discount on each Order.</span>
+            <span className="font-semibold underline cursor-pointer hover:text-pink-400" onClick={()=>router.push('/shop')}>
               Shop Sale
             </span>
           </div>

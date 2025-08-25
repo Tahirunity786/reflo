@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 // DRY category array
@@ -16,6 +17,7 @@ const categories = [
 const ProductWidget = () => {
   const [cData, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   useEffect(() => {
     const fetchCollection = async () => {
@@ -59,13 +61,14 @@ const ProductWidget = () => {
               className="min-w-[70%] sm:min-w-[40%] md:min-w-0 flex-shrink-0 md:flex-shrink snap-center flex flex-col items-center text-center"
             >
               {/* Image */}
-              <div className="w-full aspect-[3/4] overflow-hidden rounded-xl">
+              <div className="w-full sm:aspect-[4/4] lg:aspect-[3/4]  overflow-hidden rounded-xl">
                 <Image
+                onClick={()=>router.push(`/collection/${category.collectionSlug}`)}
                   src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${category.collectionImage}`}
                   alt={category.collectionName}
                   width={300}
                   height={400}
-                  className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                  className="object-cover cursor-pointer w-full h-full transition-transform duration-300 hover:scale-105"
                 />
               </div>
 

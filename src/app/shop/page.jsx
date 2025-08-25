@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Heart, ShoppingCart, Star, LayoutGrid, List } from "lucide-react";
 import CollectCard from "@/components/CollectCard/CollectCard";
 import ProductCard from "@/components/ProductCard/ProductCard";
+import { useRouter } from "next/navigation";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -78,6 +79,7 @@ const Page = () => {
   const [layout, setLayout] = useState("grid");
   const [pData, setPData] = useState({ products: [], collections: [] });
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const handleLayoutChange = (view) => {
     setLoading(true);
@@ -138,7 +140,7 @@ const Page = () => {
             imageAlt={item.collectionName}
             buttonLabel={item.collectionName}
             hSm={true}
-            onButtonClick={() => console.log(`Clicked ${item._id}`)}
+            onButtonClick={() => router.push(`/collection/${item.collectionSlug}`)}
           />
         ))}
       </div>
