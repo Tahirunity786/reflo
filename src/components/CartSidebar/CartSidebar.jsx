@@ -44,19 +44,19 @@ const CartSidebar = ({ isOpen, onClose }) => {
       {
         items.length === 0 ? (
           <>
-          <div className="flex justify-between items-center px-4 py-5 border-b border-gray-200">
+            <div className="flex justify-between items-center px-4 py-5 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800">My Cart</h2>
               <button onClick={onClose} aria-label="Close cart" className="text-gray-600 hover:text-gray-800">
                 <X className="w-6 h-6" />
               </button>
             </div>
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Cart is Empty</h2>
-            <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
-            <button onClick={handleShoppingContinue} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition duration-300 ease-in-out">
-              Continue Shopping
-            </button>
-          </div>
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Cart is Empty</h2>
+              <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
+              <button onClick={handleShoppingContinue} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition duration-300 ease-in-out">
+                Continue Shopping
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -69,8 +69,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
             </div>
             <div className="overflow-y-auto h-[calc(100%-200px)] no-scrollbar">
               {items.map((item) => {
-                const isLong = item.name.length > maxLength;
-                const displayName = isLong ? item.name.slice(0, maxLength) + "..." : item.name;
+                const name = item?.name || ""; // fallback if name is undefined
+                const isLong = name.length > maxLength;
+                const displayName = isLong ? name.slice(0, maxLength) + "..." : name;
 
                 return (
                   <div
@@ -81,7 +82,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                     <div className="flex-shrink-0">
                       <Image
                         src={item.image}
-                        alt={item.name}
+                        alt={name || "Product Image"}
                         width={80}
                         height={80}
                         className="rounded-lg object-cover w-20 h-20"
@@ -105,7 +106,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                                 align="center"
                                 className="z-[9999] bg-gray-900 text-white px-3 py-1 rounded-md text-xs shadow-lg"
                               >
-                                {item.name}
+                                {name}
                                 <Tooltip.Arrow className="fill-gray-900" />
                               </Tooltip.Content>
                             </Tooltip.Portal>
@@ -153,6 +154,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                   </div>
                 );
               })}
+
             </div>
 
 
