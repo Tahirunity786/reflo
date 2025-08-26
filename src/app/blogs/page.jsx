@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 // import Header from '@/components/Header/Header';
 // import styles from './blog.module.css'
@@ -16,6 +16,7 @@ const Page = () => {
     const swiperRef = useRef(null);
     const [isEnd, setIsEnd] = useState(false);
     const [isBeginning, setIsBeginning] = useState(true);
+    const [blogs, setBlogs] = useState([]);
 
 
     const handleButtonClick = (index) => {
@@ -29,6 +30,22 @@ const Page = () => {
         "All Posts",
         "Success Stories"
     ];
+
+    const fetchBlogs = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/blog/content/`);
+            if (response.ok) {
+                const data = await response.json();
+                setBlogs(data || [])
+            }
+
+        } catch (e) {
+
+        }
+    }
+    useEffect(() => {
+        fetchBlogs()
+    }, []);
     const metadata = {
         title: "Blogs - ATPL Pro",
     };
@@ -42,7 +59,7 @@ const Page = () => {
             >
                 <div className="container mx-auto text-center">
                     <h2 className="text-2xl font-bold">DoorBix Blog</h2>
-                    <p className="font-bold">
+                    <p className="font-bold sm:text-sm ">
                         Expert Insights, study tips, and success stories to help you succeed in your aviation
                         <br /> journey
                     </p>
@@ -91,8 +108,8 @@ const Page = () => {
                                 <SwiperSlide key={index} className="!w-auto">
                                     <button
                                         className={`px-4 py-2 rounded-full border-2 transition-all duration-300 ${activeIndex === index
-                                                ? "bg-blue-400 text-white border-blue-400"
-                                                : "border-blue-400 text-black hover:bg-blue-400 hover:text-white"
+                                            ? "bg-blue-400 text-white border-blue-400"
+                                            : "border-blue-400 text-black hover:bg-blue-400 hover:text-white"
                                             }`}
                                         onClick={() => handleButtonClick(index)}
                                     >
@@ -139,29 +156,29 @@ const Page = () => {
 
                 {/* Blog Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-16">
-                    {[1, 2, 3, 4].map((_, i) => (
-                        <div key={i} className="card w-full text-start border rounded-lg shadow-sm overflow-hidden">
+                    {blogs.map((_, i) => (
+                        <div key={i} className="card w-full text-start  rounded-lg shadow-sm overflow-hidden">
                             {/* Image */}
                             <Image
-                                src={'/Image/fff.png'}
+                                src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${_.blogImage}`}
                                 width={300}
                                 height={213}
-                                className="w-full h-auto object-cover"
+                                className="w-full h-[15rem] object-cover"
                                 alt='blog image'
                             />
 
                             {/* Card Body */}
                             <div className="p-4">
-                                <span className="inline-block bg-yellow-400 text-black text-sm px-3 py-1 rounded-full mb-3">Fashion</span>
-                                <h5 className="text-lg font-bold">Card title</h5>
+                                <span className="inline-block bg-yellow-400 text-black text-sm px-3 py-1 rounded-full mb-3">{_.blogCategory.name}</span>
+                                <h5 className="text-lg font-bold">{_.blogTitle}</h5>
                                 <p className="text-sm text-gray-700 mb-4">
-                                    Some quick example text to build on the card title and make up the bulk of the card's content.
+                                    {_.blogExcerpt}
                                 </p>
-                                <a href="#"
+                                <a href={`/blogs/${_.slug}`}
                                     className="inline-flex items-center justify-center w-full border border-[var(--aero-primary)] text-[var(--aero-primary)] 
               px-4 py-2 rounded-md hover:bg-blue-400 hover:text-white transition-all"
                                 >
-                                    Go somewhere
+                                    Learn more
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         className="ms-2 bi bi-arrow-right" viewBox="0 0 16 16">
                                         <path fillRule="evenodd" d="M1 8a.5.5 0 0 
