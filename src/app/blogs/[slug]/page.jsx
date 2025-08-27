@@ -113,7 +113,7 @@ const BlogDetailPage = () => {
       <div className="mt-10 mb-10">
         <h5>Comments ({comments?.length})</h5>
         {comments.length > 0 &&
-          comments.map((c) => <Comment key={c.id} comment={c} />)}
+          comments.map((c) => <Comment key={c.id} comment={c} postId={post?.id} onCommentPost={handleFetchComment}  />)}
       </div>
 
       <CommentForm postId={post?.id} onCommentPost={handleFetchComment} />

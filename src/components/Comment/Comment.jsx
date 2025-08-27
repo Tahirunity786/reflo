@@ -4,12 +4,54 @@ import { User, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment , postId, onCommentPost }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comments, setComment] = useState("");
+
+
+  const handleReplySubmit = async (parentCommentId) => {
+  if (!comments.trim()) return; // prevent empty reply
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/blog/${postId}/comments/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          comment: comments,
+          comment_on_comment: parentCommentId, // attach reply to parent
+        }),
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      console.log("Reply posted:", data);
+
+      // ✅ clear form after submit
+      setName("");
+      setEmail("");
+      setComment("");
+      setShowReplyBox(false);
+
+      // refresh comment list
+      onCommentPost && onCommentPost();
+    } else {
+      console.error("Failed to post reply:", await res.json());
+    }
+  } catch (error) {
+    console.error("Error posting reply:", error);
+  }
+};
+
 
 
   // ✅ Ensure replies is always an array
@@ -97,7 +139,7 @@ const Comment = ({ comment }) => {
               className="w-full p-2 border rounded-md text-sm focus:ring focus:ring-blue-200"
             />
             <div className="mt-2 flex gap-2">
-              <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              <button onClick={()=>{handleReplySubmit(comment?.id)}} className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
                 Post Reply
               </button>
               <button

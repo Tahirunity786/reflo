@@ -15,13 +15,15 @@ import CartSidebar from '../CartSidebar/CartSidebar';
 import SignInModal from '../SignInModal/SignInModal';
 import SignUpModal from '../SignUpModal/SignUpModal';
 import SearchModal from '../SearchModal/SearchModal';
-import { ShoppingBasketIcon } from 'lucide-react';
+
 import Cookies from 'js-cookie';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useSelector } from "react-redux";
-import { selectCartItems, selectCartCount} from "@/redux/slices/cartSlice";
-import { selectWishlistCount} from "@/redux/slices/wishSlice";
+import { selectCartCount } from "@/redux/slices/cartSlice";
+import { selectWishlistCount } from "@/redux/slices/wishSlice";
+import Image from 'next/image';
+import { User } from 'lucide-react';
 
 const socialIcons = [
   { icon: <FaFacebookF />, label: 'Facebook' },
@@ -41,7 +43,6 @@ const navLinks = [
 
 export default function Navbar() {
   const router = useRouter();
-  const items = useSelector(selectCartItems);
   const [isCartOpen, setCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -112,11 +113,12 @@ export default function Navbar() {
           </div>
           <div className="hidden md:flex items-center space-x-1">
             <span>Get 3% Discount on each Order.</span>
-            <span className="font-semibold underline cursor-pointer hover:text-pink-400" onClick={()=>router.push('/shop')}>
+            <span className="font-semibold underline cursor-pointer hover:text-pink-400" onClick={() => router.push('/shop')}>
               Shop Sale
             </span>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1">
+            <User className='h-4 w-4'/>
             <a href="/contact" className="hover:text-white">Help Center</a>
           </div>
         </div>
@@ -125,8 +127,15 @@ export default function Navbar() {
         <div className="sticky top-0 z-50 bg-white shadow-sm">
           <div className="flex justify-between items-center px-4 lg:px-8 py-4">
             <div className="text-3xl font-bold tracking-tight flex items-center space-x-2.5">
-              <div><ShoppingBasketIcon width={32} height={32} /></div>
-              <div>DoorBix</div>
+              <Image
+                src={'/Image/Logo.png'}
+                onClick={()=>router.push('/')}
+                className='cursor-pointer'
+                alt='Logo'
+                width={130}
+                height={80}
+                priority
+              />
             </div>
 
             <nav className="hidden lg:flex space-x-8 font-dm font-bold">

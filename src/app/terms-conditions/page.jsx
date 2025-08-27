@@ -14,8 +14,7 @@ export default function TermsPage() {
               1. Introduction
             </p>
             <p className="mb-4 leading-relaxed">
-              Welcome to CompanyName. These terms and conditions outline the rules and regulations for the use of our
-              website and services...
+              Thank you for shopping at <a href="/">Doorbix</a>. We strive to provide a seamless shopping experience and want you completely satisfied with your purchase. This policy explains our guidelines and procedures for processing refunds and replacements. By purchasing on our website, you agree to the terms of this Policy.
             </p>
           </section>
 
@@ -27,14 +26,14 @@ export default function TermsPage() {
             <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg mb-4 p-6">
               <ul className="space-y-2">
                 <li>
-                  <strong className="text-indigo-700 dark:text-indigo-300">Company:</strong> Refers to CompanyName.
+                  <strong className="text-indigo-700 dark:text-indigo-300">Company:</strong> DoorBix.
                 </li>
                 <li>
                   <strong className="text-indigo-700 dark:text-indigo-300">User:</strong> Any individual who accesses
                   or uses our website or services.
                 </li>
                 <li>
-                  <strong className="text-indigo-700 dark:text-indigo-300">Service:</strong> The tools and content
+                  <strong className="text-indigo-700 dark:text-indigo-300">Service:</strong> All Niche Products are available here.
                   provided through our site.
                 </li>
                 <li>
@@ -106,8 +105,74 @@ export default function TermsPage() {
           {/* Additional Sections (Privacy Policy, IP, Liability...) */}
           {/* You can repeat the same JSX conversion pattern for each section (4–10) exactly as done above */}
 
+
+
+          <section className="mb-8">
+           <div className="space-y-4">
+  <p className="text-2xl font-semibold text-gray-900 pb-2 dark:text-white border-b-2 border-indigo-500">
+    1. Further Details
+  </p>
+
+  <h5 className="leading-relaxed font-semibold">Replacement Eligibility:</h5>
+  <h6 className="font-medium">Product Eligibility</h6>
+  <p>
+    As a responsible company Tazah Global wants to ensure that the product is
+    received by the customer in its original condition and is not incorrect,
+    broken or faulty. If you receive a product that is incorrect, faulty,
+    broken or damaged you are eligible for a free replacement.
+  </p>
+
+  <h6 className="font-medium">Timeframe</h6>
+  <p>
+    DoorBix will cater all complaints landed within 30 days of delivery.
+    <br />
+    Your request of a replacement within 7 days from the date of delivery will
+    be done free of cost. After 7 days, there will be certain charges for the
+    replacement.
+  </p>
+
+  <h6 className="font-medium">Replacement Process</h6>
+
+  <h6 className="font-medium">Initiation</h6>
+  <p>
+    To initiate a replacement, please share a video of the incorrect, faulty or
+    damaged product to our customer support team within the eligible time
+    frame. In a lot of cases the issue is with the usage of the product and our
+    team can guide you on how the issue you are facing can be fixed. If we
+    determine that the product is indeed faulty…
+  </p>
+
+  <h6 className="font-medium">Option A</h6>
+  <p>
+    You need to ship the incorrect, faulty, damaged or broken product in its
+    original packing (Original Product Box and All Accessories) to our warehouse
+    at the below address:
+  </p>
+  <p className="italic">
+    Tazah Global LLC, Warehouse # 13, Plot # 4488, Al Sajaa Industrial, Sharjah, UAE
+  </p>
+  <p>
+    Within 5 working days of receipt of the product, we will ship the
+    replacement for you free of charge.
+  </p>
+
+  <h6 className="font-medium">Option B</h6>
+  <p>
+    We will schedule a replacement for you within 14 working days. Please pack
+    the product (Original Product Box and All Accessories) for the courier to
+    pick it up and provide you a replacement.
+  </p>
+  <p className="text-red-600 font-medium">
+    Please note that we do not offer a replacement for “change of mind”.
+  </p>
+
+  <h6 className="font-medium">Refund</h6>
+  <p>We do not have a refund policy.</p>
+</div>
+
+          </section>
           {/* Example Footer Section */}
-          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-600">
+          <div className="mt-12 mb-8 pt-8 border-t border-gray-200 dark:border-gray-600">
             <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-6">
               <p className="text-lg font-semibold text-indigo-800 mb-3 dark:text-indigo-200">Acknowledgment</p>
               <p className="text-indigo-700 dark:text-indigo-300">
