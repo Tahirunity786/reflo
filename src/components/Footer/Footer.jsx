@@ -36,7 +36,7 @@ export default function Footer() {
 
     return (
         <footer className="bg-[#F5F4F1] text-gray-700 pt-12 pb-6 px-8">
-            <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-1 lg:grid-cols-4 gap-10">
                 {/* Logo & Description */}
                 <div>
                     <Image

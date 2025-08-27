@@ -22,22 +22,23 @@ const stats = [
 const showcaseData = [
     {
         id: 1,
-        title: 'The Best Product',
+        title: 'Quality You Can Trust in the UAE',
         subtitle: 'Our Factories',
         description:
-            'We spend a lot of time finding the best factories around the world—the same factories that make your favorite designer brands. We visit them regularly and build strong personal relationships with the owners. Each factory is audited for compliance to ensure factors such as fair wages.',
+            `
+             At DOORBIX, we carefully select trusted suppliers and manufacturers within the UAE to bring you reliable products with uncompromised quality. Every partner is reviewed to ensure they meet our standards for excellence, safety, and ethical practices. By working closely with local suppliers, we make sure your products are sourced responsibly and delivered to your doorstep with speed and care.`,
         imageUrl: '/Image/about-3.jpeg',
-        imageAlt: 'Professional team meeting in modern office...',
+        imageAlt: 'Our Factories',
         reverse: false,
     },
     {
         id: 2,
-        title: 'Timeless Products',
-        subtitle: 'Our Products',
+        title: 'Our Products',
+        subtitle: 'Reliable & Essential',
         description:
-            "At Mijome, we are not big on trends. We want you to wear our pieces for years, even decades, to come. That's why we source the finest materials and factories for our timeless products—like our Grade-A cashmere sweaters, Italian shoes, and Peruvian Pima tees.",
+            "At DOORBIX, we focus on products that truly matter to our customers in the UAE. Instead of chasing trends, we carefully select everyday essentials and high-quality items from trusted local suppliers, delivered right to your doorstep with care and reliability.",
         imageUrl: '/Image/about-4.png',
-        imageAlt: 'Students studying together in a library setting...',
+        imageAlt: 'Our Products',
         reverse: true,
     },
 ];
@@ -47,29 +48,30 @@ const workCultureData = [
         id: 1,
         title: 'The Core of Us',
         description:
-            'Adipiscing elit sed do eiusmod tempor labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        imageUrl: 'https://placehold.co/400x300/f3f4f6/6b7280?text=Team+Meeting',
+            `Built on Trust & Reliability
+At DOORBIX, everything we do starts with our customers. We believe in making shopping simple, affordable, and stress-free by delivering quality products right to your doorstep. Our commitment to trust, care, and efficiency is at the heart of every delivery.`,
+        // imageUrl: 'https://placehold.co/400x300/f3f4f6/6b7280?text=Team+Meeting',
         imageAlt:
-            'Team meeting with diverse group of people collaborating around a table with laptops and documents',
+            "Core of us",
     },
     {
         id: 2,
         title: 'Our Products',
-        description:
-            'Adipiscing elit sed do eiusmod tempor labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        imageUrl: 'https://placehold.co/400x300/3b82f6/ffffff?text=Delivery+Service',
-        imageAlt:
-            'Smiling delivery person in blue uniform holding a cardboard package in a warehouse setting',
+        description: `Quality at Your Doorstep
+        At DOORBIX, we handpick products that bring value, convenience, and reliability to our customers across the UAE. By working with trusted suppliers, we make sure every item meets our standards of quality—delivered straight to your doorstep with care and speed.`,
+        // imageUrl: 'https://placehold.co/400x300/3b82f6/ffffff?text=Delivery+Service',
+        // imageAlt:
+        //     'Smiling delivery person in blue uniform holding a cardboard package in a warehouse setting',
     },
     {
         id: 3,
         title: 'Our Careers',
-        description:
-            'Adipiscing elit sed do eiusmod tempor labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        imageUrl:
-            'https://placehold.co/400x300/f3f4f6/6b7280?text=Professional+Team',
-        imageAlt:
-            'Professional business meeting with people in suits working with laptops and documents in modern office',
+        description: `Grow With Us
+        At DOORBIX, we believe our people are the driving force behind every successful delivery. We’re building a culture of innovation, teamwork, and growth, where every role makes a real impact. If you’re passionate about shaping the future of doorstep delivery in the UAE, DOORBIX is the place to be.`,
+        // imageUrl:
+        //     'https://placehold.co/400x300/f3f4f6/6b7280?text=Professional+Team',
+        // imageAlt:
+        //     'Professional business meeting with people in suits working with laptops and documents in modern office',
     },
 ];
 export default function AboutHero() {
@@ -79,14 +81,13 @@ export default function AboutHero() {
             {/* Welcome Text & Heading */}
             <div className="mb-22">
                 <div>
-                    <p className="text-sm text-gray-500 font-medium uppercase mb-2">Welcome to Milano</p>
+                    <p className="text-sm text-gray-500 font-medium uppercase mb-2">Welcome to DoorBix</p>
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                         Best Store <br className="sm:hidden" />
                         <span className="text-black">Available to Everyone!</span>
                     </h1>
                     <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
-                        Over 15 years of experience, we have meticulously curated collections that transcend fleeting trends,
-                        embodying a timeless elegance that resonates with our discerning clientele.
+                        With years of expertise in logistics and e-commerce, DOORBIX has built a reliable platform that goes beyond just shipping. We are committed to making doorstep delivery simple, fast, and trustworthy, ensuring every product reaches our customers with care and efficiency.
                     </p>
                 </div>
 
@@ -141,44 +142,43 @@ export default function AboutHero() {
                             <p className="text-gray-600 text-lg mb-8 leading-relaxed ">
                                 {description}
                             </p>
-                            <button
+                            {/* <button
                                 type="button"
                                 className="bg-gray-900 text-white hover:bg-gray-800 transition-colors px-8 py-3 rounded-full font-medium"
                             >
                                 Learn More
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 ))}
             </div>
             <div className="px-8">
-            {/* Section Heading */}
-            <div className="text-center mb-16">
-                <p className="text-sm font-medium text-gray-600 mb-4 ">How We Work</p>
-                <h2 className="text-4xl font-bold text-gray-900 mb-6 ">Expanding Horizons</h2>
-                <p className="text-lg text-gray-600 mx-auto leading-relaxed max-w-4xl">
-                    At Millers, our work culture is deeply rooted in collaboration, innovation and passion.
-                    We believe that a positive and inclusive work environment is the foundation for creativity and success.
-                </p>
-            </div>
+                {/* Section Heading */}
+                <div className="text-center mb-16">
+                    <p className="text-sm font-medium text-gray-600 mb-4 ">How We Work</p>
+                    <h2 className="text-4xl font-bold text-gray-900 mb-6 ">From Us to Your Doorstep</h2>
+                    <p className="text-lg text-gray-600 mx-auto leading-relaxed max-w-4xl">
+                        At DOORBIX, we keep it simple: you choose, we deliver. By working with trusted local suppliers and using fast, reliable logistics, we make sure your products arrive at your doorstep quickly and safely. Our mission is to give you a smooth, stress-free shopping experience, every single time.
+                    </p>
+                </div>
 
-            {/* Info Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {workCultureData.map(({ id, title, description, imageUrl, imageAlt }) => (
-                    <div key={id} className="text-center">
-                        <div className="mb-6">
-                            <img
-                                src={imageUrl}
-                                alt={imageAlt}
-                                className="w-full h-64 object-cover rounded-lg"
-                                loading="lazy"
-                            />
+                {/* Info Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {workCultureData.map(({ id, title, description, imageUrl, imageAlt }) => (
+                        <div key={id} className="text-center">
+                            {/* <div className="mb-6">
+                                <img
+                                    src={imageUrl}
+                                    alt={imageAlt}
+                                    className="w-full h-64 object-cover rounded-lg"
+                                    loading="lazy"
+                                />
+                            </div> */}
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
+                            <p className="text-gray-600 leading-relaxed">{description}</p>
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
-                        <p className="text-gray-600 leading-relaxed">{description}</p>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
             </div>
         </section>
     );
