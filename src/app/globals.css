@@ -1,9 +1,9 @@
 @import url('./styles/fonts.css');
 @import "tailwindcss";
-:root {
+/* :root {
   --background: #f3f3f3;
   --foreground: #171717;
-}
+} */
 
 /* @theme inline {
   --color-background: var(--background);

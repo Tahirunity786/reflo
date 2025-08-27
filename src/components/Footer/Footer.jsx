@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fa';
 import { Globe } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 
 
@@ -14,6 +15,7 @@ export default function Footer() {
     const companyLinks = [
         { name: "Home", link: "/" },
         { name: "Shop", link: "/shop" },
+        { name: "Blog", link: "/blogs" },
         { name: "Collection", link: "/collection" },
         { name: "About Us", link: "/aboutus" },
         { name: "Contact Us", link: "/contact" },
@@ -39,20 +41,30 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
                 {/* Logo & Description */}
                 <div>
-                    <h1 className="text-2xl font-bold mb-2">DoorBix</h1>
+                    <Image
+                        src={'/Image/Logo.png'}
+                        onClick={() => router.push('/')}
+                        className='cursor-pointer'
+                        alt='Logo'
+                        width={130}
+                        height={80}
+                        priority
+                    />
                     <p className="text-sm leading-6">
                         We only carry designs we believe in ethically and aesthetically – original, authentic pieces that are made to last.{' '}
-                        <a href="#" className="text-black font-semibold underline">Learn more</a>
+                        <Link
+                            href="/aboutus"
+                            aria-label="Learn more about us"
+                            prefetch={false}
+                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200 font-medium"
+                        >
+                            Learn more →
+                        </Link>
+                        {/* <a href="#" className="text-black font-semibold underline"></a> */}
                     </p>
                     <ul className="mt-4 space-y-2 text-sm">
                         <li className="flex items-center gap-2">
-                            <FiMapPin size={16} /> Street Address 2571 Oakridge
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <FiPhone size={16} /> +1 (973) 435-3638
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <FiMail size={16} /> info@fashionwomen.com
+                            <FiMail size={16} /> info@doorbix.com
                         </li>
 
                     </ul>
@@ -122,9 +134,9 @@ export default function Footer() {
 
             {/* Bottom Bar */}
             <div className="max-w-7xl mx-auto mt-10 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-center items-center text-sm text-gray-600 gap-4">
-              
+
                 <div>© 2025 Milano store. All rights reserved.</div>
-                
+
             </div>
         </footer>
     );
