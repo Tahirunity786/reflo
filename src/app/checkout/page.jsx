@@ -21,10 +21,10 @@ const Input = ({ name, type = "text", placeholder, value, onChange, error }) => 
         onChange,
         className: `
       w-full px-3 py-2 rounded-md 
-      bg-white dark:bg-gray-700 
-      text-gray-900 dark:text-white 
-      border ${error ? "border-red-500 mb-1" : "border-gray-300 dark:border-gray-600 mb-4"}
-      placeholder-gray-500 dark:placeholder-gray-400 
+      bg-white  
+      text-gray-900  
+      border ${error ? "border-red-500 mb-1" : "border-gray-300  mb-4"}
+      placeholder-gray-500 
       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
     `,
     };
@@ -46,7 +46,7 @@ const Select = ({ name, value, options, onChange }) => (
             name={name}
             value={value}
             onChange={onChange}
-            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white  text-gray-900  border border-gray-300  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
             {options.map((opt, idx) => (
                 <option key={idx} value={opt}>{opt}</option>
@@ -398,7 +398,7 @@ export default function CheckoutForm() {
                                 onChange={handleChange}
                                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                             />
-                            <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                            <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 ">
                                 Email me with news and offers
                             </label>
                         </div>
@@ -443,16 +443,16 @@ export default function CheckoutForm() {
                                 onChange={handleChange}
                                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                             />
-                            <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                            <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-600 ">
                                 Save this information for next time
                             </label>
                         </div>
                     </section>
                     {/* Shipping Method */}
                     <section>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Shipping</h2>
-                        <div className="border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 p-4">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <h2 className="text-lg font-semibold text-gray-900  mb-4">Shipping</h2>
+                        <div className="border border-gray-300  rounded-md bg-gray-50  p-4">
+                            <p className="text-sm text-gray-600 ">
                                 Your parcel is expected to arrive within 5–7 business days.
                             </p>
 
@@ -462,8 +462,8 @@ export default function CheckoutForm() {
 
                     {/* Payment Section */}
                     <section>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment</h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900  mb-4">Payment</h2>
+                        <p className="text-sm text-gray-600  mb-4">
                             At Doorbix, we prioritize your comfort and trust — that’s why we offer a convenient and secure Cash on Delivery (COD) option, allowing you to pay only when your order arrives at your doorstep.</p>
 
                     </section>
@@ -501,14 +501,14 @@ export default function CheckoutForm() {
                             </div>
                         )}
                     </div>
-                    <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 flex space-x-4 text-sm">
-                        <a href="#" className="text-blue-600 dark:text-blue-400">Privacy policy</a>
-                        <a href="#" className="text-blue-600 dark:text-blue-400">Cancellation policy</a>
+                    <div className="mt-8 pt-4 border-t border-gray-200  flex space-x-4 text-sm">
+                        <a href="#" className="text-blue-600 ">Privacy policy</a>
+                        <a href="#" className="text-blue-600 ">Cancellation policy</a>
                     </div>
                 </div>
 
                 {/* Right Side: Cart Summary */}
-                <div className=" dark:bg-gray-800 space-y-6">
+                <div className="  space-y-6">
                     <div className="bg-white shadow-sm p-6 rounded-lg">
                         {Array.isArray(item) ? (
                             item.map((item) => {
@@ -550,12 +550,12 @@ export default function CheckoutForm() {
                                                 </Tooltip.Root>
                                             </Tooltip.Provider>
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="text-sm text-gray-500 ">
                                                 Qty: {item.qty}
                                             </p>
                                         </div>
 
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                        <div className="text-sm font-medium text-gray-900 ">
                                             {item.price * item.qty} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </div>
                                     </div>
@@ -601,12 +601,12 @@ export default function CheckoutForm() {
                                                 </Tooltip.Root>
                                             </Tooltip.Provider>
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="text-sm text-gray-500 ">
                                                 Qty: {qty}
                                             </p>
                                         </div>
 
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                        <div className="text-sm font-medium text-gray-900 ">
                                             {item.price * qty} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </div>
                                     </div>
@@ -616,19 +616,19 @@ export default function CheckoutForm() {
 
 
 
-                        <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2 text-sm">
+                        <div className="pt-4 border-t border-gray-200  space-y-2 text-sm">
                             <div className="flex justify-between">
-                                <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                                <span className="text-gray-900 dark:text-white">{total} {process.env.NEXT_PUBLIC_CURRENCY}</span>
+                                <span className="text-gray-600 ">Subtotal</span>
+                                <span className="text-gray-900 ">{total} {process.env.NEXT_PUBLIC_CURRENCY}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-gray-600 dark:text-gray-400">Shipping</span>
-                                <span className="text-gray-500 dark:text-gray-400">Free</span>
+                                <span className="text-gray-600 ">Shipping</span>
+                                <span className="text-gray-500 ">Free</span>
                             </div>
                             {isAuthenticated ? (
                                 <div className="flex justify-between">
-                                    <span className="text-gray-600 dark:text-gray-400">Discount</span>
-                                    <span className="text-gray-500 dark:text-gray-400">
+                                    <span className="text-gray-600 ">Discount</span>
+                                    <span className="text-gray-500 ">
                                         -{Math.round(total * 0.03)}   {/* 3% discount rounded */}
                                     </span>
                                 </div>
@@ -636,20 +636,20 @@ export default function CheckoutForm() {
 
                         </div>
 
-                        <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between text-lg font-semibold">
-                            <span className="text-gray-900 dark:text-white">Total</span>
+                        <div className="pt-4 border-t border-gray-200  flex justify-between text-lg font-semibold">
+                            <span className="text-gray-900 ">Total</span>
                             <div className="text-right">
                                 {isAuthenticated ? (
                                     <>
                                         <span className="line-through text-gray-500 mr-2">
                                             {total} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </span>
-                                        <span className="text-gray-900 dark:text-white">
+                                        <span className="text-gray-900 ">
                                             {Math.round(total * 0.97)} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </span>
                                     </>
                                 ) : (
-                                    <span className="text-gray-900 dark:text-white">
+                                    <span className="text-gray-900 ">
                                         {total} {process.env.NEXT_PUBLIC_CURRENCY}
                                     </span>
                                 )}
