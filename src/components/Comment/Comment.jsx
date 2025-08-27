@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const Comment = ({ comment }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [comments, setComment] = useState("");
 
 
   // ✅ Ensure replies is always an array
@@ -66,8 +69,30 @@ const Comment = ({ comment }) => {
 
         {/* Reply Input Box */}
         {showReplyBox && (
-          <div className="mt-3">
+          <div className="mt-3 lg:w-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+              {/* Name */}
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="w-full p-3 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+
+              {/* Email */}
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email"
+                className="w-full p-3 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
             <textarea
+              value={comments}
+              onChange={(e) => setComment(e.target.value)}
               placeholder="Write your reply..."
               className="w-full p-2 border rounded-md text-sm focus:ring focus:ring-blue-200"
             />
