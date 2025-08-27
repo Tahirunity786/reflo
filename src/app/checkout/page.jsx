@@ -370,13 +370,13 @@ export default function CheckoutForm() {
         <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-8 py-8 ">
                 {/* Left Side: Form */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 space-y-8">
+                <div className="bg-white rounded-lg shadow-sm p-6 space-y-8">
                     {/* Contact Section */}
                     <section>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h2>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact</h2>
                         {
                             !authUser && (
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                <p className="text-sm text-gray-600 mb-4">
                                     <span className='cursor-pointer font-bold' onClick={() => setShowSignIn(true)}>Login</span> or <span className='cursor-pointer font-bold' onClick={() => setShowSignUp(true)}>create</span> an account for a faster checkout experience.
                                 </p>
                             )

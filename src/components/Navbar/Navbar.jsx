@@ -27,11 +27,9 @@ import { User } from 'lucide-react';
 import LinkCanvas from '../LinkCanvas/LinkCanvas';
 
 const socialIcons = [
-  { icon: <FaFacebookF />, label: 'Facebook' },
-  { icon: <FaInstagram />, label: 'Instagram' },
-  { icon: <FaTiktok />, label: 'TikTok' },
-  { icon: <FaYoutube />, label: 'YouTube' },
-  { icon: <FaPinterestP />, label: 'Pinterest' },
+  { icon: <FaFacebookF />, label: 'Facebook', url: "https://www.facebook.com/share/1BJdTBv7Yn/" },
+  { icon: <FaInstagram />, label: 'Instagram', url: "https://www.instagram.com/doorbix_store?igsh=MWdxeTUxcjJoaGtrZg==" },
+  { icon: <FaTiktok />, label: 'TikTok', url: "https://www.tiktok.com/@doorbix.store?_t=ZS-8zEgiMj1cYs&_r=1" },
 ];
 
 const navLinks = [
@@ -102,13 +100,16 @@ export default function Navbar() {
             <span className="font-semibold">Welcome To DoorBix</span>
             <div className="flex space-x-2 text-white">
               {socialIcons.map((item, index) => (
-                <span
+                <a
                   key={index}
-                  className="cursor-pointer hover:text-pink-400"
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={item.label}
+                  className="cursor-pointer"
                 >
                   {item.icon}
-                </span>
+                </a>
               ))}
             </div>
           </div>

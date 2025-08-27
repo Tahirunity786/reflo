@@ -24,15 +24,13 @@ export default function Footer() {
     const quickLinks = [
         { name: 'Privacy Policy', link: "/privacy" },
         { name: 'Terms & Conditions', link: "/terms-conditions" },
-        { name: 'Refund', link: "/refund" },
+        // { name: 'Refund', link: "/refund" },
 
     ]
     const socialIcons = [
-        { icon: <FaFacebook />, label: 'Facebook' },
-        { icon: <FaInstagram />, label: 'Instagram' },
-        { icon: <FaTiktok />, label: 'TikTok' },
-        { icon: <FaYoutube />, label: 'YouTube' },
-        { icon: <FiLink />, label: 'More' }, // or rename the label
+        { icon: <FaFacebook />, label: 'Facebook', url: "https://www.facebook.com/share/1BJdTBv7Yn/" },
+        { icon: <FaInstagram />, label: 'Instagram', url: "https://www.instagram.com/doorbix_store?igsh=MWdxeTUxcjJoaGtrZg==" },
+        { icon: <FaTiktok />, label: 'TikTok', url: "https://www.tiktok.com/@doorbix.store?_t=ZS-8zEgiMj1cYs&_r=1" },
     ];
 
 
@@ -119,15 +117,19 @@ export default function Footer() {
                     </p>
                     {/* Social Icons */}
                     <div className="flex gap-4 mt-4">
-                        {socialIcons.map(({ icon, label }, index) => (
-                            <button
+                        {socialIcons.map(({ icon, label, url }, index) => (
+                            <a
                                 key={index}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 aria-label={label}
                                 className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
                             >
                                 {icon}
-                            </button>
+                            </a>
                         ))}
+
                     </div>
                 </div>
             </div>
