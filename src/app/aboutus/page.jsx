@@ -26,7 +26,7 @@ const showcaseData = [
         subtitle: 'Our Factories',
         description:
             'We spend a lot of time finding the best factories around the world—the same factories that make your favorite designer brands. We visit them regularly and build strong personal relationships with the owners. Each factory is audited for compliance to ensure factors such as fair wages.',
-        imageUrl: 'https://placehold.co/600x400/4a5568/ffffff?text=Team+Meeting',
+        imageUrl: '/Image/about-3.jpeg',
         imageAlt: 'Professional team meeting in modern office...',
         reverse: false,
     },
@@ -36,7 +36,7 @@ const showcaseData = [
         subtitle: 'Our Products',
         description:
             "At Mijome, we are not big on trends. We want you to wear our pieces for years, even decades, to come. That's why we source the finest materials and factories for our timeless products—like our Grade-A cashmere sweaters, Italian shoes, and Peruvian Pima tees.",
-        imageUrl: 'https://placehold.co/600x400/4a5568/ffffff?text=Study+Group',
+        imageUrl: '/Image/about-4.png',
         imageAlt: 'Students studying together in a library setting...',
         reverse: true,
     },
@@ -93,10 +93,10 @@ export default function AboutHero() {
                 {/* Team Image */}
                 <div className="w-full max-w-5xl mx-auto overflow-hidden rounded-lg shadow-md">
                     <Image
-                        src="/team.jpg" // Replace with your actual image path
+                        src={"/Image/about-1.jpeg"} // Replace with your actual image path
                         alt="Team photo"
                         width={1200}
-                        height={600}
+                        height={500}
                         className="w-full h-auto object-cover"
                     />
                 </div>
@@ -132,18 +132,18 @@ export default function AboutHero() {
 
                         {/* Text content */}
                         <div className="lg:w-1/2 w-full text-center lg:text-left">
-                            <p className="text-blue-600 text-sm font-medium mb-2 dark:text-blue-400">
+                            <p className="text-blue-600 text-sm font-medium mb-2">
                                 {subtitle}
                             </p>
-                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 dark:text-white">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                                 {title}
                             </h2>
-                            <p className="text-gray-600 text-lg mb-8 leading-relaxed dark:text-gray-300">
+                            <p className="text-gray-600 text-lg mb-8 leading-relaxed ">
                                 {description}
                             </p>
                             <button
                                 type="button"
-                                className="bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors px-8 py-3 rounded-full font-medium"
+                                className="bg-gray-900 text-white hover:bg-gray-800 transition-colors px-8 py-3 rounded-full font-medium"
                             >
                                 Learn More
                             </button>
@@ -154,9 +154,9 @@ export default function AboutHero() {
             <div className="px-8">
             {/* Section Heading */}
             <div className="text-center mb-16">
-                <p className="text-sm font-medium text-gray-600 mb-4 dark:text-gray-400">How We Work</p>
-                <h2 className="text-4xl font-bold text-gray-900 mb-6 dark:text-white">Expanding Horizons</h2>
-                <p className="text-lg text-gray-600 dark:text-gray-400 mx-auto leading-relaxed max-w-4xl">
+                <p className="text-sm font-medium text-gray-600 mb-4 ">How We Work</p>
+                <h2 className="text-4xl font-bold text-gray-900 mb-6 ">Expanding Horizons</h2>
+                <p className="text-lg text-gray-600 mx-auto leading-relaxed max-w-4xl">
                     At Millers, our work culture is deeply rooted in collaboration, innovation and passion.
                     We believe that a positive and inclusive work environment is the foundation for creativity and success.
                 </p>
@@ -174,8 +174,8 @@ export default function AboutHero() {
                                 loading="lazy"
                             />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4 dark:text-white">{title}</h3>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
+                        <p className="text-gray-600 leading-relaxed">{description}</p>
                     </div>
                 ))}
             </div>
