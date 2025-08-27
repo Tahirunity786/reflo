@@ -137,7 +137,7 @@ export default function Footer() {
             {/* Bottom Bar */}
             <div className="max-w-7xl mx-auto mt-10 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-center items-center text-sm text-gray-600 gap-4">
 
-                <div>© 2025 Milano store. All rights reserved.</div>
+                <div>© 2025 DoorBix store. All rights reserved.</div>
 
             </div>
         </footer>
