@@ -24,6 +24,7 @@ import { selectCartCount } from "@/redux/slices/cartSlice";
 import { selectWishlistCount } from "@/redux/slices/wishSlice";
 import Image from 'next/image';
 import { User } from 'lucide-react';
+import LinkCanvas from '../LinkCanvas/LinkCanvas';
 
 const socialIcons = [
   { icon: <FaFacebookF />, label: 'Facebook' },
@@ -118,7 +119,7 @@ export default function Navbar() {
             </span>
           </div>
           <div className="flex items-center space-x-1">
-            <User className='h-4 w-4'/>
+            <User className='h-4 w-4' />
             <a href="/contact" className="hover:text-white">Help Center</a>
           </div>
         </div>
@@ -129,7 +130,7 @@ export default function Navbar() {
             <div className="text-3xl font-bold tracking-tight flex items-center space-x-2.5">
               <Image
                 src={'/Image/Logo.png'}
-                onClick={()=>router.push('/')}
+                onClick={() => router.push('/')}
                 className='cursor-pointer'
                 alt='Logo'
                 width={130}
@@ -199,6 +200,9 @@ export default function Navbar() {
               <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge={`${wishLength}`} />
               <NavIcon icon={<FiShoppingCart />} badge={`${cartLength}`} onClick={() => setCartOpen(true)} />
             </div>
+          </div>
+          <div className='px-4 pb-4'>
+            <LinkCanvas />
           </div>
         </div>
       </header>
