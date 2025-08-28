@@ -368,7 +368,7 @@ export default function CheckoutForm() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-8 py-8 ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-8 lg:py-8 sm:px-2 sm:py-2 ">
                 {/* Left Side: Form */}
                 <div className="bg-white rounded-lg shadow-sm p-6 space-y-8">
                     {/* Contact Section */}

@@ -114,7 +114,7 @@ const ProductState = ({
     setActiveTab,
 }) => {
 
-   
+
 
     const metaData = {
         title: `DoorBix || ${data?.productName}`,
@@ -130,19 +130,21 @@ const ProductState = ({
             {/* Breadcrumb */}
             <nav className="text-xs text-gray-400 mb-4">Home / Shop/ {data?.productName}</nav>
 
-            <div className="flex flex-col lg:flex-row gap-8 min-h-screen">
-                {/* ================= Left Section (Sticky Images) ================= */}
-                <div className="w-full lg:w-[52%] h-[100vh]">
-                    <div className="flex flex-col-reverse lg:flex-row gap-4">
-                        {/* ================= Thumbnails (Only show if 2 or more images) ================= */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
+                {/* ================= Left Section (Images) ================= */}
+                <div className="w-full h-full">
+                    <div className="grid grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr] gap-4">
+
+                        {/* ================= Thumbnails ================= */}
                         {productImages.length > 1 && (
-                            <div className="lg:w-1/6 md:w-full overflow-hidden">
+                            <div className="order-2 lg:order-1">
+                                {/* Horizontal on mobile, vertical on desktop */}
                                 <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px] pr-1">
                                     {productImages.map((img, i) => (
                                         <div
                                             key={i}
                                             onClick={() => handleThumbnailClick(img.image)}
-                                            className={`min-w-[3rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer  ${selectedImage === img.image ? 'shadow-xl' : ''
+                                            className={`min-w-[4rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
                                                 }`}
                                         >
                                             <Image
@@ -159,52 +161,30 @@ const ProductState = ({
                             </div>
                         )}
 
-                        {/* ================= Main Image (Hero Image) ================= */}
-                        <div className="relative w-full aspect-[4/5] bg-gray-100 rounded overflow-hidden">
+                        {/* ================= Main Image ================= */}
+                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden">
                             {productImages?.length > 0 && (
                                 <Image
-                                    src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${selectedImage || productImages[0].image}`}
+                                    src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${selectedImage || productImages[0].image
+                                        }`}
                                     alt="Product Preview"
                                     height={700}
                                     width={700}
                                     loading="lazy"
-                                    className={`rounded h-full w-full object-cover transition-opacity duration-300 ${fade ? 'opacity-0' : 'opacity-100'
+                                    className={`rounded w-full h-auto object-cover transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"
                                         }`}
                                 />
                             )}
-
-                           <WishButton data={data}/>
+                            <WishButton data={data} />
                         </div>
                     </div>
                 </div>
 
                 {/* ================= Right Section (Product Info) ================= */}
-                <div className="w-full lg:w-[48%] space-y-5">
+                <div className="w-full space-y-5">
                     {/* Info Card */}
                     <div className="bg-white z-10 pb-2">
-                        {/* Top Label */}
-                        {/* <div className="flex items-center justify-between mb-2">
-                            <span className="bg-yellow-300 text-xs px-2 py-1 rounded font-semibold">
-                                Subscription
-                            </span>
-                        </div> */}
-
-                        {/* Title */}
                         <h1 className="text-2xl font-semibold mb-2">{data?.productName}</h1>
-
-                        {/* Rating */}
-
-                        {/* <div className="flex items-center gap-2 mb-4">
-                            <div className="flex text-yellow-400">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star key={i} size={14} className="fill-yellow-400" />
-                                ))}
-                            </div>
-                            <span className="text-sm text-gray-500">1 review</span>
-                            <div className="text-red-500 text-md">22 added in last 24 hours</div>
-                        </div> */}
-
-                        {/* Price */}
                         <div className="mb-4 flex items-baseline gap-3">
                             <span className="text-3xl font-bold text-black">
                                 {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
@@ -215,8 +195,6 @@ const ProductState = ({
                                 </del>
                             )}
                         </div>
-
-                        {/* Benefits */}
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <Truck size={20} /> Estimate delivery times: 3-5 days International.
@@ -228,48 +206,6 @@ const ProductState = ({
                                 <ShieldCheck size={20} /> Secure checkout guarantee
                             </li>
                         </ul>
-
-                        {/* Variant Selectors */}
-
-                        {/* {
-                            data?.productVariant && (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              
-                                    <div>
-                                        <h4 className="text-sm font-medium mb-1">Size</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {sizes.map((size) => (
-                                                <button
-                                                    key={size}
-                                                    className="shadow-sm cursor-pointer px-4 py-1 rounded hover:bg-black hover:text-white text-sm"
-                                                >
-                                                    {size}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                  
-                                    <div>
-                                        <h4 className="text-sm font-medium mb-1">Color</h4>
-                                        <div className="flex gap-2">
-                                            {colors.map((color) => (
-                                                <span
-                                                    key={color}
-                                                    className={`w-5 h-5 rounded-full border cursor-pointer ${color === 'black'
-                                                        ? 'bg-black border-black'
-                                                        : color === 'gray'
-                                                            ? 'bg-gray-400 border-gray-400'
-                                                            : 'bg-yellow-700 border-yellow-700'
-                                                        }`}
-                                                ></span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        } */}
-
                     </div>
 
                     {/* Purchase Actions */}
@@ -283,17 +219,22 @@ const ProductState = ({
                             <b>SKU</b>: {data?.productSKU}
                         </p>
                         <p>
-                            <b>Available</b>: {data?.stock <= 0 ? (<span className='text-red-600'>Out of Stock</span>) : (<span className='text-green-700'>In of Stock</span>)}
+                            <b>Available</b>:{" "}
+                            {data?.stock <= 0 ? (
+                                <span className="text-red-600">Out of Stock</span>
+                            ) : (
+                                <span className="text-green-700">In Stock</span>
+                            )}
                         </p>
                     </div>
 
+                    {/* Categories / Tags Tabs */}
                     <div className="w-full">
-                        {/* Tab Headers */}
-                        <div className="flex  mb-4">
+                        <div className="flex mb-4">
                             <button
                                 className={`px-4 py-2 font-semibold text-sm transition-all duration-200 ${activeTab === "category"
-                                    ? "border-b-2 border-blue-600 text-blue-700"
-                                    : "text-gray-500 hover:text-blue-600"
+                                        ? "border-b-2 border-blue-600 text-blue-700"
+                                        : "text-gray-500 hover:text-blue-600"
                                     }`}
                                 onClick={() => setActiveTab("category")}
                             >
@@ -301,8 +242,8 @@ const ProductState = ({
                             </button>
                             <button
                                 className={`px-4 py-2 font-semibold text-sm transition-all duration-200 ${activeTab === "tag"
-                                    ? "border-b-2 border-green-600 text-green-700"
-                                    : "text-gray-500 hover:text-green-600"
+                                        ? "border-b-2 border-green-600 text-green-700"
+                                        : "text-gray-500 hover:text-green-600"
                                     }`}
                                 onClick={() => setActiveTab("tag")}
                             >
@@ -310,7 +251,6 @@ const ProductState = ({
                             </button>
                         </div>
 
-                        {/* Tab Content */}
                         {activeTab === "category" && (
                             <div className="flex flex-wrap gap-2">
                                 {data?.productCategory?.map((cat) => (
@@ -333,9 +273,7 @@ const ProductState = ({
                                     <button
                                         key={tag.id}
                                         className="px-4 py-1.5 text-sm rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-all duration-200"
-                                        onClick={() =>
-                                            router.push(`/shop/tag/${tag.name.toLowerCase()}`)
-                                        }
+                                        onClick={() => router.push(`/shop/tag/${tag.name.toLowerCase()}`)}
                                     >
                                         {tag.name}
                                     </button>
@@ -343,9 +281,9 @@ const ProductState = ({
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
+
             <ProductInfoTabs data={data} />
 
             {/* ================= More Products ================= */}
