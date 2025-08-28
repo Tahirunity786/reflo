@@ -1,7 +1,5 @@
 'use client';
 import React, { useState, useEffect, use, useMemo, useRef } from 'react';
-import { X, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { useSelector, useDispatch } from "react-redux";
 import { selectCartItems, selectCartTotal, removeItem, updateQty } from "@/redux/slices/cartSlice";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -191,8 +189,21 @@ export default function CheckoutForm() {
     }, [searchParams, slug]);
 
     useEffect(() => {
-        const controller = new AbortController();
+        if (slug !== "cart" && searchParams.get("q")) {
+            const q = parseInt(searchParams.get("q"), 10);
+            console.log("Here is quantity embeding: ", q)
+            setQty(!isNaN(q) && q > 0 ? q : 1);
+        }
+    }, [searchParams, slug]);
 
+
+    useEffect(() => {
+        if (!slug || slug === "cart") {
+            setItems(items);
+            return;
+        }
+
+        const controller = new AbortController();
 
         const fetchProduct = async () => {
             try {
@@ -202,13 +213,12 @@ export default function CheckoutForm() {
                 );
 
                 if (!response.ok) {
-                    throw new Error(
-                        `Failed to fetch product: ${response.status} ${response.statusText}`
-                    );
+                    throw new Error(`Failed to fetch product: ${response.status} ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                setItems(data);
+                const normalizedItem = { ...data, qty }; // now qty is guaranteed to be latest
+                setItems(normalizedItem);
             } catch (error) {
                 if (error.name === "AbortError") {
                     console.log("⚠️ Fetch aborted due to slug change or component unmount.");
@@ -220,22 +230,13 @@ export default function CheckoutForm() {
             }
         };
 
-        if (slug && slug !== "cart") {
-            fetchProduct();
-        } else if (slug === "cart") {
-
-            setItems(items);
-        }
+        fetchProduct();
 
         return () => controller.abort();
-    }, [slug]);
+    }, [slug, qty]); // ✅ include qty here
 
-    useEffect(() => {
-        if (slug !== "cart" && searchParams.get("q")) {
-            const q = parseInt(searchParams.get("q"), 10);
-            setQty(!isNaN(q) && q > 0 ? q : 1);
-        }
-    }, [searchParams, slug]);
+
+
 
 
 
@@ -294,9 +295,10 @@ export default function CheckoutForm() {
             const itemsPayload = orderItems.map((p) => ({
                 product_id: p.id,
                 name: p.name,
-                quantity: p.qty,
+                quantity: p.qty || qty,  // <-- fallback to qty state for single checkout
                 unit_price: p.price.toFixed(2),
             }));
+
 
             const addressesPayload = [
                 {

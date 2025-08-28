@@ -132,61 +132,57 @@ const ProductState = ({
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
                 {/* ================= Left Section (Images) ================= */}
-<div className="w-full h-full">
-  <div
-    className={`grid gap-4 ${
-      productImages.length > 1
-        ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
-        : "grid-rows-1 grid-cols-1"
-    }`}
-  >
-    {/* ================= Thumbnails ================= */}
-    {productImages.length > 1 && (
-      <div className="order-2 lg:order-1">
-        {/* Horizontal on mobile, vertical on desktop */}
-        <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px] pr-1">
-          {productImages.map((img, i) => (
-            <div
-              key={i}
-              onClick={() => handleThumbnailClick(img.image)}
-              className={`min-w-[4rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer ${
-                selectedImage === img.image ? "ring-2 ring-blue-500" : ""
-              }`}
-            >
-              <Image
-                loading="lazy"
-                src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${img.image}`}
-                alt={`Thumbnail ${i + 1}`}
-                width={96}
-                height={80}
-                className="object-cover w-full h-full"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
+                <div className="w-full h-full">
+                    <div
+                        className={`grid gap-4 ${productImages.length > 1
+                                ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
+                                : "grid-rows-1 grid-cols-1"
+                            }`}
+                    >
+                        {/* ================= Thumbnails ================= */}
+                        {productImages.length > 1 && (
+                            <div className="order-2 lg:order-1">
+                                {/* Horizontal on mobile, vertical on desktop */}
+                                <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px] pr-1">
+                                    {productImages.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => handleThumbnailClick(img.image)}
+                                            className={`min-w-[4rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
+                                                }`}
+                                        >
+                                            <Image
+                                                loading="lazy"
+                                                src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${img.image}`}
+                                                alt={`Thumbnail ${i + 1}`}
+                                                width={96}
+                                                height={80}
+                                                className="object-cover w-full h-full"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-    {/* ================= Main Image ================= */}
-    <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden">
-      {productImages?.length > 0 && (
-        <Image
-          src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${
-            selectedImage || productImages[0].image
-          }`}
-          alt="Product Preview"
-          height={700}
-          width={700}
-          loading="lazy"
-          className={`rounded w-full h-auto object-cover transition-opacity duration-300 ${
-            fade ? "opacity-0" : "opacity-100"
-          }`}
-        />
-      )}
-      <WishButton data={data} />
-    </div>
-  </div>
-</div>
+                        {/* ================= Main Image ================= */}
+                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden">
+                            {productImages?.length > 0 && (
+                                <Image
+                                    src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${selectedImage || productImages[0].image
+                                        }`}
+                                    alt="Product Preview"
+                                    height={700}
+                                    width={700}
+                                    loading="lazy"
+                                    className={`rounded w-full h-auto object-cover transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"
+                                        }`}
+                                />
+                            )}
+                            <WishButton data={data} />
+                        </div>
+                    </div>
+                </div>
 
                 {/* ================= Right Section (Product Info) ================= */}
                 <div className="w-full space-y-5">
@@ -241,8 +237,8 @@ const ProductState = ({
                         <div className="flex mb-4">
                             <button
                                 className={`px-4 py-2 font-semibold text-sm transition-all duration-200 ${activeTab === "category"
-                                        ? "border-b-2 border-blue-600 text-blue-700"
-                                        : "text-gray-500 hover:text-blue-600"
+                                    ? "border-b-2 border-blue-600 text-blue-700"
+                                    : "text-gray-500 hover:text-blue-600"
                                     }`}
                                 onClick={() => setActiveTab("category")}
                             >
@@ -250,8 +246,8 @@ const ProductState = ({
                             </button>
                             <button
                                 className={`px-4 py-2 font-semibold text-sm transition-all duration-200 ${activeTab === "tag"
-                                        ? "border-b-2 border-green-600 text-green-700"
-                                        : "text-gray-500 hover:text-green-600"
+                                    ? "border-b-2 border-green-600 text-green-700"
+                                    : "text-gray-500 hover:text-green-600"
                                     }`}
                                 onClick={() => setActiveTab("tag")}
                             >
