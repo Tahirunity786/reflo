@@ -5,6 +5,11 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
     <>
       <title>{title}</title>
       <meta name="description" content={description} />
+      <meta
+        name="keywords"
+        content="DoorBix, doorbix, door bix, online shopping, ecommerce store, buy online, best deals, fashion, electronics, accessories, home essentials, online marketplace, shop now, secure checkout, wishlist, collections, trending products"
+      />
+      
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="UTF-8" />
       <link rel="canonical" href={pageUrl} />
@@ -12,7 +17,7 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
       {/* Open Graph */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:type" content="product" />
+      <meta property="og:type" content="website" />
       <meta property="og:url" content={pageUrl} />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:image:alt" content={title} />
@@ -31,3 +36,4 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
 };
 
 export default Header;
+
