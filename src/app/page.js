@@ -13,10 +13,10 @@ export default function Home() {
     <>
       <TopBanner />
       <ProductWidget />
-      <BestSellingProducts title={"Best Selling"} type={"bestSelling"}  />
+      <BestSellingProducts title={"Best Selling"} type={"bestSelling"} smatPad={true}  />
       <CategoryShowCase/>
       {/* <CompactProductList /> */}
-      <BestSellingProducts  title={"Featured Products"} type={"featuredProducts"} />
+      <BestSellingProducts  title={"Featured Products"} type={"featuredProducts"} smatPad={true} />
       <HappyCustomers/>
       {/* <MultiColumnProductWidget /> */}
     </>

@@ -61,7 +61,7 @@ const ProductWidget = () => {
               className="min-w-[70%] sm:min-w-[40%] md:min-w-0 flex-shrink-0 md:flex-shrink snap-center flex flex-col items-center text-center"
             >
               {/* Image */}
-              <div className="w-full sm:aspect-[4/4] lg:aspect-[3/4]  overflow-hidden rounded-xl">
+              <div className="w-full aspect-[3/4]  overflow-hidden rounded-xl">
                 <Image
                 onClick={()=>router.push(`/collection/${category.collectionSlug}`)}
                   src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${category.collectionImage}`}
