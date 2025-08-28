@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Heart, ShoppingCart, Star, LayoutGrid, List } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 import CollectCard from "@/components/CollectCard/CollectCard";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import { useRouter } from "next/navigation";
+import Header from "@/components/Header/Header";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -66,16 +66,10 @@ const products = [
   },
 ];
 
-const cards = [
-  { _id: 1, img: "/Image/fs_new_s1.webp", imgAlt: "Collection", Label: "T shirt" },
-  { _id: 2, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
-  { _id: 3, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
-  { _id: 4, img: "/Image/main_clt4.webp", imgAlt: "Sweater", Label: "Sweater" },
-
-]
 
 
 const Page = () => {
+
   const [layout, setLayout] = useState("grid");
   const [pData, setPData] = useState({ products: [], collections: [] });
   const [loading, setLoading] = useState(false);
@@ -118,9 +112,19 @@ const Page = () => {
     fetchAllData();
   }, []);
 
+  const metaData = {
+    title: `DoorBix || Shop Now`,
+    description: `Shop the latest collection at DoorBix. Discover a wide range of quality products designed to bring style, value, and convenience to your shopping experience.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/shop`,
+  }
+
+
 
   return (
     <section className="bg-white px-4 py-6 md:px-8 lg:px-12 max-w-screen-xl mx-auto">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       {/* Banner */}
       {/* <div
         className="relative h-[200px] md:h-[300px] w-full mb-10 bg-cover bg-center rounded-lg overflow-hidden"

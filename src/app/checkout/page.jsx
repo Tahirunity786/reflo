@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import SignInModal from '@/components/SignInModal/SignInModal';
 import SignUpModal from '@/components/SignUpModal/SignUpModal';
+import Header from '@/components/Header/Header';
 
 
 // Helper Component: Input Field
@@ -368,8 +369,18 @@ export default function CheckoutForm() {
         }
     };
 
+
+    const metaData = {
+        title: `DoorBix || Checkout`,
+        description: `Secure and seamless checkout process on DoorBix. Review your order details and complete your purchase with confidence.`,
+        image: `https://www.doorbix.com/Image/Logo.png`,
+        pageUrl: `https://www.doorbix.com/shop/checkout`,
+    }
+
     return (
         <div className="max-w-7xl mx-auto">
+            <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-8 lg:py-8 sm:px-2 sm:py-2 ">
                 {/* Left Side: Form */}
                 <div className="bg-white rounded-lg shadow-sm p-6 space-y-8">

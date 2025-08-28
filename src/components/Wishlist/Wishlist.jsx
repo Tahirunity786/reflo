@@ -8,6 +8,7 @@ import { FaShoppingBasket } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Header from "../Header/Header";
 
 export default function Wishlist() {
   const router = useRouter()
@@ -79,8 +80,21 @@ export default function Wishlist() {
 
     fetchBSProducts();
   }, []);
+
+  const metaData = {
+    title: `DoorBix || Your Wishlist`,
+    description: `View and manage your saved items in your DoorBix Wishlist. Keep track of your favorite products and shop them anytime with ease.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/wishlist`,
+  }
+
+
+
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 text-gray-800">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       {/* Page Heading */}
       <h1 className="text-2xl font-semibold mb-6">My Wishlist</h1>
 

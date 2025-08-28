@@ -6,6 +6,7 @@ import { Heart, ShoppingCart, Star, LayoutGrid, List } from "lucide-react";
 import CollectCard from "@/components/CollectCard/CollectCard";
 import { useParams, useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard/ProductCard";
+import Header from "@/components/Header/Header";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -49,8 +50,17 @@ const Page = () => {
         }, 300);
     };
 
+    const metaData = {
+        title: `DoorBix || ${data?.collectionName}`,
+        description: `${data?.collectionDescription}`,
+        image: `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${data?.collectionImage}`,
+        pageUrl: `https://wwww.doorbix.com/shop/${data?.collectionSlug}`,
+    }
+
     return (
         <section className="bg-white px-4 py-6 md:px-8 lg:px-12 max-w-screen-xl mx-auto">
+            <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
             {/* Banner */}
             <div
                 className="relative h-[200px] md:h-[300px] w-full mb-10 bg-cover bg-center rounded-lg overflow-hidden"

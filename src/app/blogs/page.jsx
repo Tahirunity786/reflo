@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
+import Header from '@/components/Header/Header';
 
 
 const Page = () => {
@@ -46,12 +47,19 @@ const Page = () => {
     useEffect(() => {
         fetchBlogs()
     }, []);
-    const metadata = {
-        title: "Blogs - ATPL Pro",
-    };
+
+    
+    const metaData = {
+    title: `DoorBix || Blogs and Articles`,
+    description: `Explore insightful blogs and articles from DoorBix covering the latest trends, tips, and updates to keep you informed and inspired.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/blogs`,
+}
+
+
     return (
         <>
-            {/* <Header metadata={metadata} /> */}
+            <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
 
             {/* Hero Section */}
             <section

@@ -48,9 +48,12 @@ export default function ThankYouPage() {
     0
   );
 
+  
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      
       {/* ✅ Success Heading */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}

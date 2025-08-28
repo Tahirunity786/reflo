@@ -1,4 +1,5 @@
 'use client';
+import Header from '@/components/Header/Header';
 import Image from 'next/image';
 
 // Stats data array (DRY principle)
@@ -74,9 +75,18 @@ At DOORBIX, everything we do starts with our customers. We believe in making sho
         //     'Professional business meeting with people in suits working with laptops and documents in modern office',
     },
 ];
+
+const metaData = {
+    title: `DoorBix || About Us`,
+    description: `Discover DoorBix – a trusted platform dedicated to providing quality products, exceptional service, and a seamless shopping experience for our valued customers.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/aboutus`,
+}
+
 export default function AboutHero() {
     return (
         <section className="max-w-7xl mx-auto px-4 py-14 text-center space-y-10">
+            <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
 
             {/* Welcome Text & Heading */}
             <div className="mb-22">

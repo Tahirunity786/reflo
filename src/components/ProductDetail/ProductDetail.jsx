@@ -118,7 +118,7 @@ const ProductState = ({
 
     const metaData = {
         title: `DoorBix || ${data?.productName}`,
-        description: "Shop our premium red t-shirt made from 100% cotton. Unisex fit, soft, breathable, and perfect for casual wear. Available in all sizes.",
+        description: `${data?.productDescription}`,
         image: `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${productImages[0]?.image}`,
         pageUrl: `https://wwww.doorbix.com/shop/${data?.productSlug}`,
     }

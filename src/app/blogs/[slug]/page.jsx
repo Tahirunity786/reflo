@@ -68,8 +68,18 @@ const BlogDetailPage = () => {
   // ✅ Show loader while fetching post
   if (loading) return <BlogSkeleton />;
 
+
+  const metaData = {
+    title: `DoorBix || ${post?.metaTitle}`,
+    description: `${post?.metaDescription}`,
+    image: `${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${post?.blogImage}`,
+    pageUrl: `https://wwww.doorbix.com/shop/${post?.slug}`,
+  }
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       {/* Cover Image */}
       <div className="relative w-full h-72 md:h-96 mb-4 rounded-2xl overflow-hidden shadow-lg">
         <Image
@@ -113,7 +123,7 @@ const BlogDetailPage = () => {
       <div className="mt-10 mb-10">
         <h5>Comments ({comments?.length})</h5>
         {comments.length > 0 &&
-          comments.map((c) => <Comment key={c.id} comment={c} postId={post?.id} onCommentPost={handleFetchComment}  />)}
+          comments.map((c) => <Comment key={c.id} comment={c} postId={post?.id} onCommentPost={handleFetchComment} />)}
       </div>
 
       <CommentForm postId={post?.id} onCommentPost={handleFetchComment} />

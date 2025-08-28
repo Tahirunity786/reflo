@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import CollectCard from '@/components/CollectCard/CollectCard';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header/Header';
 
 
 const Page = () => {
@@ -33,23 +34,33 @@ const Page = () => {
   }, [])
 
   if (loading || !data || data.length === 0) {
-  return (
-    <div className="max-w-7xl mx-auto sm:px-4 py-8 lg:px-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="w-full max-w-xs animate-pulse rounded-xl bg-gray-100 p-4 shadow-md">
-            <div className="h-40 w-full rounded-lg bg-gray-300 mb-4"></div>
-            <div className="h-4 w-3/4 rounded bg-gray-300 mb-2"></div>
-            <div className="h-10 w-full rounded bg-gray-300"></div>
-          </div>
-        ))}
+    return (
+      <div className="max-w-7xl mx-auto sm:px-4 py-8 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div key={index} className="w-full max-w-xs animate-pulse rounded-xl bg-gray-100 p-4 shadow-md">
+              <div className="h-40 w-full rounded-lg bg-gray-300 mb-4"></div>
+              <div className="h-4 w-3/4 rounded bg-gray-300 mb-2"></div>
+              <div className="h-10 w-full rounded bg-gray-300"></div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
+  const metaData = {
+    title: `DoorBix || Collection`,
+    description: `Browse the exclusive DoorBix collection featuring a wide range of quality products carefully curated to match your style and needs.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/collection`,
+  }
+
 
   return (
     <div className="max-w-7xl mx-auto sm:px-4 py-8 lg:px-8">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
         {data?.map((item) => (
           <CollectCard

@@ -1,7 +1,20 @@
 'use client'
+
+import Header from "@/components/Header/Header";
+
 export default function TermsPage() {
+  const metaData = {
+    title: `DoorBix || Terms & Conditions`,
+    description: `Review the DoorBix Terms & Conditions to understand our policies, user guidelines, and important information regarding the use of our website and services.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/terms-conditions`,
+  }
+
+
   return (
     <main className="mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       <div className="bg-gray-100 rounded-lg  md:p-12 p-8">
         <div className="mb-8">
           <p className="text-4xl font-bold text-gray-900 mb-4">Terms and Conditions</p>

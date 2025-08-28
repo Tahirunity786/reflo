@@ -1,8 +1,21 @@
 'use client'
 
+import Header from "@/components/Header/Header";
+
 export default function PrivacyPolicyPage() {
+
+  const metaData = {
+    title: `DoorBix || Privacy Policy`,
+    description: `Read the DoorBix Privacy Policy to learn how we collect, use, and protect your personal information while ensuring a safe and transparent shopping experience.`,
+    image: `https://www.doorbix.com/Image/Logo.png`,
+    pageUrl: `https://www.doorbix.com/shop/privacy`,
+  }
+
+
   return (
     <main className="mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl">
+      <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+
       <div className="bg-gray-100 rounded-lg shadow-xl md:p-12 p-8">
         <div className="mb-8">
           <p className="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</p>
