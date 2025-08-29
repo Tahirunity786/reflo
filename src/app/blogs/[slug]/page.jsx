@@ -8,6 +8,7 @@ import HtmlContent from "@/components/HtmlContent/HtmlContent";
 import Comment from "@/components/Comment/Comment";
 import CommentForm from "@/components/CommentForm/CommentForm";
 import BlogSkeleton from "@/components/BlogSkeleton/BlogSkeleton"; // 👈 import skeleton loader
+import Header from "@/components/Header/Header";
 
 /**
  * Blog Detail Page
