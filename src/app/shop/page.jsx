@@ -299,11 +299,12 @@ const Page = () => {
               <div>
                 <label className="text-sm font-medium mr-2">Sort by:</label>
                 <select className="text-sm border border-gray-300 rounded px-2 py-1">
-                  <option>Featured</option>
-                  <option>Price: Low to High</option>
-                  <option>Price: High to Low</option>
-                  <option>Newest</option>
+                  <option value="alphabet-asc">Alphabet: A to Z</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="newest">Newest</option>
                 </select>
+
               </div>
             </div>
           </div>
