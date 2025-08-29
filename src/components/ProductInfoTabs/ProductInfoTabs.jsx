@@ -52,9 +52,9 @@ export default function ProductInfoTabs({ data }) {
     {
       label: 'Refund Policy',
       content: (
-       <p className="text-gray-700 leading-relaxed">
-Currently, we do not offer refunds. If you have any concerns, please feel free to <a href="/contact" className='text-blue-500'>contact</a> our support team and we’ll be happy to assist you.
-</p>
+        <p className="text-gray-700 leading-relaxed">
+          Currently, we do not offer refunds. If you have any concerns, please feel free to <a href="/contact" className='text-blue-500'>contact</a> our support team and we’ll be happy to assist you.
+        </p>
 
       ),
     },
@@ -69,8 +69,8 @@ Currently, we do not offer refunds. If you have any concerns, please feel free t
             key={tab.label}
             onClick={() => setActiveTab(index)}
             className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-300 ${activeTab === index
-                ? 'bg-black text-white shadow'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-black text-white shadow'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
           >
             {tab.label}
