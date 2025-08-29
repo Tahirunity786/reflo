@@ -58,6 +58,15 @@ export default function ProductInfoTabs({ data }) {
 
       ),
     },
+    {
+      label: 'Replacement',
+      content: (
+        <p className="text-gray-700 leading-relaxed">
+          Your request of a replacement within 7 days from the date of delivery will be done free of cost. After 7 days, there will be certain charges for the replacement.
+        </p>
+
+      ),
+    },
   ];
 
   return (
