@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Heart, ShoppingCart, Star, LayoutGrid, List } from "lucide-react";
-import CollectCard from "@/components/CollectCard/CollectCard";
+import { LayoutGrid, List } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Header from "@/components/Header/Header";
@@ -82,11 +80,25 @@ const Page = () => {
                         <div>
                             <h4 className="text-base font-semibold mb-3 pb-2">Product Categories</h4>
                             <ul className="text-sm space-y-2 text-gray-700">
-                                <li className="cursor-pointer hover:text-black">Crop-top</li>
-                                <li className="cursor-pointer hover:text-black">Sweaters</li>
-                                <li className="cursor-pointer hover:text-black">T-Shirts</li>
-                                <li className="cursor-pointer hover:text-black">Jean</li>
-                                <li className="cursor-pointer hover:text-black">Coats</li>
+                                {Array.isArray(data.categories) && data.categories.map((category) => (
+                                    <li
+                                        key={category.id}
+                                        className="cursor-pointer hover:text-black flex items-center gap-2"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            id={`category-${category.id}`}
+                                            value={category.id}
+                                            className="cursor-pointer"
+                                        />
+                                        <label
+                                            htmlFor={`category-${category.id}`}
+                                            className="cursor-pointer"
+                                        >
+                                            {category.categoryName}
+                                        </label>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
