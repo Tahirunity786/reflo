@@ -11,10 +11,10 @@ export default function ProductInfoTabs({ data }) {
     {
       label: 'Description',
       content: (
-      
-          <HtmlContent content={data?.productDescription} charLimit={'full'}/>
-          
-       
+
+        <HtmlContent content={data?.productDescription} charLimit={'full'} />
+
+
       ),
     },
     {
@@ -40,18 +40,22 @@ export default function ProductInfoTabs({ data }) {
       label: 'Return & Shipping',
       content: (
         <ul className="list-disc list-inside text-gray-700 space-y-1">
-          <li>Free shipping on orders over $100.</li>
-          <li>Delivery time: 3–7 business days.</li>
-          <li>30-day hassle-free returns.</li>
+          <li>Free shipping on all orders</li>
+          <li>Product will be deliver withIn <b>2-4 days</b></li>
+          <li>To initiate a replacement, please share a video of the incorrect, faulty or damaged .</li>
+          <li>Ship the incorrect, faulty damaged or broken product in its original packing (Original Product Box and All Accessories) to our warehouse at the below address: <br /> <b className='mx-6 mb-2 mt-2'>Tazah Global LLC, Warehouse # 13, Plot # 4488, Al Sajaa Industrial, Sharjah, UAE</b></li>
+          <li> Within 5 working days of receipt of the incorrect, faulty damaged or broken product we will ship the replacement for you free of charge.</li>
+          <li> Please note that we do not offer a replacement for <b>“change of mind”</b>.</li>
         </ul>
       ),
     },
     {
       label: 'Refund Policy',
       content: (
-        <p className="text-gray-700 leading-relaxed">
-          You can request a full refund within 30 days of receiving your item. Items must be in original condition with tags attached.
-        </p>
+       <p className="text-gray-700 leading-relaxed">
+Currently, we do not offer refunds. If you have any concerns, please feel free to <a href="/contact" className='text-blue-500'>contact</a> our support team and we’ll be happy to assist you.
+</p>
+
       ),
     },
   ];
@@ -64,11 +68,10 @@ export default function ProductInfoTabs({ data }) {
           <button
             key={tab.label}
             onClick={() => setActiveTab(index)}
-            className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
-              activeTab === index
+            className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-300 ${activeTab === index
                 ? 'bg-black text-white shadow'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+              }`}
           >
             {tab.label}
           </button>
