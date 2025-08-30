@@ -104,16 +104,20 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
                 </select>
               </div>
 
-              {/* Search Button */}
-              <div className="md:col-span-3 flex justify-center md:justify-start">
-                <button
-                  onClick={handleSearch}
-                  className="w-full md:w-auto px-6 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition flex items-center justify-center gap-2"
-                >
-                  <Search size={18} />
-                  <span className="hidden sm:inline">Search</span>
-                </button>
-              </div>
+              {/* <select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-2.5 top-3"
+              >
+                <option value="product">Products</option>
+                <option value="category">Categories</option>
+              </select> */}
+              {/* <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
+              >
+                <Search size={18} />
+              </button> */}
             </div>
 
 
