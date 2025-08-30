@@ -5,14 +5,29 @@ import { LayoutGrid, List } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Header from "@/components/Header/Header";
+import ProductFilters from "@/components/ProductFilters/ProductFilters";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
+const getOrderingParam = (value) => {
+    switch (value) {
+        case "alphabet-asc":
+            return "productName"; // ascending A-Z
+        case "price-asc":
+            return "productPrice"; // low → high
+        case "price-desc":
+            return "-productPrice"; // high → low
+        case "newest":
+        default:
+            return "-productCreatedAt"; // newest first
+    }
+};
 
 
 const Page = () => {
     const [layout, setLayout] = useState("grid");
     const [loading, setLoading] = useState(false);
+    const [filter, setFilter] = useState("price-asc");
     const [data, setData] = useState([]);
 
     const params = useParams();
@@ -48,6 +63,47 @@ const Page = () => {
         }, 300);
     };
 
+
+    const fetchProducts = async (selectedFilter) => {
+        try {
+            setLoading(true)
+            const ordering = getOrderingParam(selectedFilter);
+
+            const url = new URL(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/search/`);
+            url.searchParams.append("ordering", ordering);
+
+            const res = await fetch(url.toString(), {
+                method: "GET",
+                // credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                // cache: "no-store",
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch products: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            setData((prev) => ({
+                ...prev,
+                products: data.products || data, // ✅ only replace products
+            }));
+        } catch (err) {
+            console.error("Error fetching products:", err);
+        }finally{
+            setLoading(false)
+        }
+    };
+
+    const handleChange = (e) => {
+        const selected = e.target.value;
+        setFilter(selected);
+        fetchProducts(selected);
+    };
+
     const metaData = {
         title: `DoorBix || ${data?.collectionName}`,
         description: `${data?.collectionDescription}`,
@@ -75,50 +131,7 @@ const Page = () => {
 
             <div className="flex gap-8">
                 {/* Sidebar Filter */}
-                <aside className="w-full md:w-[250px] flex-shrink-0 hidden md:block">
-                    <div className="space-y-6 p-4 bg-gray-50 rounded-lg ">
-                        <div>
-                            <h4 className="text-base font-semibold mb-3 pb-2">Product Categories</h4>
-                            <ul className="text-sm space-y-2 text-gray-700">
-                                {Array.isArray(data.categories) && data.categories.map((category) => (
-                                    <li
-                                        key={category.id}
-                                        className="cursor-pointer hover:text-black flex items-center gap-2"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id={`category-${category.id}`}
-                                            value={category.id}
-                                            className="cursor-pointer"
-                                        />
-                                        <label
-                                            htmlFor={`category-${category.id}`}
-                                            className="cursor-pointer"
-                                        >
-                                            {category.categoryName}
-                                        </label>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="text-base font-semibold mb-3 pb-2">Availability</h4>
-                            <div className="space-y-2">
-                                <label className="flex items-center space-x-2 text-sm text-gray-700">
-                                    <input type="checkbox" className="accent-black" />
-                                    <span>In stock</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 className="text-base font-semibold mb-3 pb-2">Price Range</h4>
-                            <input type="range" min={0} max={500} className="w-full accent-black" />
-                            <div className="text-sm text-gray-700 mt-1">0 {process.env.NEXT_PUBLIC_CURRENCY} - 500 {process.env.NEXT_PUBLIC_CURRENCY} </div>
-                        </div>
-                    </div>
-                </aside>
+                <ProductFilters pData={data} setPData={setData} seLoading={setLoading} />
 
                 {/* Main Product Section */}
                 <div className="flex-1">
@@ -146,11 +159,15 @@ const Page = () => {
 
                             <div>
                                 <label className="text-sm font-medium mr-2">Sort by:</label>
-                                <select className="text-sm border border-gray-300 rounded px-2 py-1">
-                                    <option>Featured</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
-                                    <option>Newest</option>
+                                <select
+                                    className="text-sm border border-gray-300 rounded px-2 py-1"
+                                    value={filter}
+                                    onChange={handleChange}
+                                >
+                                    <option value="alphabet-asc">Alphabet: A to Z</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                    <option value="newest">Newest</option>
                                 </select>
                             </div>
                         </div>

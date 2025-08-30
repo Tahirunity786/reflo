@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,8 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
   const [loading, setLoading] = useState(false);
   const [bsData, setBSData] = useState([]);
   const [error, setError] = useState(false);
+  const [searchType, setSearchType] = useState('product'); // product | category
+  const [query, setQuery] = useState('');
   const router = useRouter()
 
   useEffect(() => {
@@ -41,11 +43,24 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
     fetchBSProducts();
   }, [isOpen, type]);
 
-  const handleClick =(slug)=>{
+  const handleClick = (slug) => {
     router.push(`/shop/${slug}`);
     onClose();
   }
 
+  const handleSearch = () => {
+    if (!query.trim()) return;
+
+    // redirect with params
+    router.push(`/shop?search=${encodeURIComponent(query)}&type=${searchType}`);
+    onClose();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -67,14 +82,35 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
           {/* Search Content */}
           <div className="w-full max-w-2xl mx-auto mt-20">
             <h2 className="text-3xl font-bold mb-6 text-center">Search</h2>
-            <input
-              type="text"
-              placeholder="Search products, categories..."
-              className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg mb-6"
-            />
+
+            <div className='relative'>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={`Search ${searchType === 'product' ? 'products' : 'categories'}...`}
+                className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg mb-6"
+              />
+
+              <select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-2.5 top-3"
+              >
+                <option value="product">Products</option>
+                <option value="category">Categories</option>
+              </select>
+              {/* <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
+              >
+                <Search size={18} />
+              </button> */}
+            </div>
 
             {/* Trending Keywords */}
-            <div className="mb-10">
+            <div className="mb-10 p-5">
               <h4 className="text-sm font-semibold text-gray-500 mb-2">
                 Trending Searches
               </h4>
@@ -91,7 +127,7 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
             </div>
 
             {/* Popular Products */}
-            <div>
+            <div className='p-5'>
               <h4 className="text-sm font-semibold text-gray-500 mb-4">
                 Popular Products
               </h4>
@@ -122,12 +158,12 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
                           alt={item.productName}
                           width={100}
                           height={100}
-                          onClick={()=>handleClick(item.productSlug)}
+                          onClick={() => handleClick(item.productSlug)}
                           className="object-cover w-full h- cursor-pointer"
                         />
                       </div>
                       <div>
-                        <h5 className="text-sm font-medium cursor-pointer" onClick={()=>handleClick(item.productSlug)}>{item.productName.slice(0, 15)}</h5>
+                        <h5 className="text-sm font-medium cursor-pointer" onClick={() => handleClick(item.productSlug)}>{item.productName.slice(0, 15)}</h5>
                         <p className="text-sm text-gray-500">{item.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}</p>
                       </div>
                     </div>
