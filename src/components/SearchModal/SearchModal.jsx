@@ -84,40 +84,22 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
             <h2 className="text-3xl font-bold mb-6 text-center">Search</h2>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
               {/* Search Input + Dropdown Wrapper */}
-              <div className="relative md:col-span-9">
+              <div className="relative md:col-span-10 flex">
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={`Search ${searchType === 'product' ? 'products' : 'categories'}...`}
-                  className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg"
+                  className="w-full px-6 py-4 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-black text-lg"
                 />
-
-                {/* <select
-                  value={searchType}
-                  onChange={(e) => setSearchType(e.target.value)}
-                  className="px-3 py-4 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-1 top-1"
+                <button
+                  onClick={handleSearch}
+                  className="px-6 bg-black text-white rounded-r-full hover:bg-gray-800 transition"
                 >
-                  <option value="product">Products</option>
-                  <option value="category">Categories</option>
-                </select> */}
+                  <Search size={20} />
+                </button>
               </div>
-
-              {/* <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-2.5 top-3"
-              >
-                <option value="product">Products</option>
-                <option value="category">Categories</option>
-              </select> */}
-              {/* <button
-                onClick={handleSearch}
-                className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
-              >
-                <Search size={18} />
-              </button> */}
             </div>
 
 
