@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const trendingKeywords = ['Summer Dresses', 'Men Jackets', 'Sneakers', 'Sunglasses'];
+// const trendingKeywords = ['Summer Dresses', 'Men Jackets', 'Sneakers', 'Sunglasses'];
 
 const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
   const [loading, setLoading] = useState(false);

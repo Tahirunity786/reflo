@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard/ProductCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ProductFilters from "@/components/ProductFilters/ProductFilters";
+import CollectionGrid from "@/components/CollectionGrid/CollectionGrid";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -146,18 +147,7 @@ const Page = () => {
         </div>
       </div> */}
       {/* Collect card */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center mb-6">
-        {pData?.collections?.map((item) => (
-          <CollectCard
-            key={item.id}
-            imageSrc={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${item.collectionImage}`}
-            imageAlt={item.collectionName}
-            buttonLabel={item.collectionName}
-            hSm={true}
-            onButtonClick={() => router.push(`/collection/${item.collectionSlug}`)}
-          />
-        ))}
-      </div>
+      <CollectionGrid pData={pData}/>
 
 
       <div className="flex gap-8">
