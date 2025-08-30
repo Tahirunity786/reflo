@@ -94,14 +94,14 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
                   className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg"
                 />
 
-                <select
+                {/* <select
                   value={searchType}
                   onChange={(e) => setSearchType(e.target.value)}
                   className="px-3 py-4 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-1 top-1"
                 >
                   <option value="product">Products</option>
                   <option value="category">Categories</option>
-                </select>
+                </select> */}
               </div>
 
               {/* <select
