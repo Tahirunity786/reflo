@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { LayoutGrid, List } from "lucide-react";
 import CollectCard from "@/components/CollectCard/CollectCard";
 import ProductCard from "@/components/ProductCard/ProductCard";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ProductFilters from "@/components/ProductFilters/ProductFilters";
 
@@ -26,12 +26,16 @@ const getOrderingParam = (value) => {
 
 
 const Page = () => {
-
+  const params = useSearchParams();
   const [layout, setLayout] = useState("grid");
   const [pData, setPData] = useState({ products: [], collections: [] });
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("price-asc");
-  const router = useRouter()
+  const router = useRouter();
+
+  // params declaration
+  const type = params.get("type");
+  const search = params.get("search");
 
   const handleLayoutChange = (view) => {
     setLoading(true);
@@ -71,21 +75,20 @@ const Page = () => {
   }, []);
 
 
-  const fetchProducts = async (selectedFilter) => {
+  const fetchProducts = async (selectedFilter, search, type) => {
     try {
       setLoading(true);
       const ordering = getOrderingParam(selectedFilter);
 
       const url = new URL(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/search/`);
-      url.searchParams.append("ordering", ordering);
+      if (ordering) url.searchParams.append("ordering", ordering);
+      if (search) url.searchParams.append("search", search);
+      if (type) url.searchParams.append("type", type);
+
 
       const res = await fetch(url.toString(), {
         method: "GET",
-        // credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // cache: "no-store",
+        headers: { "Content-Type": "application/json" },
       });
 
       if (!res.ok) {
@@ -96,15 +99,22 @@ const Page = () => {
 
       setPData((prev) => ({
         ...prev,
-        products: data.results || data, // ✅ only replace products
+        products: data.results || data,
       }));
     } catch (err) {
       console.error("Error fetching products:", err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (search && type) {
+      console.log(search, type)
+      fetchProducts(null, search, type);
+    }
+  }, [search, type]);
+
 
   const handleChange = (e) => {
     const selected = e.target.value;

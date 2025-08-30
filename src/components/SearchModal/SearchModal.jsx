@@ -82,35 +82,43 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
           {/* Search Content */}
           <div className="w-full max-w-2xl mx-auto mt-20">
             <h2 className="text-3xl font-bold mb-6 text-center">Search</h2>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              {/* Search Input + Dropdown Wrapper */}
+              <div className="relative md:col-span-9">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={`Search ${searchType === 'product' ? 'products' : 'categories'}...`}
+                  className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg"
+                />
 
-            <div className='relative'>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={`Search ${searchType === 'product' ? 'products' : 'categories'}...`}
-                className="w-full px-6 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black text-lg mb-6"
-              />
+                <select
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="px-3 py-4 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-1 top-1"
+                >
+                  <option value="product">Products</option>
+                  <option value="category">Categories</option>
+                </select>
+              </div>
 
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none cursor-pointer absolute right-2.5 top-3"
-              >
-                <option value="product">Products</option>
-                <option value="category">Categories</option>
-              </select>
-              {/* <button
-                onClick={handleSearch}
-                className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
-              >
-                <Search size={18} />
-              </button> */}
+              {/* Search Button */}
+              <div className="md:col-span-3 flex justify-center md:justify-start">
+                <button
+                  onClick={handleSearch}
+                  className="w-full md:w-auto px-6 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition flex items-center justify-center gap-2"
+                >
+                  <Search size={18} />
+                  <span className="hidden sm:inline">Search</span>
+                </button>
+              </div>
             </div>
 
+
             {/* Trending Keywords */}
-            <div className="mb-10 p-5">
+            {/* <div className="mb-10 p-5">
               <h4 className="text-sm font-semibold text-gray-500 mb-2">
                 Trending Searches
               </h4>
@@ -124,7 +132,7 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Popular Products */}
             <div className='p-5'>
