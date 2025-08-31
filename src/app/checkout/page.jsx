@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import SignInModal from '@/components/SignInModal/SignInModal';
 import SignUpModal from '@/components/SignUpModal/SignUpModal';
 import Header from '@/components/Header/Header';
+import Link from 'next/link';
 
 
 // Helper Component: Input Field
@@ -36,28 +37,55 @@ const Input = ({ name, type = "text", placeholder, value, onChange, error }) => 
     );
 };
 
-
-
 // Helper Component: Select Dropdown
+const UAE_STATES = [
+    { value: "AD", label: "Abu Dhabi" },
+    { value: "DU", label: "Dubai" },
+    { value: "SH", label: "Sharjah" },
+    { value: "AJ", label: "Ajman" },
+    { value: "UQ", label: "Umm Al-Quwain" },
+    { value: "RK", label: "Ras Al-Khaimah" },
+    { value: "FJ", label: "Fujairah" },
+];
+
 const Select = ({ name, value, options, onChange }) => (
     <div className="relative">
         <select
             name={name}
             value={value}
             onChange={onChange}
-            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white  text-gray-900  border border-gray-300  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
+            <option value="" disabled hidden>
+                Select {name.charAt(0).toUpperCase() + name.slice(1)}
+            </option>
+
             {options.map((opt, idx) => (
-                <option key={idx} value={opt}>{opt}</option>
+                <option key={idx} value={opt.value}>
+                    {opt.label}
+                </option>
             ))}
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+
+        <div className="absolute top-3 right-0 flex items-center px-2 pointer-events-none">
+            <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                />
             </svg>
         </div>
     </div>
 );
+
 
 const useCartTotal = (items) => {
     return useMemo(() => {
@@ -73,9 +101,7 @@ const useCartTotal = (items) => {
 };
 
 const REQUIRED_FIELDS = [
-    "email",
-    "firstName",
-    "lastName",
+    "fullName",
     "address",
     "city",
     "state",
@@ -99,12 +125,11 @@ export default function CheckoutForm() {
     const [errors, setErrors] = useState({});
     const [qty, setQty] = useState(1); // quantity state
 
-    const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
+    // const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
 
     const [formData, setFormData] = useState({
         email: "",
-        firstName: "",
-        lastName: "",
+        fullName: "",
         address: "",
         apartment: "",
         city: "",
@@ -237,10 +262,6 @@ export default function CheckoutForm() {
     }, [slug, qty]); // ✅ include qty here
 
 
-
-
-
-
     // ⏳ Countdown effect
     useEffect(() => {
         if (!isPending) return;
@@ -304,9 +325,8 @@ export default function CheckoutForm() {
             const addressesPayload = [
                 {
                     address_type: "SHP",
-                    first_name: formData.firstName,
-                    last_name: formData.lastName,
-                    email: formData.email,
+                    fullName: formData.fullName,
+                    email: formData.email || "",
                     phone: formData.phone || "",
                     line1: formData.address,
                     line2: formData.apartment,
@@ -396,7 +416,7 @@ export default function CheckoutForm() {
                         }
                         <Input
                             name="email"
-                            placeholder="Email"
+                            placeholder="Email (Optional)"
                             value={formData.email}
                             onChange={handleChange}
                             error={errors.email}
@@ -418,7 +438,7 @@ export default function CheckoutForm() {
                     </section>
 
                     {/* Delivery Section */}
-                    <section>
+                    {/* <section>
                         <Select
                             name="delivery"
                             value={formData.delivery}
@@ -431,19 +451,24 @@ export default function CheckoutForm() {
                             options={["Home delivery"]}
                             onChange={handleChange}
                         />
-                    </section>
+                    </section> */}
                     {/* Address Section */}
                     <section>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <Input name="firstName" error={errors.firstName} placeholder="First name" value={formData.firstName} onChange={handleChange} />
-                            <Input name="lastName" error={errors.lastName} placeholder="Last name" value={formData.lastName} onChange={handleChange} />
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Location (UAE)</h2>
+                        <div className="w-full mb-2">
+                            <Input name="fullName" error={errors.fullName} placeholder="Full Name" value={formData.fullName} onChange={handleChange} />
                         </div>
                         <Input name="address" error={errors.address} placeholder="Address" value={formData.address} onChange={handleChange} />
                         <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+                            <Select
+                                name="state"
+                                value={formData.state}
+                                options={UAE_STATES}
+                                onChange={handleChange}
+                            />
                             <Input name="city" placeholder="City" error={errors.city} value={formData.city} onChange={handleChange} />
-                            <Input name="state" placeholder="State" error={errors.state} value={formData.state} onChange={handleChange} />
                             <Input name="zip" placeholder="ZIP code" error={errors.zip} value={formData.zip} onChange={handleChange} />
                         </div>
 
@@ -466,7 +491,7 @@ export default function CheckoutForm() {
                         <h2 className="text-lg font-semibold text-gray-900  mb-4">Shipping</h2>
                         <div className="border border-gray-300  rounded-md bg-gray-50  p-4">
                             <p className="text-sm text-gray-600 ">
-                                Your parcel is expected to arrive within 5–7 business days.
+                                Your parcel is expected to arrive within 2–4 business days.
                             </p>
 
 
@@ -515,8 +540,21 @@ export default function CheckoutForm() {
                         )}
                     </div>
                     <div className="mt-8 pt-4 border-t border-gray-200  flex space-x-4 text-sm">
-                        <a href="#" className="text-blue-600 ">Privacy policy</a>
-                        <a href="#" className="text-blue-600 ">Cancellation policy</a>
+                        <div className="flex space-x-4">
+                            <Link
+                                href="/privacy"
+                                className="text-blue-600 hover:underline transition-colors duration-200"
+                            >
+                                Privacy Policy
+                            </Link>
+                            <Link
+                                href="/terms-conditions"
+                                className="text-blue-600 hover:underline transition-colors duration-200"
+                            >
+                                Terms & Conditions
+                            </Link>
+                        </div>
+
                     </div>
                 </div>
 
@@ -638,21 +676,21 @@ export default function CheckoutForm() {
                                 <span className="text-gray-600 ">Shipping</span>
                                 <span className="text-gray-500 ">Free</span>
                             </div>
-                            {isAuthenticated ? (
+                            {/* {isAuthenticated ? (
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 ">Discount</span>
                                     <span className="text-gray-500 ">
-                                        -{Math.round(total * 0.03)}   {/* 3% discount rounded */}
+                                        -{Math.round(total * 0.03)}
                                     </span>
                                 </div>
-                            ) : null}
+                            ) : null} */}
 
                         </div>
 
                         <div className="pt-4 border-t border-gray-200  flex justify-between text-lg font-semibold">
                             <span className="text-gray-900 ">Total</span>
                             <div className="text-right">
-                                {isAuthenticated ? (
+                                {/* {isAuthenticated ? (
                                     <>
                                         <span className="line-through text-gray-500 mr-2">
                                             {total} {process.env.NEXT_PUBLIC_CURRENCY}
@@ -662,10 +700,10 @@ export default function CheckoutForm() {
                                         </span>
                                     </>
                                 ) : (
-                                    <span className="text-gray-900 ">
-                                        {total} {process.env.NEXT_PUBLIC_CURRENCY}
-                                    </span>
-                                )}
+                                )} */}
+                                <span className="text-gray-900 ">
+                                    {total} {process.env.NEXT_PUBLIC_CURRENCY}
+                                </span>
                             </div>
                         </div>
 

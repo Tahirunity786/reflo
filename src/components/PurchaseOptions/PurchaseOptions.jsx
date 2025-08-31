@@ -26,11 +26,6 @@ const PurchaseOptions = ({ data }) => {
   const items = useSelector((state) => state.cart.items);
 
   const addToCartItem = () => {
-    if (!isAuthenticated && selectedOption === "subscription") {
-      setShowSignIn(true);
-      return;
-    }
-
     const exists = items.find((i) => i.id === data?.id);
     if (exists) {
       toast("Item is already in your cart!", {
@@ -58,10 +53,10 @@ const PurchaseOptions = ({ data }) => {
   };
 
   const handleBuyNow = () => {
-    if (!isAuthenticated && selectedOption === "subscription") {
-      setShowSignIn(true); // 👈 open sign-in modal
-      return;
-    }
+    // if (!isAuthenticated && selectedOption === "subscription") {
+    //   setShowSignIn(true); // 👈 open sign-in modal
+    //   return;
+    // }
     if (!agreed) return;
 
     router.push(`/checkout?i=${data?.id}&q=${qty}`);
@@ -69,26 +64,26 @@ const PurchaseOptions = ({ data }) => {
 
 
   // DRY: Centralized options config
-  const allOptions = [
-    {
-      key: "one-time",
-      label: "One Time Purchase",
-      price: data?.productPrice,
-      discountedPrice: null,
-      badge: null,
-    },
-    {
-      key: "subscription",
-      label: "Subscribe and save",
-      price: data?.productPrice,
-      discountedPrice: data?.productPrice ? data.productPrice * 0.97 : null,
-      badge: "SAVE 3%",
-    },
-  ];
+  // const allOptions = [
+  //   {
+  //     key: "one-time",
+  //     label: "One Time Purchase",
+  //     price: data?.productPrice,
+  //     discountedPrice: null,
+  //     badge: null,
+  //   },
+  //   {
+  //     key: "subscription",
+  //     label: "Subscribe and save",
+  //     price: data?.productPrice,
+  //     discountedPrice: data?.productPrice ? data.productPrice * 0.97 : null,
+  //     badge: "SAVE 3%",
+  //   },
+  // ];
 
-  const options = isAuthenticated
-    ? allOptions.filter((opt) => opt.key === "one-time")
-    : allOptions
+  // const options = isAuthenticated
+  //   ? allOptions.filter((opt) => opt.key === "one-time")
+  //   : allOptions
 
   return (
     <div className="w-full space-y-6">
@@ -111,7 +106,7 @@ const PurchaseOptions = ({ data }) => {
 
 
       {/* Purchase Options */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         <h3 className="font-semibold">Purchase Options</h3>
         {options.map((option) => (
           <label
@@ -153,7 +148,7 @@ const PurchaseOptions = ({ data }) => {
 
           </label>
         ))}
-      </div>
+      </div> */}
 
       {/* Cart & Terms Section */}
       <div className="space-y-3">

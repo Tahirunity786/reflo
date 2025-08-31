@@ -195,7 +195,7 @@ export default function ThankYouPage() {
             </div>
 
             {/* ✅ Total */}
-            {
+            {/* {
               order?.discount_amount > 0 && (
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-gray-800 font-semibold">Discount</span>
@@ -204,12 +204,12 @@ export default function ThankYouPage() {
                   </span>
                 </div>
               )
-            }
+            } */}
 
             <div className="flex justify-between items-center pt-2">
               <span className="text-gray-800 font-semibold">Total</span>
               <span className="font-bold text-green-600">
-                {itemsTotal - order?.discount_amount} {process.env.NEXT_PUBLIC_CURRENCY}
+                {itemsTotal} {process.env.NEXT_PUBLIC_CURRENCY}
               </span>
             </div>
           </div>
