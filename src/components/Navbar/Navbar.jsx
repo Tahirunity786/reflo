@@ -113,12 +113,12 @@ export default function Navbar() {
               ))}
             </div>
           </div>
-          <div className="hidden md:flex items-center space-x-1">
+          {/* <div className="hidden md:flex items-center space-x-1">
             <span>Get 3% Discount on each Order.</span>
             <span className="font-semibold underline cursor-pointer hover:text-pink-400" onClick={() => router.push('/shop')}>
               Shop Sale
             </span>
-          </div>
+          </div> */}
           <div className="flex items-center space-x-1">
             <User className='h-4 w-4' />
             <a href="/contact" className="hover:text-white">Help Center</a>
