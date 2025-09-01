@@ -48,41 +48,49 @@ const UAE_STATES = [
     { value: "FJ", label: "Fujairah" },
 ];
 
-const Select = ({ name, value, options, onChange }) => (
-    <div className="relative">
-        <select
-            name={name}
-            value={value}
-            onChange={onChange}
-            required
-            className="appearance-none mb-4 w-full px-3 py-2 rounded-md bg-white text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-            <option value="" disabled hidden>
-                Select {name.charAt(0).toUpperCase() + name.slice(1)}
-            </option>
-
-            {options.map((opt, idx) => (
-                <option key={idx} value={opt.value}>
-                    {opt.label}
-                </option>
-            ))}
-        </select>
-
-        <div className="absolute top-3 right-0 flex items-center px-2 pointer-events-none">
-            <svg
-                className="w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+const Select = ({ name, value, options, onChange, error }) => (
+    <div>
+        <div className="relative">
+            <select
+                name={name}
+                value={value}
+                onChange={onChange}
+                required
+                className={`
+                    appearance-none w-full px-3 py-2 rounded-md bg-white text-gray-900
+                    border ${error ? "border-red-500 mb-1" : "border-gray-300 mb-4"}
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                `}
             >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                />
-            </svg>
+                <option value="" disabled hidden>
+                    Select Emirates
+                </option>
+
+                {options.map((opt, idx) => (
+                    <option key={idx} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+
+            <div className="absolute top-3 right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                    />
+                </svg>
+            </div>
         </div>
+
+        {error && <p className="text-red-500 text-sm mt-1 mb-4">{error}</p>}
     </div>
 );
 
@@ -103,9 +111,8 @@ const useCartTotal = (items) => {
 const REQUIRED_FIELDS = [
     "fullName",
     "address",
-    "city",
     "state",
-    "zip",
+    "phone",
 ];
 
 export default function CheckoutForm() {
@@ -132,9 +139,8 @@ export default function CheckoutForm() {
         fullName: "",
         address: "",
         apartment: "",
-        city: "",
+        phone: "",
         state: "",
-        zip: "",
         emailOffers: false,
         saveInfo: false,
         delivery: "Ship",
@@ -217,7 +223,6 @@ export default function CheckoutForm() {
     useEffect(() => {
         if (slug !== "cart" && searchParams.get("q")) {
             const q = parseInt(searchParams.get("q"), 10);
-            console.log("Here is quantity embeding: ", q)
             setQty(!isNaN(q) && q > 0 ? q : 1);
         }
     }, [searchParams, slug]);
@@ -330,9 +335,7 @@ export default function CheckoutForm() {
                     phone: formData.phone || "",
                     line1: formData.address,
                     line2: formData.apartment,
-                    city: formData.city,
                     state: formData.state,
-                    postal_code: formData.zip,
                     country: (formData.country || "UAE").toUpperCase(),
                 },
             ];
@@ -436,43 +439,31 @@ export default function CheckoutForm() {
                             </label>
                         </div>
                     </section>
-
-                    {/* Delivery Section */}
-                    {/* <section>
-                        <Select
-                            name="delivery"
-                            value={formData.delivery}
-                            options={["Ship"]}
-                            onChange={handleChange}
-                        />
-                        <Select
-                            name="method"
-                            value={formData.method}
-                            options={["Home delivery"]}
-                            onChange={handleChange}
-                        />
-                    </section> */}
-                    {/* Address Section */}
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">Location (UAE)</h2>
+                        
                         <div className="w-full mb-2">
                             <Input name="fullName" error={errors.fullName} placeholder="Full Name" value={formData.fullName} onChange={handleChange} />
                         </div>
+                        
                         <Input name="address" error={errors.address} placeholder="Address" value={formData.address} onChange={handleChange} />
-                        <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
+                        
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 '>
+                            <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
+                            <Input name="phone" placeholder="Your phone no" value={formData.phone} onChange={handleChange} error={errors.phone} />
+                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+                        <div className="w-full ">
                             <Select
                                 name="state"
                                 value={formData.state}
                                 options={UAE_STATES}
                                 onChange={handleChange}
+                                error={errors.state}
                             />
-                            <Input name="city" placeholder="City" error={errors.city} value={formData.city} onChange={handleChange} />
-                            <Input name="zip" placeholder="ZIP code" error={errors.zip} value={formData.zip} onChange={handleChange} />
                         </div>
 
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                             <input
                                 id="saveInfo"
                                 name="saveInfo"
@@ -484,7 +475,7 @@ export default function CheckoutForm() {
                             <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-600 ">
                                 Save this information for next time
                             </label>
-                        </div>
+                        </div> */}
                     </section>
                     {/* Shipping Method */}
                     <section>
