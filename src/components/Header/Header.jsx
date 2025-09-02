@@ -9,7 +9,7 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
         name="keywords"
         content="DoorBix, doorbix, door bix, online shopping, ecommerce store, buy online, best deals, fashion, electronics, accessories, home essentials, online marketplace, shop now, secure checkout, wishlist, collections, trending products"
       />
-      
+
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="UTF-8" />
       <link rel="canonical" href={pageUrl} />
@@ -30,6 +30,7 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
 
+      <meta name="msvalidate.01" content="FC9E846E102FF0479D6A1652561543EA" />
       <link rel="icon" href="/favicon.ico" />
     </>
   );
