@@ -1,26 +1,24 @@
 'use client';
 import React, { useState } from 'react';
-import { FaSyncAlt } from 'react-icons/fa';
 import { useDispatch } from "react-redux";
 import { addItemSafe } from "@/redux/slices/cartSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { FaShoppingBasket } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 import SignUpModal from '../SignUpModal/SignUpModal';
 import SignInModal from '../SignInModal/SignInModal';
 
 
 const PurchaseOptions = ({ data }) => {
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState('one-time');
+  // const [selectedOption, setSelectedOption] = useState('one-time');
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [qty, setQty] = useState(1);
   const [agreed, setAgreed] = useState(false);
 
-  const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
+  // const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
 
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
@@ -160,22 +158,19 @@ const PurchaseOptions = ({ data }) => {
           Add to Cart
         </button>
         {/* Terms Checkbox */}
-        <div className="flex items-center gap-2 text-sm">
+        {/* <div className="flex items-center gap-2 text-sm">
           <input type="checkbox" id="terms-cond" className="accent-black" onChange={(e) => setAgreed(e.target.checked)} />
           <label htmlFor="terms-cond" className="cursor-pointer">
             I agree with <span className="underline">Terms & Conditions</span>
           </label>
 
-        </div>
+        </div> */}
 
         {/* Buy It Now Button */}
         <button
-          disabled={!agreed}
+          // disabled={!agreed}
           onClick={handleBuyNow}
-          className={`w-full rounded-full py-3 transition ${agreed
-            ? "bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
-            : "bg-red-500/10 text-red-600 cursor-not-allowed"
-            }`}
+          className={`w-full rounded-full py-3 transition ${"bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"}`}
         >
           Buy It Now
         </button>

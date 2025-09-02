@@ -8,6 +8,8 @@ import PurchaseOptions from '../PurchaseOptions/PurchaseOptions';
 import ProductInfoTabs from '../ProductInfoTabs/ProductInfoTabs';
 import Header from '../Header/Header';
 import WishButton from '../WishButton/WishButton';
+import { useDispatch } from 'react-redux';
+import { addRecentlyViewed } from '@/redux/slices/viewSlice';
 
 
 const LoadingState = () => {
@@ -114,6 +116,14 @@ const ProductState = ({
     setActiveTab,
 }) => {
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (data) {
+            // dispatch the raw product object returned by your DRF MiniProductSerializer
+            dispatch(addRecentlyViewed(data));
+        }
+    }, [data, dispatch]);
 
 
     const metaData = {
@@ -135,8 +145,8 @@ const ProductState = ({
                 <div className="w-full h-full">
                     <div
                         className={`grid gap-4 ${productImages.length > 1
-                                ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
-                                : "grid-rows-1 grid-cols-1"
+                            ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
+                            : "grid-rows-1 grid-cols-1"
                             }`}
                     >
                         {/* ================= Thumbnails ================= */}
@@ -203,9 +213,11 @@ const ProductState = ({
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <Truck size={20} /> Estimate delivery times: 3-5 days International.
                             </li>
-                            <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <Badge size={20} /> Subscribe & Save 3% on this product
+                            <li className="flex items-center gap-3 text-gray-600 text-md">
+                                <Badge size={20} />
+                                No Quality Compromise
                             </li>
+
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <ShieldCheck size={20} /> Secure checkout guarantee
                             </li>

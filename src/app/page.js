@@ -1,10 +1,13 @@
 import BestSellingProducts from "@/components/BestSellingProducts/BestSellingProducts";
 import CategoryShowCase from "@/components/CategoryShowCase/CategoryShowCase";
 import CompactProductList from "@/components/CompactProductList/CompactProductList";
+import Features from "@/components/Features/Features";
 import Header from "@/components/Header/Header";
 import MultiColumnProductWidget from "@/components/MultiColumnProductWidget/MultiColumnProductWidget";
 import ProductWidget from "@/components/ProductWidget/ProductWidget";
+import RecentlyViewedWidget from "@/components/RecentlyViewedWidget/RecentlyViewedWidget";
 import HappyCustomers from "@/components/ReviewWidget/ReviewWidget";
+import Testimonials from "@/components/Testimonials/Testimonials";
 import { TopBanner } from "@/components/TopBanner/TopBanner";
 
 
@@ -21,13 +24,16 @@ export default function Home() {
     <>
       <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
       <TopBanner />
+      <Features/>
       <ProductWidget />
       <BestSellingProducts title={"Best Selling"} type={"bestSelling"} smatPad={true} />
-      <CategoryShowCase />
+      {/* <CategoryShowCase /> */}
       {/* <CompactProductList /> */}
       <BestSellingProducts title={"Featured Products"} type={"featuredProducts"} smatPad={true} />
-      <HappyCustomers />
+      {/* <HappyCustomers /> */}
+      <Testimonials/>
       {/* <MultiColumnProductWidget /> */}
+      <RecentlyViewedWidget/>
     </>
   );
 }

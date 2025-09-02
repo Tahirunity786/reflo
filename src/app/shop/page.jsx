@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { LayoutGrid, List } from "lucide-react";
-import CollectCard from "@/components/CollectCard/CollectCard";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/Header/Header";
