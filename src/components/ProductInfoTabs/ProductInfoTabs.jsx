@@ -20,20 +20,69 @@ export default function ProductInfoTabs({ data }) {
     {
       label: 'Customer Reviews',
       content: (
-        <div className="space-y-4 text-gray-700">
-          {data?.productReviews?.length > 0 ? (
-            data.productReviews.map((review, index) => (
-              <div key={index}>
-                <p className="font-semibold">{review.reviewer || "Anonymous"}</p>
-                <p className="text-sm text-gray-500">
-                  {review.comment || "No comment provided."}
+        <div className="space-y-6">
+          {data?.reviews?.length > 0 ? (
+            data.reviews.map((review, index) => (
+              <div
+                key={index}
+                className="border-b border-gray-200 pb-4 last:border-none w-fit"
+              >
+                {/* Reviewer + Rating */}
+                <div className="flex items-center justify-between mb-2 space-x-3">
+                  <div className="flex items-center justify-between mb-2 space-x-3">
+                    <div className="flex items-center space-x-3">
+                      {/* Avatar / Initial */}
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-sm font-medium">
+                        {(review.reviewd_by?.full_name || "A").charAt(0).toUpperCase()}
+                      </div>
+                      <p className="font-medium text-gray-900 text-sm">
+                        {review.reviewd_by?.full_name || "Anonymous"}
+                      </p>
+                    </div>
+
+                    {/* Stars */}
+                    <div className="flex items-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          className={`w-4 h-4 ${i < Math.round(review.rating) ? "text-yellow-400" : "text-gray-300"
+                            }`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 22 20"
+                        >
+                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comment */}
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {review.rating_comment || "No comment provided."}
                 </p>
+
+                {/* Optional review image */}
+                {review.rating_image && (
+                  <div className="mt-3">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${review.rating_image}`}
+                      alt="Review image"
+                      className="w-24 h-24 object-cover rounded-md border border-gray-200"
+                    />
+                  </div>
+                )}
               </div>
             ))
           ) : (
-            <p className="text-sm text-gray-500">No reviews available.</p>
+            <p className="text-sm text-gray-500 italic">
+              No reviews yet. Be the first to share your experience!
+            </p>
           )}
+
         </div>
+
       ),
     },
     {
