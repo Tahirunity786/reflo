@@ -24,7 +24,7 @@ export default function Footer() {
     const quickLinks = [
         { name: 'Privacy Policy', link: "/privacy" },
         { name: 'Terms & Conditions', link: "/terms-conditions" },
-        // { name: 'Refund', link: "/refund" },
+        { name: 'Track Order', link: "/track-order" },
 
     ]
     const socialIcons = [

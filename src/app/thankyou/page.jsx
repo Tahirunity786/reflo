@@ -229,12 +229,12 @@ export default function ThankYouPage() {
         >
           Continue Shopping
         </Link>
-        <Link
+        {/* <Link
           href="/account/orders"
           className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium shadow hover:bg-gray-100 transition text-center"
         >
           View My Orders
-        </Link>
+        </Link> */}
       </motion.div>
     </div>
   );
