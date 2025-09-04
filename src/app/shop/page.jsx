@@ -76,6 +76,7 @@ const Page = () => {
 
 
   const fetchProducts = async (selectedFilter, search, type) => {
+    console.log("I'm calling.")
     try {
       setLoading(true);
       const ordering = getOrderingParam(selectedFilter);
@@ -110,13 +111,14 @@ const Page = () => {
 
   useEffect(() => {
     if (search && type) {
-      console.log(search, type)
+      console.log("Here is search type: ",search, type)
       fetchProducts(null, search, type);
     }
   }, [search, type]);
 
 
   const handleChange = (e) => {
+    console.log("I'm calling.")
     const selected = e.target.value;
     setFilter(selected);
     fetchProducts(selected);

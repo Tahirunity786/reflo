@@ -82,19 +82,19 @@ export default function ProductFilters({ pData, setPData, seLoading }) {
     }, [selectedCategories, inStockOnly, minPrice, maxPrice, searchKeyword, setPData]);
 
     // When a filter changes, call fetch with a debounce for the text box
-    useEffect(() => {
-        // debounce for search (400ms) — resets on every change
-        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    // useEffect(() => {
+    //     // debounce for search (400ms) — resets on every change
+    //     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
 
-        // We still want immediate fetch for checkbox/slider changes, but debounced is okay too.
-        searchDebounceRef.current = setTimeout(() => {
-            fetchFilteredProducts();
-        }, 300);
+    //     // We still want immediate fetch for checkbox/slider changes, but debounced is okay too.
+    //     searchDebounceRef.current = setTimeout(() => {
+    //         fetchFilteredProducts();
+    //     }, 300);
 
-        return () => {
-            if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
-        };
-    }, [selectedCategories, inStockOnly, minPrice, maxPrice, searchKeyword, fetchFilteredProducts]);
+    //     return () => {
+    //         if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    //     };
+    // }, [selectedCategories, inStockOnly, minPrice, maxPrice, searchKeyword, fetchFilteredProducts]);
 
     // Handlers
     const toggleCategory = (categoryId) => {
@@ -174,7 +174,7 @@ export default function ProductFilters({ pData, setPData, seLoading }) {
                                         id={`category-${category.id}`}
                                         value={category.id}
                                         checked={checked}
-                                        onChange={() => toggleCategory(category.id)}
+                                        onChange={() => {toggleCategory(category.id);}}
                                         className="cursor-pointer"
                                     />
                                     <label

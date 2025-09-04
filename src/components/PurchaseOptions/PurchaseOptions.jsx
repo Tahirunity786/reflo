@@ -55,7 +55,7 @@ const PurchaseOptions = ({ data }) => {
     //   setShowSignIn(true); // 👈 open sign-in modal
     //   return;
     // }
-    if (!agreed) return;
+    // if (!agreed) return;
 
     router.push(`/checkout?i=${data?.id}&q=${qty}`);
   };
