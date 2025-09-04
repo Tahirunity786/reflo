@@ -97,7 +97,7 @@ const BestSellingProducts = ({ title, type, smatPad = false }) => {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
               <div
@@ -119,7 +119,7 @@ const BestSellingProducts = ({ title, type, smatPad = false }) => {
             bsData.map((product) => (
               <div
                 key={product.id}
-                className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm group relative"
+                className="w-full  bg-white border border-gray-200 rounded-lg shadow-sm group relative"
               >
                 {/* Wishlist Icon */}
                 <div className="absolute top-2 right-2 z-10">

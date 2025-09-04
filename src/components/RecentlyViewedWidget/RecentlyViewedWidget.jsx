@@ -26,7 +26,7 @@ export default function RecentlyViewedWidget() {
   };
 
   return (
-    <section className="p-4 bg-white shadow rounded-lg max-w-7xl mx-auto px-4 sm:px-2 lg:px-16">
+    <section className="p-4 bg-white  rounded-lg max-w-7xl mx-auto px-4 sm:px-2 lg:px-16">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Recently viewed</h3>

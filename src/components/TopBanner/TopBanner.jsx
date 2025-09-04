@@ -42,7 +42,8 @@ export const TopBanner = () => {
   };
 
   return (
-    <div className="w-full h-screen lg:h-[40rem] relative overflow-hidden">
+    <div className="w-full h-[45rem] relative overflow-hidden">
+
       {/* Slides container */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full w-full"

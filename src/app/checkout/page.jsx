@@ -424,8 +424,12 @@ export default function CheckoutForm() {
                             onChange={handleChange}
                             error={errors.email}
                         />
+                        <p className="text-green-700 text-sm">
+                            Email is optional, but it helps us share your order updates faster.
+                        </p>
 
-                        <div className="flex items-center">
+
+                        {/* <div className="flex items-center">
                             <input
                                 id="emailOffers"
                                 name="emailOffers"
@@ -437,17 +441,17 @@ export default function CheckoutForm() {
                             <label htmlFor="emailOffers" className="ml-2 text-sm text-gray-600 ">
                                 Email me with news and offers
                             </label>
-                        </div>
+                        </div> */}
                     </section>
                     <section>
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">Location (UAE)</h2>
-                        
+
                         <div className="w-full mb-2">
                             <Input name="fullName" error={errors.fullName} placeholder="Full Name" value={formData.fullName} onChange={handleChange} />
                         </div>
-                        
+
                         <Input name="address" error={errors.address} placeholder="Address" value={formData.address} onChange={handleChange} />
-                        
+
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 '>
                             <Input name="apartment" placeholder="Apartment, suite, etc. (optional)" value={formData.apartment} onChange={handleChange} />
                             <Input name="phone" placeholder="Your phone no" value={formData.phone} onChange={handleChange} error={errors.phone} />

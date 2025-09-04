@@ -202,7 +202,7 @@ export default function Navbar() {
               <NavIcon icon={<FiShoppingCart />} badge={`${cartLength}`} onClick={() => setCartOpen(true)} />
             </div>
           </div>
-          <div className="sm:px-4 sm:pb-4 lg:hidden">
+          <div className="px-4 pb-2 sm:px-4 sm:pb-4 lg:hidden">
             <LinkCanvas />
           </div>
 
