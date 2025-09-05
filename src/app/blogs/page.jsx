@@ -74,7 +74,7 @@ const Page = () => {
                 </div>
             </section>
             {/* Search + Category Carousel */}
-            <section className="container mx-auto mb-12">
+            <section className="container mb-12">
                 <div className="flex flex-wrap justify-between items-center mb-12 gap-4 px-16">
 
                     {/* Search Box */}
@@ -88,10 +88,10 @@ const Page = () => {
                             viewBox="0 0 16 16"
                         >
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 
-          3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 
-          1 0 0 0-.115-.1zM12 
-          6.5a5.5 5.5 0 1 1-11 0 
-          5.5 5.5 0 0 1 11 0" />
+                                3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 
+                                1 0 0 0-.115-.1zM12 
+                                6.5a5.5 5.5 0 1 1-11 0 
+                                5.5 5.5 0 0 1 11 0" />
                         </svg>
                         <input
                             type="search"
@@ -146,24 +146,25 @@ const Page = () => {
                         {/* Right Nav Button */}
                         <button
                             className={`absolute right-[-35px] top-1/2 -translate-y-1/2 p-2 bg-blue-400 shadow-md rounded-full border 
-          ${isEnd ? "hidden" : ""}`}
+                            ${isEnd ? "hidden" : ""}`}
                             onClick={() => swiperRef.current?.slideNext()}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" fill="currentColor"
                                 className="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 
-            1 .5-.5h11.793l-3.147-3.146a.5.5 
-            0 0 1 .708-.708l4 4a.5.5 0 0 
-            1 0 .708l-4 4a.5.5 0 0 
-            1-.708-.708L13.293 8.5H1.5A.5.5 
-            0 0 1 1 8" />
+                                    1 .5-.5h11.793l-3.147-3.146a.5.5 
+                                    0 0 1 .708-.708l4 4a.5.5 0 0 
+                                    1 0 .708l-4 4a.5.5 0 0 
+                                    1-.708-.708L13.293 8.5H1.5A.5.5 
+                                    0 0 1 1 8" 
+                                    />
                             </svg>
                         </button>
                     </div>
                 </div>
 
                 {/* Blog Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-16">
                     {blogs.map((_, i) => (
                         <div key={i} className="card w-full text-start  rounded-lg shadow-sm overflow-hidden">
                             {/* Image */}
@@ -184,17 +185,17 @@ const Page = () => {
                                 </p>
                                 <a href={`/blogs/${_.slug}`}
                                     className="inline-flex items-center justify-center w-full border border-[var(--aero-primary)] text-[var(--aero-primary)] 
-              px-4 py-2 rounded-md hover:bg-blue-400 hover:text-white transition-all"
+                                px-4 py-2 rounded-md hover:bg-blue-400 hover:text-white transition-all"
                                 >
                                     Learn more
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         className="ms-2 bi bi-arrow-right" viewBox="0 0 16 16">
                                         <path fillRule="evenodd" d="M1 8a.5.5 0 0 
-                1 .5-.5h11.793l-3.147-3.146a.5.5 
-                0 0 1 .708-.708l4 4a.5.5 0 0 
-                1 0 .708l-4 4a.5.5 0 0 
-                1-.708-.708L13.293 8.5H1.5A.5.5 
-                0 0 1 1 8" />
+                                        1 .5-.5h11.793l-3.147-3.146a.5.5 
+                                        0 0 1 .708-.708l4 4a.5.5 0 0 
+                                        1 0 .708l-4 4a.5.5 0 0 
+                                        1-.708-.708L13.293 8.5H1.5A.5.5 
+                                        0 0 1 1 8" />
                                     </svg>
                                 </a>
                             </div>

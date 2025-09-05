@@ -60,6 +60,9 @@ const Page = () => {
   return (
     <div className="max-w-7xl mx-auto sm:px-4 py-8 lg:px-8">
       <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
+      <h2 className="text-2xl font-semibold text-gray-800 mb-10 text-center">
+        Discover Our Curated Collections – Quality, Style, and Innovation for You
+      </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
         {data?.map((item) => (
