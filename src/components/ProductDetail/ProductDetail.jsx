@@ -10,6 +10,7 @@ import Header from '../Header/Header';
 import WishButton from '../WishButton/WishButton';
 import { useDispatch } from 'react-redux';
 import { addRecentlyViewed } from '@/redux/slices/viewSlice';
+import ViewerCount from '../ViewerCount/ViewerCount';
 
 
 const LoadingState = () => {
@@ -115,19 +116,8 @@ const ProductState = ({
     activeTab,
     setActiveTab,
 }) => {
-    const [viewers, setViewers] = useState(9);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Randomize within a range (e.g., 5–25 viewers)
-            const randomViewers = Math.floor(Math.random() * 20) + 5;
-            setViewers(randomViewers);
-        }, 4000); // updates every 4 seconds
-
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         if (data) {
@@ -250,10 +240,7 @@ const ProductState = ({
                                 </span>
                             )}
                         </div>
-                        <p className="text-gray-600 text-sm mb-4">
-                            👀 <span className="font-medium">{viewers} people</span> are viewing this now
-                        </p>
-
+                        <ViewerCount productId={data?.id}/>
 
                         <div className="mb-4 flex items-baseline gap-3">
                             <span className="text-3xl font-bold text-black">
