@@ -1,6 +1,21 @@
 // components/Testimonials.js
 
 import Image from "next/image";
+import { Star } from "lucide-react";
+
+function StarRating({ rating }) {
+  return (
+    <div className="flex items-center text-yellow-500 mb-2">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          size={16}
+          className={i < rating ? "fill-yellow-500" : "text-gray-300"}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function Testimonials() {
   return (
@@ -9,16 +24,16 @@ export default function Testimonials() {
         
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">Testimonials</h2>
+          <h2 className="text-3xl font-bold text-gray-900">What Our Customers Say</h2>
           <p className="mt-2 text-gray-600">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Trusted by thousands of happy shoppers — here are some of their experiences.
           </p>
         </div>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 gap-10 items-center">
           
-          {/* Left Testimonial (Sarah Jones) */}
+          {/* Left Testimonial (Necklace) */}
           <div className="flex items-center bg-gray-50 rounded-2xl p-6 shadow-sm">
             {/* Image */}
             <div className="w-32 h-32 rounded-xl overflow-hidden flex-shrink-0">
@@ -32,20 +47,20 @@ export default function Testimonials() {
             </div>
             {/* Text */}
             <div className="ml-6">
+              <StarRating rating={5} />
               <p className="text-gray-700 text-sm leading-relaxed">
-                Neque porro quisquam est, qui dolore ipsum quia dolor sit amet,
-                consectetur adipisci velit, sed quia non numquam eius modi tempora
-                incidunt.
+                “I ordered the <span className="font-medium">925 Sterling Silver Simple Temperament Clavicle Necklace</span> 
+                and it’s absolutely beautiful! The quality feels premium, and it adds such elegance to my outfits. 
+                Shipping was fast too. Highly recommend.”
               </p>
-              <h4 className="mt-3 font-semibold text-gray-900">Sarah Jones</h4>
-              <span className="text-sm text-gray-500">Interior Designer</span>
+           
             </div>
           </div>
 
           {/* Right Side (2 stacked testimonials) */}
           <div className="space-y-8">
             
-            {/* Jessica Foxx */}
+            {/* Matte Lipstick Set */}
             <div className="flex items-center bg-gray-50 rounded-2xl p-6 shadow-sm">
               {/* Image */}
               <div className="w-28 h-28 rounded-xl overflow-hidden flex-shrink-0">
@@ -59,17 +74,17 @@ export default function Testimonials() {
               </div>
               {/* Text */}
               <div className="ml-6">
+                <StarRating rating={4} />
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  Neque porro quisquam est, qui dolore ipsum quia dolor sit amet,
-                  consectetur adipisci velit, sed quia non numquam eius modi tempora
-                  incidunt.
+                  “The <span className="font-medium">Matte Lipstick Set</span> has gorgeous shades that last all day without drying my lips. 
+                  I love how smooth the texture is. I just wish there were a few more nude colors, 
+                  but overall an amazing set for the price.”
                 </p>
-                <h4 className="mt-3 font-semibold text-gray-900">Jessica Foxx</h4>
-                <span className="text-sm text-gray-500">Student</span>
+                
               </div>
             </div>
 
-            {/* Briana Luke */}
+            {/* Sunscreen Lotion */}
             <div className="flex items-center bg-gray-50 rounded-2xl p-6 shadow-sm">
               {/* Image */}
               <div className="w-28 h-28 rounded-xl overflow-hidden flex-shrink-0">
@@ -83,13 +98,13 @@ export default function Testimonials() {
               </div>
               {/* Text */}
               <div className="ml-6">
+                <StarRating rating={5} />
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  Neque porro quisquam est, qui dolore ipsum quia dolor sit amet,
-                  consectetur adipisci velit, sed quia non numquam eius modi tempora
-                  incidunt.
+                  “The <span className="font-medium">UV Protection Refreshing Protective Cream Sunscreen Lotion</span> 
+                  is a game changer! It feels light, non-greasy, and keeps my skin protected 
+                  even during long outdoor days. No white cast at all — love it.”
                 </p>
-                <h4 className="mt-3 font-semibold text-gray-900">Briana Luke</h4>
-                <span className="text-sm text-gray-500">Student</span>
+                
               </div>
             </div>
 
