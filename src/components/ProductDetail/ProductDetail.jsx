@@ -11,6 +11,7 @@ import WishButton from '../WishButton/WishButton';
 import { useDispatch } from 'react-redux';
 import { addRecentlyViewed } from '@/redux/slices/viewSlice';
 import ViewerCount from '../ViewerCount/ViewerCount';
+import MiniCountdownBanner from '../MiniCountdownBanner/MiniCountdownBanner';
 
 
 const LoadingState = () => {
@@ -238,6 +239,8 @@ const ProductState = ({
                                 null
                             )}
                         </div>
+
+
                         <ViewerCount productId={data?.id} />
 
                         <div className="mb-2 flex items-baseline gap-3">
@@ -260,9 +263,19 @@ const ProductState = ({
                             )}
 
                         </div>
-                            <div className="text-3xl font-bold text-black mb-4">
-                                {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
-                            </div>
+                        <div className="text-3xl font-bold text-black mb-4">
+                            {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
+                        </div>
+                        {data?.productComparePrice ? (
+                            <MiniCountdownBanner
+                                fillStartPercent={60}        // start at 60%
+                                fillDurationHours={2}        // reach 100% in 2 hours
+                                persistKey="flash-mini-20250908"
+                                urgencyText="Act fast — almost gone!"
+                                onFull={() => console.log("Fill reached 100%")}
+                            />
+                        ) : null}
+
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <Truck size={20} /> Estimate delivery times: 3-5 days International.
