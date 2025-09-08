@@ -36,7 +36,6 @@ const BestSellingProducts = ({ title, type, smatPad = false }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/products?type=${type}&quantity=4`);
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
           setBSData(data);
           setLoading(false);
         }
