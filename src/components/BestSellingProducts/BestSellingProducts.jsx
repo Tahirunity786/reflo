@@ -193,33 +193,44 @@ const BestSellingProducts = ({ title, type, smatPad = false }) => {
                         </span>
                       </>
                     ) : (
-                      <span className="text-xs text-gray-500 italic">
-                        Waiting for the first review
-                      </span>
+                      null
                     )}
                   </div>
 
-
+                  {product.productComparePrice && (
+                    <>
+                    <div className='space-x-3'>
+                      <span className="line-through text-gray-400 text-sm">
+                        {parseFloat(product.productComparePrice)} {process.env.NEXT_PUBLIC_CURRENCY}
+                      </span>
+                      <span className="text-green-600 text-sm font-semibold">
+                        {Math.round(
+                          ((product.productComparePrice - product.productPrice) /
+                            product.productComparePrice) *
+                          100
+                        )}
+                        % OFF
+                      </span>
+                      </div>
+                    </>
+                  )}
                   {/* Pricing + CTA */}
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-gray-900">
-                      {parseFloat(product.productPrice)} {process.env.NEXT_PUBLIC_CURRENCY}
-                    </span>
-                    {product.productComparePrice && (
-                      <span className="line-through text-gray-400 text-sm ml-2">
-                        {parseFloat(product.productComparePrice)}{" "}
-                        {process.env.NEXT_PUBLIC_CURRENCY}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg font-bold text-gray-900">
+                        {parseFloat(product.productPrice)} {process.env.NEXT_PUBLIC_CURRENCY}
                       </span>
-                    )}
+
+                    </div>
 
                     <button
-                      onClick={() => addToCartItem(product)}   // ✅ pass product here
+                      onClick={() => addToCartItem(product)}
                       className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center"
                     >
                       Add to cart
                     </button>
-
                   </div>
+
                 </div>
               </div>
             ))

@@ -67,7 +67,7 @@ const ProductCard = ({ product, isList }) => {
             )}
 
             {/* Wishlist Icon */}
-            <WishButton data={product}/>
+            <WishButton data={product} />
 
             {/* Image */}
             <div
@@ -100,54 +100,65 @@ const ProductCard = ({ product, isList }) => {
                     {product.productName}
                 </h3>
                 {/* Rating */}
-                        <div className="flex items-center mt-2.5 mb-4">
-                            {product?.average_rating ? (
-                                <>
-                                    <div className="flex items-center space-x-1">
-                                        {[...Array(Math.floor(product?.average_rating))].map((_, i) => (
-                                            <svg
-                                                key={i}
-                                                className="w-4 h-4 text-yellow-400"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 22 20"
-                                            >
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                        ))}
-                                        {/* Remaining empty stars */}
-                                        {[...Array(5 - Math.floor(product?.average_rating))].map((_, i) => (
-                                            <svg
-                                                key={i}
-                                                className="w-4 h-4 text-gray-300"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 22 20"
-                                            >
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                        ))}
-                                    </div>
-                                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ml-3">
-                                        {product?.average_rating}
-                                    </span>
-                                </>
-                            ) : (
-                                <span className="text-xs text-gray-500 italic">
-                                    Waiting for the first review
-                                </span>
-                            )}
+                <div className="flex items-center mt-2.5 mb-4">
+                    {product?.average_rating ? (
+                        <>
+                            <div className="flex items-center space-x-1">
+                                {[...Array(Math.floor(product?.average_rating))].map((_, i) => (
+                                    <svg
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 22 20"
+                                    >
+                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                    </svg>
+                                ))}
+                                {/* Remaining empty stars */}
+                                {[...Array(5 - Math.floor(product?.average_rating))].map((_, i) => (
+                                    <svg
+                                        key={i}
+                                        className="w-4 h-4 text-gray-300"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 22 20"
+                                    >
+                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                    </svg>
+                                ))}
+                            </div>
+                            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ml-3">
+                                {product?.average_rating}
+                            </span>
+                        </>
+                    ) : (
+                        null
+                    )}
+                </div>
+
+
+                {product.productComparePrice && (
+                    <>
+                        <div className='space-x-3'>
+                            <span className="line-through text-gray-400 text-sm">
+                                {parseFloat(product.productComparePrice)} {process.env.NEXT_PUBLIC_CURRENCY}
+                            </span>
+                            <span className="text-green-600 text-sm font-semibold">
+                                {Math.round(
+                                    ((product.productComparePrice - product.productPrice) /
+                                        product.productComparePrice) *
+                                    100
+                                )}
+                                % OFF
+                            </span>
                         </div>
-
-
+                    </>
+                )}
                 {/* Price */}
                 <div className="mt-1">
-                    <span className="text-sm font-bold text-black">{product.productPrice} AED</span>
-                    {product.productComparePrice && (
-                        <span className="ml-2 text-xs text-gray-400 line-through">
-                            {product.productComparePrice} AED
-                        </span>
-                    )}
+                    <span className="text-sm font-bold text-black">{product.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}</span>
+                   
                 </div>
 
 

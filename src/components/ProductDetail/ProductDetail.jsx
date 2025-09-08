@@ -141,7 +141,7 @@ const ProductState = ({
             {/* Breadcrumb */}
             <nav className="text-xs text-gray-400 mb-4">Home / Shop/ {data?.productName}</nav>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* ================= Left Section (Images) ================= */}
                 <div className="w-full h-full">
                     <div
@@ -235,23 +235,34 @@ const ProductState = ({
                                     </span>
                                 </>
                             ) : (
-                                <span className="text-xs text-gray-500 italic">
-                                    Waiting for the first review
-                                </span>
+                                null
                             )}
                         </div>
-                        <ViewerCount productId={data?.id}/>
+                        <ViewerCount productId={data?.id} />
 
-                        <div className="mb-4 flex items-baseline gap-3">
-                            <span className="text-3xl font-bold text-black">
-                                {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
-                            </span>
+                        <div className="mb-2 flex items-baseline gap-3">
                             {data?.productComparePrice && (
-                                <del className="text-gray-500">
-                                    {data.productComparePrice} {process.env.NEXT_PUBLIC_CURRENCY}
-                                </del>
+                                <>
+                                    <div className='space-x-3'>
+                                        <span className="line-through text-gray-400 text-sm">
+                                            {parseFloat(data?.productComparePrice)} {process.env.NEXT_PUBLIC_CURRENCY}
+                                        </span>
+                                        <span className="text-green-600 text-sm font-semibold">
+                                            {Math.round(
+                                                ((data?.productComparePrice - data?.productPrice) /
+                                                    data?.productComparePrice) *
+                                                100
+                                            )}
+                                            % OFF
+                                        </span>
+                                    </div>
+                                </>
                             )}
+
                         </div>
+                            <div className="text-3xl font-bold text-black mb-4">
+                                {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
+                            </div>
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <Truck size={20} /> Estimate delivery times: 3-5 days International.
