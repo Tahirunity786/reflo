@@ -151,9 +151,8 @@ export default function Navbar() {
             <div className="flex items-center space-x-4 text-black relative">
               <NavIcon icon={<FiSearch />} onClick={() => setIsSearchOpen(true)} />
               {/* User Icon */}
-              <div ref={dropdownRef} className="relative">
+              {/* <div ref={dropdownRef} className="relative">
                 <NavIcon icon={<FiUser />} onClick={handleUserClick} />
-                {/* Dropdown for Auth User */}
                 <AnimatePresence>
                   {isDropdownOpen && (
                     <motion.div
@@ -197,7 +196,7 @@ export default function Navbar() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </div> */}
               <NavIcon icon={<FiHeart />} onClick={() => router.push("/wishlist")} badge={`${wishLength}`} />
               <NavIcon icon={<FiShoppingCart />} badge={`${cartLength}`} onClick={() => setCartOpen(true)} />
             </div>

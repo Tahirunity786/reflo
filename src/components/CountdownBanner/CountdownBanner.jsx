@@ -141,7 +141,7 @@ export default function CountdownBanner({
                 <p className="mt-1 text-[11px] sm:text-sm md:text-sm opacity-90 truncate">{subtitle}</p>
               </div>
 
-              {isDismissible && (
+              {/* {isDismissible && (
                 <button
                   onClick={() => setHidden(true)}
                   className="ml-3 p-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/40"
@@ -151,7 +151,7 @@ export default function CountdownBanner({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l8 8M6 14L14 6" />
                   </svg>
                 </button>
-              )}
+              )} */}
             </div>
 
             {/* Timer area: compact digital on xs, pill UI for sm+ */}
