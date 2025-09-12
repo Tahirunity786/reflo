@@ -6,6 +6,7 @@ import Features from "@/components/Features/Features";
 import Header from "@/components/Header/Header";
 import MultiColumnProductWidget from "@/components/MultiColumnProductWidget/MultiColumnProductWidget";
 import ProductWidget from "@/components/ProductWidget/ProductWidget";
+import PromotionModal from "@/components/PromotionModal/PromotionModal";
 import RecentlyViewedWidget from "@/components/RecentlyViewedWidget/RecentlyViewedWidget";
 import HappyCustomers from "@/components/ReviewWidget/ReviewWidget";
 import Testimonials from "@/components/Testimonials/Testimonials";
@@ -25,6 +26,7 @@ export default function Home() {
     <>
       <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
       <TopBanner />
+      <PromotionModal/>
       <Features />
       <CountdownBanner
         durationInHours={12}
