@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const slides = [
   {
@@ -32,6 +33,7 @@ const slides = [
 
 export const TopBanner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
@@ -70,7 +72,7 @@ export const TopBanner = () => {
                   <br />
                   {slide.subtitle}
                 </h1>
-                <button className="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition">
+                <button className="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition" onClick={() => router.push('/collection')}>
                   Shop Collection
                 </button>
               </div>
