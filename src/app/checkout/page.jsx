@@ -9,6 +9,7 @@ import SignInModal from '@/components/SignInModal/SignInModal';
 import SignUpModal from '@/components/SignUpModal/SignUpModal';
 import Header from '@/components/Header/Header';
 import Link from 'next/link';
+import CouponForm from '@/components/CouponForm/CouponForm';
 
 
 // Helper Component: Input Field
@@ -122,6 +123,7 @@ export default function CheckoutForm() {
     const [slug, setSlug] = useState(searchParams.get("i") || "");
     const items = useSelector(selectCartItems);
     const [item, setItems] = useState([]);
+    const [discount, setDiscount] = useState(null);
     const [authUser, setAuthUser] = useState(null);
     const [showSignIn, setShowSignIn] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
@@ -147,8 +149,6 @@ export default function CheckoutForm() {
         method: "Home delivery",
         items: [], // ✅ hold product ids here
     });
-
-
 
     // ✅ update formData.email when authUser is loaded
     useEffect(() => {
@@ -346,6 +346,7 @@ export default function CheckoutForm() {
                 method: formData.method,
                 items: itemsPayload,
                 addresses: addressesPayload,
+                code: discount?.data?.code || null,
             };
 
             try {
@@ -392,6 +393,15 @@ export default function CheckoutForm() {
         }
     };
 
+    const handleDiscount = (data) => {
+        if (data) {
+            setDiscount(data);
+        } else {
+            setDiscount(null);
+
+        }
+
+    }
 
     const metaData = {
         title: `DoorBix || Checkout`,
@@ -555,6 +565,7 @@ export default function CheckoutForm() {
 
                 {/* Right Side: Cart Summary */}
                 <div className="  space-y-6">
+
                     <div className="bg-white shadow-sm p-6 rounded-lg">
                         {Array.isArray(item) ? (
                             item.map((item) => {
@@ -671,38 +682,53 @@ export default function CheckoutForm() {
                                 <span className="text-gray-600 ">Shipping</span>
                                 <span className="text-gray-500 ">Free</span>
                             </div>
-                            {/* {isAuthenticated ? (
+                            {discount ? (
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 ">Discount</span>
-                                    <span className="text-gray-500 ">
-                                        -{Math.round(total * 0.03)}
+                                    <span className="text-gray-500">
+                                        - {discount.data.discount_value}{" "}
+                                        {discount.data.discount_type === "percentage"
+                                            ? "%"
+                                            : process.env.NEXT_PUBLIC_CURRENCY}
                                     </span>
+
                                 </div>
-                            ) : null} */}
+                            ) : null}
 
                         </div>
 
                         <div className="pt-4 border-t border-gray-200  flex justify-between text-lg font-semibold">
                             <span className="text-gray-900 ">Total</span>
                             <div className="text-right">
-                                {/* {isAuthenticated ? (
-                                    <>
-                                        <span className="line-through text-gray-500 mr-2">
+                                <>
+                                    {discount && discount.data ? (
+                                        <>
+                                            <span className="line-through text-gray-500 mr-2">
+                                                {total} {process.env.NEXT_PUBLIC_CURRENCY}
+                                            </span>
+                                            <span className="text-gray-900">
+                                                {Math.round(
+                                                    discount.data.discount_type === "percentage"
+                                                        ? total - (total * discount.data.discount_value) / 100
+                                                        : total - discount.data.discount_value
+                                                )}{" "}
+                                                {process.env.NEXT_PUBLIC_CURRENCY}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="text-gray-900">
                                             {total} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </span>
-                                        <span className="text-gray-900 ">
-                                            {Math.round(total * 0.97)} {process.env.NEXT_PUBLIC_CURRENCY}
-                                        </span>
-                                    </>
-                                ) : (
-                                )} */}
-                                <span className="text-gray-900 ">
-                                    {total} {process.env.NEXT_PUBLIC_CURRENCY}
-                                </span>
+                                    )}
+                                </>
+
+
+
                             </div>
                         </div>
 
                     </div>
+                    <CouponForm email={formData.email} handleDiscount={handleDiscount} />
                 </div>
             </div>
             {/* Sign In Modal */}

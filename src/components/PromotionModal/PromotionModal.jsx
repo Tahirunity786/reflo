@@ -128,7 +128,7 @@ export default function PromotionModal() {
                                     <span className="text-yellow-500">UAE Special</span>
                                 </h2>
                                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-                                    Get <span className="text-blue-500">20% OFF</span> 🎉 on each product.
+                                    Get <span className="text-blue-500">20% OFF</span> 🎉 on each checkout.
                                 </h3>
                                 <p className="text-gray-600 mb-6 text-sm sm:text-base">
                                     Enter your email and we’ll send your discount coupon instantly.
