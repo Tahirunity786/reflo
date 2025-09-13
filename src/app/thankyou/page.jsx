@@ -6,11 +6,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import ConfettiExplosion from 'react-confetti-explosion';
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 export default function ThankYouPage() {
   const params = useSearchParams();
   const [order, setOrder] = useState(null);
+  const [isExploding, setIsExploding] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
@@ -34,6 +36,7 @@ export default function ThankYouPage() {
 
         const data = await response.json();
         setOrder(data); // ✅ save order
+        setIsExploding(true); // ✅ trigger confetti
       } catch (error) {
         console.error("Failed to fetch order:", error);
       }
@@ -53,6 +56,7 @@ export default function ThankYouPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      {isExploding && <ConfettiExplosion />}
       
       {/* ✅ Success Heading */}
       <motion.div

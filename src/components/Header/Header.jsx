@@ -31,7 +31,7 @@ const Header = ({ title, description, imageUrl, pageUrl }) => {
       <meta name="twitter:image" content={imageUrl} />
 
       <meta name="msvalidate.01" content="FC9E846E102FF0479D6A1652561543EA" />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/favicon-32x32.png" />
     </>
   );
 };
