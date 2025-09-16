@@ -2,6 +2,7 @@ import BestSellingProducts from "@/components/BestSellingProducts/BestSellingPro
 import CategoryShowCase from "@/components/CategoryShowCase/CategoryShowCase";
 import CompactProductList from "@/components/CompactProductList/CompactProductList";
 import CountdownBanner from "@/components/CountdownBanner/CountdownBanner";
+import FAQSection from "@/components/FAQSection/FAQSection";
 import Features from "@/components/Features/Features";
 import Header from "@/components/Header/Header";
 import MultiColumnProductWidget from "@/components/MultiColumnProductWidget/MultiColumnProductWidget";
@@ -40,6 +41,7 @@ export default function Home() {
       <BestSellingProducts title={"Featured Products"} type={"featuredProducts"} smatPad={true} />
       {/* <HappyCustomers /> */}
       <Testimonials />
+      {/* <FAQSection/> */}
       {/* <MultiColumnProductWidget /> */}
       <RecentlyViewedWidget />
     </>

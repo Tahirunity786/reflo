@@ -592,7 +592,7 @@ export default function CheckoutForm() {
                 </div>
 
                 {/* Right Side: Cart Summary */}
-                <div className="  space-y-6">
+                <div className="space-y-6 ">
 
                     <div className="bg-white shadow-sm p-6 rounded-lg">
                         {Array.isArray(item) ? (
@@ -641,7 +641,7 @@ export default function CheckoutForm() {
                                         </div>
 
                                         <div className="text-sm font-medium text-gray-900 ">
-                                            {item.price * item.qty} {process.env.NEXT_PUBLIC_CURRENCY}
+                                            {(item.price * item.qty).toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </div>
                                     </div>
                                 );
@@ -692,7 +692,7 @@ export default function CheckoutForm() {
                                         </div>
 
                                         <div className="text-sm font-medium text-gray-900 ">
-                                            {item.price * qty} {process.env.NEXT_PUBLIC_CURRENCY}
+                                            {(item.price * qty).toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </div>
                                     </div>
                                 );
@@ -704,7 +704,7 @@ export default function CheckoutForm() {
                         <div className="pt-4 border-t border-gray-200  space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-gray-600 ">Subtotal</span>
-                                <span className="text-gray-900 ">{total} {process.env.NEXT_PUBLIC_CURRENCY}</span>
+                                <span className="text-gray-900 ">{total.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-gray-600 ">Shipping</span>
@@ -737,7 +737,7 @@ export default function CheckoutForm() {
                                             <span className="text-gray-900">
                                                 {Math.round(
                                                     discount.data.discount_type === "percentage"
-                                                        ? total - (total * discount.data.discount_value) / 100
+                                                        ? (total - (total * discount.data.discount_value) / 100).toFixed(0)
                                                         : total - discount.data.discount_value
                                                 )}{" "}
                                                 {process.env.NEXT_PUBLIC_CURRENCY}
@@ -745,7 +745,7 @@ export default function CheckoutForm() {
                                         </>
                                     ) : (
                                         <span className="text-gray-900">
-                                            {total} {process.env.NEXT_PUBLIC_CURRENCY}
+                                            {total.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                                         </span>
                                     )}
                                 </>
@@ -756,7 +756,9 @@ export default function CheckoutForm() {
                         </div>
 
                     </div>
-                    <CouponForm email={formData.email} handleDiscount={handleDiscount} />
+                    <div className='px-2'>
+                        <CouponForm email={formData.email} handleDiscount={handleDiscount} />
+                    </div>
                 </div>
             </div>
             {/* Sign In Modal */}

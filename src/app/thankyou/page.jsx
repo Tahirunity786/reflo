@@ -4,13 +4,14 @@ import Link from "next/link";
 import { CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import ConfettiExplosion from 'react-confetti-explosion';
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 export default function ThankYouPage() {
   const params = useSearchParams();
+  const router = useRouter()
   const [order, setOrder] = useState(null);
   const [isExploding, setIsExploding] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -50,14 +51,16 @@ export default function ThankYouPage() {
     (acc, item) => acc + Number(item.total_price || 0),
     0
   );
-
-  
-
+ useEffect(() => {
+    if (!params.get("order")) {
+      router.push("/shop");
+    }
+  }, [params, router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
       {isExploding && <ConfettiExplosion />}
-      
+
       {/* ✅ Success Heading */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
@@ -69,10 +72,17 @@ export default function ThankYouPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           Thank You for Your Order!
         </h1>
-        <p className="mt-2 text-gray-600 text-base md:text-lg max-w-xl">
-          Your order has been successfully placed. A confirmation email will be
-          sent shortly with your order details.
-        </p>
+        {order?.msg_info === true &&  params.get("order") ? (
+          <p className="mt-2 text-gray-600 text-base md:text-lg max-w-xl">
+            Your order has been placed successfully! A confirmation email with your order details will arrive shortly.
+          </p>
+        ) : (
+          <p className="mt-2 text-gray-600 text-base md:text-lg max-w-xl">
+            Your order has been placed successfully! Please keep your order number <b>{order?.order_id}</b> for track you order.
+          </p>
+        )}
+
+
       </motion.div>
 
       {/* ✅ Order Summary */}
@@ -122,7 +132,7 @@ export default function ThankYouPage() {
                       </Tooltip.Root>
                     </Tooltip.Provider>
                     <span className="font-medium text-gray-900">
-                      {item.total_price} {process.env.NEXT_PUBLIC_CURRENCY}
+                      {item.total_price.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                     </span>
                   </div>
                 )
@@ -167,7 +177,7 @@ export default function ThankYouPage() {
                         </Tooltip.Root>
                       </Tooltip.Provider>
                       <span className="font-medium text-gray-900">
-                        ${item.total_price}
+                        ${item.total_price.toFixed(0)}
                       </span>
                     </motion.div>
                   )
@@ -199,21 +209,21 @@ export default function ThankYouPage() {
             </div>
 
             {/* ✅ Total */}
-            {/* {
+            {
               order?.discount_amount > 0 && (
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-gray-800 font-semibold">Discount</span>
                   <span className="font-bold text-green-600">
-                    -{order?.discount_amount} {process.env.NEXT_PUBLIC_CURRENCY}
+                    -{order?.discount_amount.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                   </span>
                 </div>
               )
-            } */}
+            }
 
             <div className="flex justify-between items-center pt-2">
               <span className="text-gray-800 font-semibold">Total</span>
               <span className="font-bold text-green-600">
-                {itemsTotal} {process.env.NEXT_PUBLIC_CURRENCY}
+                {order?.total_amount.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
               </span>
             </div>
           </div>

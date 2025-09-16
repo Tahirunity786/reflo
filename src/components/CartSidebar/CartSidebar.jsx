@@ -116,7 +116,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
                       {/* Price × Quantity */}
                       <p className="text-sm text-gray-600 mt-1">
-                        {(item.price * item.qty)} {process.env.NEXT_PUBLIC_CURRENCY}
+                        {(item.price * item.qty).toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                       </p>
 
                       {/* Quantity Controls */}
@@ -170,7 +170,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
             <div className="absolute bottom-0 left-0 right-0 px-4 py-5 bg-white border-t border-gray-100 space-y-4">
               <div className="flex justify-between text-lg font-semibold text-gray-800">
                 <span>Subtotal</span>
-                <span className="text-gray-900">{total} {process.env.NEXT_PUBLIC_CURRENCY}</span>
+                <span className="text-gray-900">{total.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}</span>
               </div>
 
               <div className="flex items-center gap-3 text-sm">

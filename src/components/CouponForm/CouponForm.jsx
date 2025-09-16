@@ -6,7 +6,7 @@ import SignInModal from "../SignInModal/SignInModal";
 import SignUpModal from "../SignUpModal/SignUpModal";
 import Cookies from "js-cookie";
 
-export default function CouponCollapse({ email = "", handleDiscount }) {
+export default function CouponCollapse({ handleDiscount }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -31,7 +31,7 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
           "Content-Type": "application/json",
           ...(auth_cookie && { Authorization: `Bearer ${auth_cookie}` }),
         },
-        body: JSON.stringify({ email, code: coupon.trim() }),
+        body: JSON.stringify({ code: coupon.trim() }),
       });
 
       if (res.status === 401) {
@@ -56,7 +56,7 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
   };
 
   return (
-    <div className="w-full mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
+    <div className="w-full mx-auto bg-white shadow-lg rounded-xl overflow-hidden ">
       {/* Collapse Header */}
       <button
         onClick={toggleCollapse}
@@ -98,10 +98,10 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
         {message && (
           <div
             className={`mt-4 p-3 rounded-lg text-sm sm:text-base ${message.type === "success"
-                ? "bg-green-100 text-green-700"
-                : message.type === "warning"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
+              ? "bg-green-100 text-green-700"
+              : message.type === "warning"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
               }`}
           >
             {message.text}
