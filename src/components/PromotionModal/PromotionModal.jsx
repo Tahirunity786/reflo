@@ -88,7 +88,7 @@ export default function PromotionModal() {
   if (!isOpen) return null;
 
   return (
-    <div className=" flex items-center justify-center bg-black/50 p-4">
+    <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       {/* Modal Card */}
       <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden animate-fadeIn">
         {/* Grid layout: Image Left, Content Right */}
@@ -110,9 +110,7 @@ export default function PromotionModal() {
                   Unlock <span className="text-blue-600">Exclusive Deals</span> 🎉
                 </h2>
                 <p className="text-gray-700 mb-6 text-base sm:text-lg font-medium">
-                  Join our VIP list today and get{" "}
-                  <b>20% OFF</b> + access to members-only discounts and
-                  first looks at new collections.
+                  Join our VIP list for <b>20% OFF</b>, exclusive deals, and early access to new collections.
                   <span className="text-red-500 font-semibold block mt-2">
                     Required to continue browsing 🚀
                   </span>

@@ -1,6 +1,7 @@
 'use client';
 
 import Header from '@/components/Header/Header';
+import { Clock } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 export default function ContactPage() {
@@ -27,54 +28,54 @@ export default function ContactPage() {
 
   // ---------- Handle Submit ----------
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // ✅ Basic validation
-  if (!formData.name || !formData.email || !formData.message) {
-    setSuccess({ type: "error", message: "All fields are required." });
-    return;
-  }
-
-  if (!formData.privacy) {
-    setSuccess({
-      type: "error",
-      message: "You must agree to the Privacy Policy.",
-    });
-    return;
-  }
-
-  setLoading(true);
-  setSuccess(null);
-
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/contact/contact/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Something went wrong.");
+    // ✅ Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setSuccess({ type: "error", message: "All fields are required." });
+      return;
     }
 
-    setSuccess({ type: "success", message: "Message sent successfully!" });
-    setFormData({ name: "", email: "", message: "", privacy: false }); // Reset form
-  } catch (error) {
-    console.error(error);
-    setSuccess({
-      type: "error",
-      message: error.message || "Something went wrong. Please try again.",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!formData.privacy) {
+      setSuccess({
+        type: "error",
+        message: "You must agree to the Privacy Policy.",
+      });
+      return;
+    }
+
+    setLoading(true);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/contact/contact/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Something went wrong.");
+      }
+
+      setSuccess({ type: "success", message: "Message sent successfully!" });
+      setFormData({ name: "", email: "", message: "", privacy: false }); // Reset form
+    } catch (error) {
+      console.error(error);
+      setSuccess({
+        type: "error",
+        message: error.message || "Something went wrong. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const metaData = {
     title: `DoorBix || Contact Us`,
@@ -152,8 +153,13 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Us</h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-2">
               Please submit all general enquiries in the contact form below and we look forward to hearing from you soon.
+            </p>
+
+            <p className="flex items-center gap-2 text-gray-700 mb-6">
+              <Clock className="w-5 h-5 text-gray-500" />
+              <span>Average response time: <strong> 30 minutes</strong></span>
             </p>
 
             <form

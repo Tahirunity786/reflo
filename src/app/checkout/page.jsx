@@ -131,6 +131,7 @@ export default function CheckoutForm() {
     const [secondsLeft, setSecondsLeft] = useState(5);
     const abortController = useRef(null); // keep AbortController instance
     const [status, setStatus] = useState("idle");
+    const [errorMessage, setErrorMessage] = useState("");
     const [errors, setErrors] = useState({});
     const [qty, setQty] = useState(1); // quantity state
 
@@ -311,85 +312,106 @@ export default function CheckoutForm() {
         return Object.keys(newErrors).length === 0;
     };
 
+
+
     const placeOrder = async () => {
-        if (validate()) {
-            const authToken = Cookies.get("access");
-            setIsPending(true); // stop countdown
-            abortController.current = new AbortController();
-
-            // 🛒 Build items array
-            const orderItems = Array.isArray(item) ? item : [item];
-            const itemsPayload = orderItems.map((p) => ({
-                product_id: p.id,
-                name: p.name,
-                quantity: p.qty || qty,  // <-- fallback to qty state for single checkout
-                unit_price: p.price.toFixed(2),
-            }));
-
-
-            const addressesPayload = [
-                {
-                    address_type: "SHP",
-                    fullName: formData.fullName,
-                    email: formData.email || "",
-                    phone: formData.phone || "",
-                    line1: formData.address,
-                    line2: formData.apartment,
-                    state: formData.state,
-                    country: (formData.country || "UAE").toUpperCase(),
-                },
-            ];
-
-            // 🧾 Final request body
-            const payload = {
-                delivery: formData.delivery,
-                method: formData.method,
-                items: itemsPayload,
-                addresses: addressesPayload,
-                code: discount?.data?.code || null,
-            };
-
-            try {
-                // ✅ Build headers dynamically
-                const headers = {
-                    "Content-Type": "application/json",
-                };
-                if (authToken) {
-                    headers["Authorization"] = `Bearer ${authToken}`;
-                }
-
-                const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
-                    {
-                        method: "POST",
-                        headers,
-                        body: JSON.stringify(payload),
-                        signal: abortController.current.signal,
-                    }
-                );
-
-                if (response.status === 201) {
-                    const data = await response.json();
-
-                    // ✅ Redirect to thank you page with order ID
-                    router.push(`/thankyou?order=${data.order_id}`);
-                } else if (response.status !== 201) {
-
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
-            } catch (error) {
-                if (error.name === "AbortError") {
-                    console.log("⚠️ Order request cancelled by user.");
-                } else {
-                    console.error("❌ Failed to place order:", error);
-                }
-            } finally {
-                setIsPending(false);
-                setStatus("confirm");
-            }
-        } else {
+        if (!validate()) {
             setIsPending(false);
             setStatus("idle");
+            return;
+        }
+
+        const authToken = Cookies.get("access");
+        setIsPending(true);
+        abortController.current = new AbortController();
+
+        // 🛒 Build items array
+        const orderItems = Array.isArray(item) ? item : [item];
+        const itemsPayload = orderItems.map((p) => ({
+            product_id: p.id,
+            name: p.name,
+            quantity: p.qty || qty,
+            unit_price: p.price.toFixed(2),
+        }));
+
+        const addressesPayload = [
+            {
+                address_type: "SHP",
+                fullName: formData.fullName,
+                email: formData.email || "",
+                phone: formData.phone || "",
+                line1: formData.address,
+                line2: formData.apartment,
+                state: formData.state,
+                country: (formData.country || "UAE").toUpperCase(),
+            },
+        ];
+
+        const payload = {
+            delivery: formData.delivery,
+            method: formData.method,
+            items: itemsPayload,
+            addresses: addressesPayload,
+            code: discount?.data?.code || null,
+        };
+
+        try {
+            const headers = { "Content-Type": "application/json" };
+            if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/order/place-order/`,
+                {
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify(payload),
+                    signal: abortController.current.signal,
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+
+            if (response.status === 201 && data?.success) {
+                // ✅ Success
+                router.push(`/thankyou?order=${data.order_id}`);
+                return;
+            }
+
+            // ❌ Non-201 → handle standardized error
+            let errMsg = "Something went wrong. Please try again.";
+
+            if (data?.message) {
+                errMsg = data.message;
+
+                // Replace "contact support" with clickable link
+                errMsg = errMsg.replace(
+                    /contact support/gi,
+                    `<a href="/contact" class="underline text-blue-600 hover:text-blue-800">contact support</a>`
+                );
+            } else if (data?.errors) {
+                errMsg = Object.entries(data.errors)
+                    .map(
+                        ([field, msgs]) =>
+                            `${field}: ${Array.isArray(msgs) ? msgs.join(", ") : msgs}`
+                    )
+                    .join(" | ");
+            } else if (response.status >= 400) {
+                errMsg = `Error: ${response.status} ${response.statusText}`;
+            }
+
+            setErrorMessage(errMsg);
+            setStatus("error");
+
+        } catch (error) {
+            if (error.name === "AbortError") {
+                console.log("⚠️ Order request cancelled by user.");
+            } else {
+                console.error("❌ Failed to place order:", error);
+                setErrorMessage(error.message || "Unexpected error occurred.");
+                setStatus("error");
+            }
+        } finally {
+            setIsPending(false);
         }
     };
 
@@ -542,6 +564,12 @@ export default function CheckoutForm() {
                             <div className="p-4 bg-green-50 rounded-md text-center border border-green-200 text-green-800 font-semibold">
                                 Order Confirmed
                             </div>
+                        )}
+                        {status === "error" && (
+                            <div
+                                className="p-4 bg-red-50 rounded-md text-center border border-red-200 text-red-800 font-semibold"
+                                dangerouslySetInnerHTML={{ __html: errorMessage }}
+                            />
                         )}
                     </div>
                     <div className="mt-8 pt-4 border-t border-gray-200  flex space-x-4 text-sm">
