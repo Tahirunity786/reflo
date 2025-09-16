@@ -142,6 +142,7 @@ export default function Navbar() {
 
   const logoutHandler = () => {
     Cookies.remove("user");
+    Cookies.remove("access");
     setAuthUser(null);
     setIsDropdownOpen(false);
     if (typeof window !== "undefined") window.location.reload();
@@ -187,7 +188,7 @@ export default function Navbar() {
         {/* Main Navbar — toggles fixed/relative */}
         <div
           ref={mainNavRef}
-          className={`bg-white transition-all ${isMainFixed ? "fixed left-0 right-0 z-40 shadow-sm" : "relative"}`}
+          className={`bg-white transition-all ${isMainFixed ? "fixed left-0 right-0 z-[100] shadow-sm" : "relative"}`}
           style={isMainFixed ? { top: isTopBarFixed ? topBarHeight : 0 } : {}}
         >
           <div className="flex justify-between items-center px-4 lg:px-8 py-4">
@@ -221,7 +222,7 @@ export default function Navbar() {
                     else setShowSignIn(true);
                   }}
                 >
-                  <FiUser />
+                  <FiUser className="w-5 h-5" />
                 </div>
 
                 <AnimatePresence>
@@ -234,7 +235,7 @@ export default function Navbar() {
                       className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50"
                     >
                       <ul className="py-2 text-sm text-gray-700">
-                        <li>
+                        {/* <li>
                           <a href="/my-reviews" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                             <FiStar className="text-gray-500" /> My Reviews
                           </a>
@@ -253,7 +254,7 @@ export default function Navbar() {
                           <a href="/profile" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                             <FiUser className="text-gray-500" /> Profile
                           </a>
-                        </li>
+                        </li> */}
                         <li>
                           <button
                             onClick={logoutHandler}

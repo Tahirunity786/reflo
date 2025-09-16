@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import SignInModal from "../SignInModal/SignInModal";
+import SignUpModal from "../SignUpModal/SignUpModal";
+import Cookies from "js-cookie";
 
 export default function CouponCollapse({ email = "", handleDiscount }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -16,20 +21,25 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
     setLoading(true);
     setMessage(null);
 
-    if (!email) {
-      setMessage({ type: "error", text: "Please provide your email before applying a coupon." });
-      setLoading(false);
-      return;
-    }
+
+    const auth_cookie = Cookies.get('access');
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/product/coupon/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(auth_cookie && { Authorization: `Bearer ${auth_cookie}` }),
+        },
         body: JSON.stringify({ email, code: coupon.trim() }),
       });
 
+      if (res.status === 401) {
+        setShowSignIn(true);
+        return;
+      }
       const data = await res.json();
+
 
       if (!res.ok) {
         setMessage({ type: data.status || "error", text: data.message || "Something went wrong!" });
@@ -58,9 +68,8 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
 
       {/* Collapsible Content */}
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? "max-h-[1000px] p-6 sm:p-8" : "max-h-0 p-0"
-        }`}
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-[1000px] p-6 sm:p-8" : "max-h-0 p-0"
+          }`}
       >
         <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
           Apply Your Coupon 🎟️
@@ -88,13 +97,12 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
         {/* Message */}
         {message && (
           <div
-            className={`mt-4 p-3 rounded-lg text-sm sm:text-base ${
-              message.type === "success"
+            className={`mt-4 p-3 rounded-lg text-sm sm:text-base ${message.type === "success"
                 ? "bg-green-100 text-green-700"
                 : message.type === "warning"
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-red-100 text-red-700"
-            }`}
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+              }`}
           >
             {message.text}
           </div>
@@ -104,6 +112,24 @@ export default function CouponCollapse({ email = "", handleDiscount }) {
           Your email is safe with us. No spam, only exclusive deals! ✨
         </p>
       </div>
+
+      <SignInModal
+        isOpen={showSignIn}
+        onClose={() => setShowSignIn(false)}
+        onSwitchToSignUp={() => {
+          setShowSignIn(false);
+          setShowSignUp(true);
+        }}
+      />
+
+      <SignUpModal
+        isOpen={showSignUp}
+        onClose={() => setShowSignUp(false)}
+        onSwitchToSignIn={() => {
+          setShowSignUp(false);
+          setShowSignIn(true);
+        }}
+      />
     </div>
   );
 }
