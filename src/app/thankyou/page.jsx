@@ -177,7 +177,7 @@ export default function ThankYouPage() {
                         </Tooltip.Root>
                       </Tooltip.Provider>
                       <span className="font-medium text-gray-900">
-                        ${item.total_price.toFixed(0)}
+                        {item.total_price.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                       </span>
                     </motion.div>
                   )
