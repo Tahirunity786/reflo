@@ -164,7 +164,7 @@ export default function Wishlist() {
 
                       {/* Price */}
                       <td className="p-4 text-orange-500 font-medium">
-                        ${item.price.toFixed(2)}
+                        {item.price.toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                       </td>
 
                       {/* Stock Status */}
@@ -261,7 +261,7 @@ export default function Wishlist() {
                   </Tooltip.Provider>
 
                   <span className="text-orange-500 font-semibold text-sm">
-                    ${Number(product?.productPrice || 0).toFixed(2)}
+                   {Number(product?.productPrice || 0).toFixed(0)} {process.env.NEXT_PUBLIC_CURRENCY}
                   </span>
 
                 </div>
