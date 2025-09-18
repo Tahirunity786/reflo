@@ -34,7 +34,7 @@ export default function SalesPopup() {
 
   return (
     <div
-      className={`fixed bottom-6 left-6 w-80 max-w-xs bg-gradient-to-r from-white to-gray-50 shadow-2xl rounded-2xl p-4 border border-gray-200 flex items-start gap-3 transition-all duration-500 transform ${
+      className={`fixed bottom-6 left-6 w-80 z-100 max-w-xs bg-gradient-to-r from-white to-gray-50 shadow-2xl rounded-2xl p-4 border border-gray-200 flex items-start gap-3 transition-all duration-500 transform ${
         visible ? "translate-y-0 opacity-100 scale-100" : "translate-y-10 opacity-0 scale-95"
       }`}
     >

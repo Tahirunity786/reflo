@@ -69,7 +69,7 @@ const SearchModal = ({ isOpen, onClose, type = 'popular' }) => {
           animate={{ y: 0 }}
           exit={{ y: '-100%' }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-          className="fixed inset-0 z-60 bg-white flex flex-col p-8 overflow-y-auto"
+          className="fixed inset-0 z-150 bg-white flex flex-col p-8 overflow-y-auto"
         >
           {/* Close Button */}
           <button
