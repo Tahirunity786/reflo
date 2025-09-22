@@ -124,6 +124,7 @@ const ProductState = ({
     const [variant, setVariant] = useState(null);
 
 
+
     const handleVariantClick = (vdata) => {
 
         setFade(true);
@@ -171,7 +172,7 @@ const ProductState = ({
                 <div className="w-full h-full">
                     <div
                         className={`grid gap-4 
-      ${productImages.length > 1
+                               ${productImages.length > 1
                                 ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[80px_1fr] sm:grid-cols-[60px_1fr]"
                                 : "grid-rows-1 grid-cols-1"
                             }`}
@@ -305,7 +306,7 @@ const ProductState = ({
 
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <Truck size={20} /> Estimate delivery times: 1-2 days at your door step.
+                                <Truck size={20} /> Estimate delivery times: 1-2 days .
                             </li>
                             <li className="flex items-center gap-3 text-gray-600 text-md">
                                 <Badge size={20} />
@@ -318,26 +319,31 @@ const ProductState = ({
                         </ul>
                     </div>
 
-                    {data?.productVariant && data?.productVariant?.variantType === 'color' ? (
+                    {data?.productVariant && data?.productVariant?.variantType === 'color' && (
                         <div className="mb-4">
                             <h3 className="font-medium mb-2">Color:</h3>
                             <div className="flex space-x-2">
-                                {data?.productVariant?.variantValue?.map((variant) => (
-                                    <button
-                                        key={variant.id}
-                                        className={`w-8 h-8 rounded-full border-2 ${variant.name.toLowerCase() === 'white' ? 'border-gray-300' : 'border-transparent'
-                                            }`}
-                                        style={{ backgroundColor: variant.code }}
-                                        onClick={() => handleVariantClick(variant)}
-                                    >
-                                        {variant.name.toLowerCase() === 'white' && (
-                                            <div className="w-full h-full bg-white rounded-full border border-gray-300"></div>
-                                        )}
-                                    </button>
-                                ))}
+                                {data.productVariant.variantValue.map((v) => {
+                                    const isSelected = variant?.id === v.id; // selectedVariant is a state variable
+                                    return (
+                                        <button
+                                            key={v.id}
+                                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition 
+                                               ${isSelected ? 'shadow-sm' : v.name.toLowerCase() === 'white' ? 'border-gray-300' : 'border-transparent'
+                                                }`}
+                                            style={{ backgroundColor: v.code }}
+                                            onClick={() => handleVariantClick(v)}
+                                        >
+                                            {v.name.toLowerCase() === 'white' && (
+                                                <div className="w-full h-full bg-white rounded-full border border-gray-300"></div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
-                    ) : null}
+                    )}
+
 
                     {/* Purchase Actions */}
                     <div className="mb-3">

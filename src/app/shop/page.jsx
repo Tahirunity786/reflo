@@ -111,7 +111,6 @@ const Page = () => {
 
   useEffect(() => {
     if (search && type) {
-      console.log("Here is search type: ",search, type)
       fetchProducts(null, search, type);
     }
   }, [search, type]);
