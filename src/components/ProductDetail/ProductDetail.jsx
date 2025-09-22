@@ -134,7 +134,7 @@ const ProductState = ({
         if (vdata.image) {
             setSelectedImage(vdata.image);
         }
-        
+
         // data variant price update logic can be added here
         data.productPrice = vdata.price;
         data.productSKU = vdata.sku;
@@ -170,29 +170,29 @@ const ProductState = ({
                 {/* ================= Left Section (Images) ================= */}
                 <div className="w-full h-full">
                     <div
-                        className={`grid gap-4 ${productImages.length > 1
-                            ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
-                            : "grid-rows-1 grid-cols-1"
+                        className={`grid gap-4 
+      ${productImages.length > 1
+                                ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[80px_1fr] sm:grid-cols-[60px_1fr]"
+                                : "grid-rows-1 grid-cols-1"
                             }`}
                     >
                         {/* ================= Thumbnails ================= */}
                         {productImages.length > 1 && (
                             <div className="order-2 lg:order-1">
-                                {/* Horizontal on mobile, vertical on desktop */}
                                 <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px] pr-1">
                                     {productImages.map((img, i) => (
                                         <div
                                             key={i}
                                             onClick={() => handleThumbnailClick(img.image)}
-                                            className={`min-w-[4rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
+                                            className={`flex-shrink-0 w-16 h-16 sm:w-14 sm:h-14 rounded shadow-sm overflow-hidden cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
                                                 }`}
                                         >
                                             <Image
                                                 loading="lazy"
                                                 src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${img.image}`}
                                                 alt={`Thumbnail ${i + 1}`}
-                                                width={96}
-                                                height={80}
+                                                width={64}
+                                                height={64}
                                                 className="object-cover w-full h-full"
                                             />
                                         </div>
@@ -202,7 +202,7 @@ const ProductState = ({
                         )}
 
                         {/* ================= Main Image ================= */}
-                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden">
+                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden w-full">
                             {productImages?.length > 0 && (
                                 <Image
                                     src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${selectedImage || productImages[0].image
@@ -219,6 +219,7 @@ const ProductState = ({
                         </div>
                     </div>
                 </div>
+
 
                 {/* ================= Right Section (Product Info) ================= */}
                 <div className="w-full space-y-5">
