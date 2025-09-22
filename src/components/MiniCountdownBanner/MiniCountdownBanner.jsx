@@ -128,7 +128,7 @@ export default function MiniCountdownBanner({
       aria-live="polite"
       aria-atomic="true"
     >
-      <div className="flex-shrink-0 text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-100">
+      <div className="flex-shrink-0 text-xs sm:text-sm font-semibold text-gray-800">
         ⚡ Hurry
       </div>
 

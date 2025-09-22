@@ -10,7 +10,7 @@ import SignUpModal from '../SignUpModal/SignUpModal';
 import SignInModal from '../SignInModal/SignInModal';
 
 
-const PurchaseOptions = ({ data }) => {
+const PurchaseOptions = ({ data, vdata = null }) => {
   const router = useRouter();
   // const [selectedOption, setSelectedOption] = useState('one-time');
   const [showSignIn, setShowSignIn] = useState(false);
@@ -51,13 +51,16 @@ const PurchaseOptions = ({ data }) => {
   };
 
   const handleBuyNow = () => {
-    // if (!isAuthenticated && selectedOption === "subscription") {
-    //   setShowSignIn(true); // 👈 open sign-in modal
-    //   return;
-    // }
-    // if (!agreed) return;
+    const params = new URLSearchParams({
+      i: data?.id,
+      q: qty.toString(),
+    });
 
-    router.push(`/checkout?i=${data?.id}&q=${qty}`);
+    if (vdata?.id) {
+      params.append("v", vdata.id);
+    }
+
+    router.push(`/checkout?${params.toString()}`);
   };
 
 

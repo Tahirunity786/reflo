@@ -112,13 +112,37 @@ const ProductState = ({
     data,
     productImages,
     selectedImage,
+    setSelectedImage,
     handleThumbnailClick,
     fade,
+    setFade,
     activeTab,
     setActiveTab,
 }) => {
 
     const dispatch = useDispatch();
+    const [variant, setVariant] = useState(null);
+
+
+    const handleVariantClick = (vdata) => {
+
+        setFade(true);
+        setTimeout(() => {
+            setFade(false);
+        }, 200);
+        // If the variant has an associated image, update the main image
+        if (vdata.image) {
+            setSelectedImage(vdata.image);
+        }
+        
+        // data variant price update logic can be added here
+        data.productPrice = vdata.price;
+        data.productSKU = vdata.sku;
+        data.productStock = vdata.stock;
+
+        setVariant(vdata);
+
+    };
 
     useEffect(() => {
         if (data) {
@@ -266,6 +290,8 @@ const ProductState = ({
                         <div className="text-3xl font-bold text-black mb-4">
                             {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
                         </div>
+
+
                         {data?.productComparePrice ? (
                             <MiniCountdownBanner
                                 fillStartPercent={60}        // start at 60%
@@ -278,7 +304,7 @@ const ProductState = ({
 
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <Truck size={20} /> Estimate delivery times: 3-5 days International.
+                                <Truck size={20} /> Estimate delivery times: 1-2 days at your door step.
                             </li>
                             <li className="flex items-center gap-3 text-gray-600 text-md">
                                 <Badge size={20} />
@@ -291,9 +317,30 @@ const ProductState = ({
                         </ul>
                     </div>
 
+                    {data?.productVariant && data?.productVariant?.variantType === 'color' ? (
+                        <div className="mb-4">
+                            <h3 className="font-medium mb-2">Color:</h3>
+                            <div className="flex space-x-2">
+                                {data?.productVariant?.variantValue?.map((variant) => (
+                                    <button
+                                        key={variant.id}
+                                        className={`w-8 h-8 rounded-full border-2 ${variant.name.toLowerCase() === 'white' ? 'border-gray-300' : 'border-transparent'
+                                            }`}
+                                        style={{ backgroundColor: variant.code }}
+                                        onClick={() => handleVariantClick(variant)}
+                                    >
+                                        {variant.name.toLowerCase() === 'white' && (
+                                            <div className="w-full h-full bg-white rounded-full border border-gray-300"></div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
+
                     {/* Purchase Actions */}
                     <div className="mb-3">
-                        <PurchaseOptions data={data} />
+                        <PurchaseOptions data={data} vdata={variant} />
                     </div>
 
                     {/* Extra Info */}
@@ -394,6 +441,8 @@ const ProductDetailPage = ({ slug }) => {
 
 
 
+
+
     useEffect(() => {
         const retrieveProduct = async () => {
             if (!slug) return;
@@ -434,8 +483,10 @@ const ProductDetailPage = ({ slug }) => {
             selectedImage={selectedImage}
             handleThumbnailClick={handleThumbnailClick}
             fade={fade}
+            setFade={setFade}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            setSelectedImage={setSelectedImage}
         />
     );
 };

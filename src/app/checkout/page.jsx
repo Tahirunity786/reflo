@@ -121,6 +121,7 @@ export default function CheckoutForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState(searchParams.get("i") || "");
+    const [variant, setVariant] = useState(searchParams.get("v") || "");
     const items = useSelector(selectCartItems);
     const [item, setItems] = useState([]);
     const [discount, setDiscount] = useState(null);
@@ -240,7 +241,7 @@ export default function CheckoutForm() {
         const fetchProduct = async () => {
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/product/products/${slug}?view=mini`,
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/product/products/${slug}?view=mini&variant=${variant}`,
                     { signal: controller.signal }
                 );
 
@@ -327,12 +328,27 @@ export default function CheckoutForm() {
 
         // 🛒 Build items array
         const orderItems = Array.isArray(item) ? item : [item];
-        const itemsPayload = orderItems.map((p) => ({
-            product_id: p.id,
-            name: p.name,
-            quantity: p.qty || qty,
-            unit_price: p.price.toFixed(2),
-        }));
+        const itemsPayload = orderItems
+            .map((p) => {
+                const product_id = p?.id ?? null;
+                const variant_id = p?.variant?.id ?? null; // null if no variant
+                const name = p?.name ?? "";
+                const quantity = Number(p?.qty ?? qty ?? 1);
+
+                // Round price to whole number (avoid decimals)
+                const unit_price = Math.round(Number(p?.price ?? p?.unit_price ?? 0));
+
+                if (!product_id) return null; // skip invalid item
+
+                return {
+                    product_id,
+                    variant_id,
+                    name,
+                    quantity,
+                    unit_price,
+                };
+            })
+            .filter(Boolean);
 
         const addressesPayload = [
             {
