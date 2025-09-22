@@ -534,7 +534,7 @@ export default function CheckoutForm() {
                         <h2 className="text-lg font-semibold text-gray-900  mb-4">Shipping</h2>
                         <div className="border border-gray-300  rounded-md bg-gray-50  p-4">
                             <p className="text-sm text-gray-600 ">
-                                Your parcel is expected to arrive within 2–4 business days.
+                                Your parcel is expected to arrive within 1–2 business days.
                             </p>
 
 
