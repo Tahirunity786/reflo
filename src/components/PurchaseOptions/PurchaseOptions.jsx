@@ -105,52 +105,6 @@ const PurchaseOptions = ({ data, vdata = null }) => {
         </button>
       </div>
 
-
-      {/* Purchase Options */}
-      {/* <div className="space-y-4">
-        <h3 className="font-semibold">Purchase Options</h3>
-        {options.map((option) => (
-          <label
-            key={option.key}
-            className={`flex justify-between items-center border rounded-lg p-4 cursor-pointer transition ${selectedOption === option.key ? 'border-black' : 'border-gray-300'
-              }`}
-          >
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="purchase"
-                checked={selectedOption === option.key}
-                onChange={() => setSelectedOption(option.key)}
-              />
-              <span className="text-sm font-medium">{option.label}</span>
-              {option.badge && (
-                <span className="ml-2 bg-black text-white text-xs px-2 py-0.5 rounded-full">
-                  {option.badge}
-                </span>
-              )}
-            </div>
-            <div className="text-sm font-medium text-right">
-              {option.discountedPrice ? (
-                <>
-                  <span className="line-through text-gray-500">
-                    {(Number(option.price) * qty).toFixed(2)} {process.env.NEXT_PUBLIC_CURRENCY}
-                  </span>{" "}
-                  <span className="text-black">
-                    {(Number(option.discountedPrice) * qty).toFixed(2)} {process.env.NEXT_PUBLIC_CURRENCY}
-                  </span>
-                </>
-              ) : (
-                <span className="text-black">
-                  {(Number(option.price) * qty).toFixed(2)} {process.env.NEXT_PUBLIC_CURRENCY}
-                </span>
-              )}
-            </div>
-
-
-          </label>
-        ))}
-      </div> */}
-
       {/* Cart & Terms Section */}
       <div className="space-y-3">
         {/* Add to Cart Button */}
@@ -160,22 +114,17 @@ const PurchaseOptions = ({ data, vdata = null }) => {
         >
           Add to Cart
         </button>
-        {/* Terms Checkbox */}
-        {/* <div className="flex items-center gap-2 text-sm">
-          <input type="checkbox" id="terms-cond" className="accent-black" onChange={(e) => setAgreed(e.target.checked)} />
-          <label htmlFor="terms-cond" className="cursor-pointer">
-            I agree with <span className="underline">Terms & Conditions</span>
-          </label>
-
-        </div> */}
 
         {/* Buy It Now Button */}
+
         <button
-          // disabled={!agreed}
           onClick={handleBuyNow}
-          className={`w-full rounded-full py-3 transition ${"bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"}`}
+          className="w-full rounded-full py-3 transition 
+             bg-green-500 text-white hover:bg-green-600 
+             active:bg-green-700 cursor-pointer 
+             animate-urgent"
         >
-          Buy It Now
+          ⚡ Order Now - Cash on Delivery
         </button>
       </div>
       {/* Sign In Modal */}

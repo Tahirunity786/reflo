@@ -308,14 +308,14 @@ const ProductState = ({
                             <li className="flex items-center gap-2 text-gray-600 text-md">
                                 <Truck size={20} /> Estimate delivery times: 1-2 days .
                             </li>
+                            <li className="flex items-center gap-2 text-gray-600 text-md">
+                                <ShieldCheck size={20} /> Free Cash on Delivery
+                            </li>
                             <li className="flex items-center gap-3 text-gray-600 text-md">
                                 <Badge size={20} />
                                 No Quality Compromise
                             </li>
 
-                            <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <ShieldCheck size={20} /> Secure checkout guarantee
-                            </li>
                         </ul>
                     </div>
 

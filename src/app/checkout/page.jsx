@@ -136,6 +136,16 @@ export default function CheckoutForm() {
     const [errors, setErrors] = useState({});
     const [qty, setQty] = useState(1); // quantity state
 
+    const [copied, setCopied] = useState(false);
+    const coupon = "UAESPECIAL20";
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(coupon);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // hide tooltip after 2s
+    };
+
+
     // const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
 
     const [formData, setFormData] = useState({
@@ -773,6 +783,33 @@ export default function CheckoutForm() {
 
                     </div>
                     <div className='px-2'>
+                        <div className="px-2 text-center sm:text-left">
+                            <p className="text-sm sm:text-base text-gray-700 mt-1 mb-4">
+                                Use coupon code{" "}
+                                <span className="relative">
+                                    <span
+                                        className="font-mono font-bold text-indigo-600 cursor-pointer"
+                                        onClick={handleCopy}
+                                    >
+                                        {coupon}
+                                    </span>
+
+                                    {copied && (
+                                        <span
+                                            className="absolute left-1/2 -translate-x-1/2 -top-7 
+                                                bg-gray-800 text-white text-xs px-2 py-1 
+                                                rounded-md shadow-md whitespace-nowrap"
+                                        >
+                                            Code is copied!
+                                        </span>
+
+                                    )}
+                                </span>{" "}
+                                to get <span className="font-semibold text-green-600">20% OFF</span> your order.
+                            </p>
+                        </div>
+
+
                         <CouponForm email={formData.email} handleDiscount={handleDiscount} />
                     </div>
                 </div>
