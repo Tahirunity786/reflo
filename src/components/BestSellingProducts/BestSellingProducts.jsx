@@ -115,7 +115,7 @@ const BestSellingProducts = ({ title, type, smatPad = false }) => {
               </div>
             ))
           ) : (
-            bsData.map((product) => (
+            bsData.products?.map((product) => (
               <div
                 key={product.id}
                 className="w-full  bg-white border border-gray-200 rounded-lg shadow-sm group relative"

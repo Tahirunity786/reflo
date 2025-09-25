@@ -65,7 +65,7 @@ const Page = () => {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
-        {data?.map((item) => (
+        {data.collections?.map((item) => (
           <CollectCard
             key={item.id}
             imageSrc={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${item.collectionImage}`}
