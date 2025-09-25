@@ -149,7 +149,7 @@ const Page = () => {
         pageUrl={metaData.pageUrl}
       />
 
-      <CollectionGrid pData={pData} />
+      {/* <CollectionGrid pData={pData} /> */}
 
       <div className="flex gap-8">
         {/* Sidebar Filter */}
