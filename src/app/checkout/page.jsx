@@ -121,6 +121,7 @@ export default function CheckoutForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState(searchParams.get("i") || "");
+    const [variant, setVariant] = useState(searchParams.get("v") || "");
     const items = useSelector(selectCartItems);
     const [item, setItems] = useState([]);
     const [discount, setDiscount] = useState(null);
@@ -134,6 +135,16 @@ export default function CheckoutForm() {
     const [errorMessage, setErrorMessage] = useState("");
     const [errors, setErrors] = useState({});
     const [qty, setQty] = useState(1); // quantity state
+
+    const [copied, setCopied] = useState(false);
+    const coupon = "UAESPECIAL20";
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(coupon);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // hide tooltip after 2s
+    };
+
 
     // const isAuthenticated = typeof window !== 'undefined' && Cookies.get('access') ? true : false;
 
@@ -240,7 +251,7 @@ export default function CheckoutForm() {
         const fetchProduct = async () => {
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/product/products/${slug}?view=mini`,
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/product/products/${slug}?view=mini&variant=${variant}`,
                     { signal: controller.signal }
                 );
 
@@ -327,12 +338,27 @@ export default function CheckoutForm() {
 
         // 🛒 Build items array
         const orderItems = Array.isArray(item) ? item : [item];
-        const itemsPayload = orderItems.map((p) => ({
-            product_id: p.id,
-            name: p.name,
-            quantity: p.qty || qty,
-            unit_price: p.price.toFixed(2),
-        }));
+        const itemsPayload = orderItems
+            .map((p) => {
+                const product_id = p?.id ?? null;
+                const variant_id = p?.variant?.id ?? null; // null if no variant
+                const name = p?.name ?? "";
+                const quantity = Number(p?.qty ?? qty ?? 1);
+
+                // Round price to whole number (avoid decimals)
+                const unit_price = Math.round(Number(p?.price ?? p?.unit_price ?? 0));
+
+                if (!product_id) return null; // skip invalid item
+
+                return {
+                    product_id,
+                    variant_id,
+                    name,
+                    quantity,
+                    unit_price,
+                };
+            })
+            .filter(Boolean);
 
         const addressesPayload = [
             {
@@ -518,7 +544,7 @@ export default function CheckoutForm() {
                         <h2 className="text-lg font-semibold text-gray-900  mb-4">Shipping</h2>
                         <div className="border border-gray-300  rounded-md bg-gray-50  p-4">
                             <p className="text-sm text-gray-600 ">
-                                Your parcel is expected to arrive within 2–4 business days.
+                                Your parcel is expected to arrive within 1–2 business days.
                             </p>
 
 
@@ -757,6 +783,33 @@ export default function CheckoutForm() {
 
                     </div>
                     <div className='px-2'>
+                        <div className="px-2 text-center sm:text-left">
+                            <p className="text-sm sm:text-base text-gray-700 mt-1 mb-4">
+                                Use coupon code{" "}
+                                <span className="relative">
+                                    <span
+                                        className="font-mono font-bold text-indigo-600 cursor-pointer"
+                                        onClick={handleCopy}
+                                    >
+                                        {coupon}
+                                    </span>
+
+                                    {copied && (
+                                        <span
+                                            className="absolute left-1/2 -translate-x-1/2 -top-7 
+                                                bg-gray-800 text-white text-xs px-2 py-1 
+                                                rounded-md shadow-md whitespace-nowrap"
+                                        >
+                                            Code is copied!
+                                        </span>
+
+                                    )}
+                                </span>{" "}
+                                to get <span className="font-semibold text-green-600">20% OFF</span> your order.
+                            </p>
+                        </div>
+
+
                         <CouponForm email={formData.email} handleDiscount={handleDiscount} />
                     </div>
                 </div>

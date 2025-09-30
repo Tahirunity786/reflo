@@ -22,7 +22,7 @@ const ProductWidget = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setData(data);
+          setData(data.collections);
         }
       } catch (e) {
         console.error(e);

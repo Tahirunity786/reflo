@@ -55,6 +55,18 @@ export default function OrderTrackPage() {
     setLoading(false);
   };
 
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const o = params.get("o");
+    if (o) {
+      setOrderId(o);
+      fetchOrder(o);
+    }
+  }
+  , []);
+
+  
   const handleSubmit = (e) => {
     e?.preventDefault();
     if (orderId.trim()) fetchOrder(orderId.trim());

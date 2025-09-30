@@ -112,13 +112,38 @@ const ProductState = ({
     data,
     productImages,
     selectedImage,
+    setSelectedImage,
     handleThumbnailClick,
     fade,
+    setFade,
     activeTab,
     setActiveTab,
 }) => {
 
     const dispatch = useDispatch();
+    const [variant, setVariant] = useState(null);
+
+
+
+    const handleVariantClick = (vdata) => {
+
+        setFade(true);
+        setTimeout(() => {
+            setFade(false);
+        }, 200);
+        // If the variant has an associated image, update the main image
+        if (vdata.image) {
+            setSelectedImage(vdata.image);
+        }
+
+        // data variant price update logic can be added here
+        data.productPrice = vdata.price;
+        data.productSKU = vdata.sku;
+        data.productStock = vdata.stock;
+
+        setVariant(vdata);
+
+    };
 
     useEffect(() => {
         if (data) {
@@ -146,29 +171,29 @@ const ProductState = ({
                 {/* ================= Left Section (Images) ================= */}
                 <div className="w-full h-full">
                     <div
-                        className={`grid gap-4 ${productImages.length > 1
-                            ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[120px_1fr]"
-                            : "grid-rows-1 grid-cols-1"
+                        className={`grid gap-4 
+                               ${productImages.length > 1
+                                ? "grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[80px_1fr] sm:grid-cols-[60px_1fr]"
+                                : "grid-rows-1 grid-cols-1"
                             }`}
                     >
                         {/* ================= Thumbnails ================= */}
                         {productImages.length > 1 && (
                             <div className="order-2 lg:order-1">
-                                {/* Horizontal on mobile, vertical on desktop */}
                                 <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[500px] pr-1">
                                     {productImages.map((img, i) => (
                                         <div
                                             key={i}
                                             onClick={() => handleThumbnailClick(img.image)}
-                                            className={`min-w-[4rem] w-20 h-20 rounded shadow-sm overflow-hidden flex-shrink-0 cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
+                                            className={`flex-shrink-0 w-16 h-16 sm:w-14 sm:h-14 rounded shadow-sm overflow-hidden cursor-pointer ${selectedImage === img.image ? "ring-2 ring-blue-500" : ""
                                                 }`}
                                         >
                                             <Image
                                                 loading="lazy"
                                                 src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${img.image}`}
                                                 alt={`Thumbnail ${i + 1}`}
-                                                width={96}
-                                                height={80}
+                                                width={64}
+                                                height={64}
                                                 className="object-cover w-full h-full"
                                             />
                                         </div>
@@ -178,7 +203,7 @@ const ProductState = ({
                         )}
 
                         {/* ================= Main Image ================= */}
-                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden">
+                        <div className="relative order-1 lg:order-2 bg-gray-100 rounded overflow-hidden w-full">
                             {productImages?.length > 0 && (
                                 <Image
                                     src={`${process.env.NEXT_PUBLIC_SERVER_MEDIA_URL}${selectedImage || productImages[0].image
@@ -195,6 +220,7 @@ const ProductState = ({
                         </div>
                     </div>
                 </div>
+
 
                 {/* ================= Right Section (Product Info) ================= */}
                 <div className="w-full space-y-5">
@@ -266,6 +292,8 @@ const ProductState = ({
                         <div className="text-3xl font-bold text-black mb-4">
                             {data?.productPrice} {process.env.NEXT_PUBLIC_CURRENCY}
                         </div>
+
+
                         {data?.productComparePrice ? (
                             <MiniCountdownBanner
                                 fillStartPercent={60}        // start at 60%
@@ -278,22 +306,48 @@ const ProductState = ({
 
                         <ul className="text-sm space-y-2 border rounded-lg p-5 mb-3">
                             <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <Truck size={20} /> Estimate delivery times: 3-5 days International.
+                                <Truck size={20} /> Estimate delivery times: 1-2 days .
+                            </li>
+                            <li className="flex items-center gap-2 text-gray-600 text-md">
+                                <ShieldCheck size={20} /> Free Cash on Delivery
                             </li>
                             <li className="flex items-center gap-3 text-gray-600 text-md">
                                 <Badge size={20} />
                                 No Quality Compromise
                             </li>
 
-                            <li className="flex items-center gap-2 text-gray-600 text-md">
-                                <ShieldCheck size={20} /> Secure checkout guarantee
-                            </li>
                         </ul>
                     </div>
 
+                    {data?.productVariant && data?.productVariant?.variantType === 'color' && (
+                        <div className="mb-4">
+                            <h3 className="font-medium mb-2">Color:</h3>
+                            <div className="flex space-x-2">
+                                {data.productVariant.variantValue.map((v) => {
+                                    const isSelected = variant?.id === v.id; // selectedVariant is a state variable
+                                    return (
+                                        <button
+                                            key={v.id}
+                                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition 
+                                               ${isSelected ? 'shadow-sm' : v.name.toLowerCase() === 'white' ? 'border-gray-300' : 'border-transparent'
+                                                }`}
+                                            style={{ backgroundColor: v.code }}
+                                            onClick={() => handleVariantClick(v)}
+                                        >
+                                            {v.name.toLowerCase() === 'white' && (
+                                                <div className="w-full h-full bg-white rounded-full border border-gray-300"></div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+
                     {/* Purchase Actions */}
                     <div className="mb-3">
-                        <PurchaseOptions data={data} />
+                        <PurchaseOptions data={data} vdata={variant} />
                     </div>
 
                     {/* Extra Info */}
@@ -394,6 +448,8 @@ const ProductDetailPage = ({ slug }) => {
 
 
 
+
+
     useEffect(() => {
         const retrieveProduct = async () => {
             if (!slug) return;
@@ -434,8 +490,10 @@ const ProductDetailPage = ({ slug }) => {
             selectedImage={selectedImage}
             handleThumbnailClick={handleThumbnailClick}
             fade={fade}
+            setFade={setFade}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            setSelectedImage={setSelectedImage}
         />
     );
 };

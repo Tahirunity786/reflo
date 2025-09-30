@@ -66,7 +66,7 @@ export default function Wishlist() {
         );
         if (response.ok) {
           const data = await response.json();
-          setBSData(data || []);
+          setBSData(data.products || []);
         } else {
           setError(true);
         }

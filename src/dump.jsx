@@ -223,3 +223,86 @@
                         </button>
                     </div>
                 </div>
+
+                // When a filter changes, call fetch with a debounce for the text box
+    // useEffect(() => {
+    //     // debounce for search (400ms) — resets on every change
+    //     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+
+    //     // We still want immediate fetch for checkbox/slider changes, but debounced is okay too.
+    //     searchDebounceRef.current = setTimeout(() => {
+    //         fetchFilteredProducts();
+    //     }, 300);
+
+    //     return () => {
+    //         if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    //     };
+    // }, [selectedCategories, inStockOnly, minPrice, maxPrice, searchKeyword, fetchFilteredProducts]);
+
+        const toggleCategory = (categoryId) => {
+        setSelectedCategories((prev) => {
+            const next = new Set(prev);
+            if (next.has(categoryId)) next.delete(categoryId);
+            else next.add(categoryId);
+            return next;
+        });
+    };
+
+    
+    const [expanded, setExpanded] = useState(false);
+
+    const categories = Array.isArray(pData.categories) ? pData.categories : [];
+    const visibleCategories = expanded ? categories : categories.slice(0, 7);
+
+
+            {/* <div>
+                    <h4 className="text-base font-semibold mb-3 pb-2">Product Categories</h4>
+                    <ul
+                        className={`space-y-2 transition-all duration-500 ease-in-out overflow-hidden`}
+                        style={{ maxHeight: expanded ? `${categories.length * 40}px` : "280px" }} // 40px ≈ li height
+                    >
+                        {visibleCategories.map((category) => {
+                            const checked = selectedCategories.has(category.id);
+                            return (
+                                <li
+                                    key={category.id}
+                                    className="cursor-pointer hover:text-black flex items-center gap-2"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id={`category-${category.id}`}
+                                        value={category.id}
+                                        checked={checked}
+                                        onChange={() => {toggleCategory(category.id);}}
+                                        className="cursor-pointer"
+                                    />
+                                    <label
+                                        htmlFor={`category-${category.id}`}
+                                        className="cursor-pointer"
+                                    >
+                                        {category.categoryName}
+                                    </label>
+                                </li>
+                            );
+                        })}
+                    </ul>
+
+                    {categories.length > 7 && (
+                        <button
+                            onClick={() => setExpanded(!expanded)}
+                            className="flex items-center gap-1 mt-2 text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                            {expanded ? (
+                                <>
+                                    <ChevronUp className="w-4 h-4" /> Show Less
+                                </>
+                            ) : (
+                                <>
+                                    <ChevronDown className="w-4 h-4" /> Show All
+                                </>
+                            )}
+                        </button>
+                    )}
+
+                </div> */}
+
