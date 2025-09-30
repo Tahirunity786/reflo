@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
           <ConditionalWrapper>{children}</ConditionalWrapper>
         </ReduxProvider>
 
-        <Script
+        {/* <Script
         id="tawk-to"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
             })();
           `,
         }}
-      />
+      /> */}
        {/* Microsoft Clarity */}
       <Script
         id="microsoft-clarity"

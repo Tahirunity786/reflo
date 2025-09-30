@@ -27,7 +27,7 @@ export default function Home() {
     <>
       <Header title={metaData.title} description={metaData.description} imageUrl={metaData.image} pageUrl={metaData.pageUrl} />
       <TopBanner />
-      <PromotionModal/>
+      {/* <PromotionModal/> */}
       <Features />
       <CountdownBanner
         durationInHours={12}

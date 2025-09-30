@@ -6,6 +6,12 @@ import { useRouter } from 'next/navigation';
 
 const slides = [
   {
+    image: '/Image/Copilot_20250825_122406.png',
+    title: 'Beauty Style',
+    subtitle: 'Modern Look',
+    tag: 'Chic Vibes',
+  },
+  {
     image: '/Image/Copilot_20250825_121802.png',
     title: 'Next Gen',
     subtitle: 'Sharp Style',
@@ -17,12 +23,7 @@ const slides = [
     subtitle: 'Simple Style',
     tag: 'Daily Comfort',
   },
-  {
-    image: '/Image/Copilot_20250825_122406.png',
-    title: 'Beauty Style',
-    subtitle: 'Modern Look',
-    tag: 'Chic Vibes',
-  },
+  
   {
     image: '/Image/Copilot_20250825_123122.png',
     title: 'Home Kitchen',

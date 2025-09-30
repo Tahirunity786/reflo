@@ -65,7 +65,8 @@ export default function Navbar() {
   // load user from cookie once on mount
   useEffect(() => {
     const user = Cookies.get("user");
-    if (user) {
+    const access = Cookies.get("access");
+    if (user && access) {
       try {
         setAuthUser(JSON.parse(user));
       } catch {
@@ -129,16 +130,16 @@ export default function Navbar() {
   }, [navTop, isMainFixed]);
 
   // close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e) {
-      const dd = document.getElementById("nav-user-dropdown");
-      if (dd && !dd.contains(e.target)) {
-        setIsDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  // useEffect(() => {
+  //   function handleClickOutside(e) {
+  //     const dd = document.getElementById("nav-user-dropdown");
+  //     if (dd && !dd.contains(e.target)) {
+  //       setIsDropdownOpen(false);
+  //     }
+  //   }
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   const logoutHandler = () => {
     Cookies.remove("user");
